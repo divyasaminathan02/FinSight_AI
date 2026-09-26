@@ -1,0 +1,11 @@
+income
+credit_score
+credit_utilization
+bank_balance
+income_stability
+savings_ratio
+credit_score
+credit_utilization
+income_stability
+savings_ratio
+sentiment_score

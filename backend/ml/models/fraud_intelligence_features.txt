@@ -1,0 +1,7 @@
+application_velocity
+device_sharing_degree
+phone_sharing_degree
+address_sharing_degree
+amount_to_income_ratio
+amount_to_balance_ratio
+requested_amount

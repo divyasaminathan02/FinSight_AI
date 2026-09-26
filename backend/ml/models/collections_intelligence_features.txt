@@ -1,0 +1,7 @@
+overdue_amount
+dpd
+credit_score
+income
+bank_balance
+collection_attempts
+income_stability

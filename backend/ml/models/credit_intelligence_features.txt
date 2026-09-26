@@ -1,0 +1,18 @@
+income
+age
+credit_score
+existing_loans
+total_emi
+debt_to_income
+credit_utilization
+previous_dpd
+previous_defaults
+loan_amount
+tenure
+bank_balance
+income_stability
+employment_type_Gig Economy Worker
+employment_type_Professional / Doctor / CA
+employment_type_Salaried
+employment_type_Self-Employed MSME
+employment_type_Small Trader
