@@ -241,6 +241,61 @@ export const notificationsApi = {
     const res = await api.post('/notifications/read-all');
     return res.data;
   },
+  generateAlerts: async () => {
+    const res = await api.post('/notifications/generate-alerts');
+    return res.data;
+  },
+};
+
+// --- Multi-Agent LangGraph Orchestration API ---
+export const orchestrationApi = {
+  analyzeLoan: async (payload: {
+    customer_id?: string;
+    loan_amount: number;
+    tenure: number;
+    loan_purpose: string;
+    income?: number;
+    credit_score?: number;
+    existing_loans?: number;
+    total_emi?: number;
+    bank_balance?: number;
+    income_stability?: number;
+  }) => {
+    const res = await api.post('/orchestration/analyze-loan', payload);
+    return res.data;
+  },
+  getWorkflowInfo: async () => {
+    const res = await api.get('/orchestration/workflow-info');
+    return res.data;
+  },
+};
+
+// --- FinSight AI Copilot API ---
+export const copilotApi = {
+  chat: async (query: string, context?: any) => {
+    const res = await api.post('/copilot/chat', { query, context });
+    return res.data;
+  },
+  getTools: async () => {
+    const res = await api.get('/copilot/tools');
+    return res.data;
+  },
+  getSuggestions: async () => {
+    const res = await api.get('/copilot/suggestions');
+    return res.data;
+  },
+};
+
+// --- Decision Audit Trail API ---
+export const auditApi = {
+  getDecisions: async (params?: { limit?: number; decision?: string; customer_id?: string }) => {
+    const res = await api.get('/audit/decisions', { params });
+    return res.data;
+  },
+  getDecisionDetail: async (auditId: string) => {
+    const res = await api.get(`/audit/decisions/${auditId}`);
+    return res.data;
+  },
 };
 
 export default api;

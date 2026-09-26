@@ -11,6 +11,7 @@ import { CollectionsPage } from './pages/CollectionsPage';
 import { RiskIntelligencePage } from './pages/RiskIntelligencePage';
 import { LiquidityIntelligencePage } from './pages/LiquidityIntelligencePage';
 import { AICopilotPage } from './pages/AICopilotPage';
+import { LoanAnalysisPage } from './pages/LoanAnalysisPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
@@ -52,6 +53,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/risk-intelligence" element={<RiskIntelligencePage />} />
         <Route path="/liquidity" element={<LiquidityIntelligencePage />} />
         <Route path="/liquidity-intelligence" element={<LiquidityIntelligencePage />} />
+        <Route path="/loan-analysis" element={<LoanAnalysisPage />} />
         <Route path="/copilot" element={<AICopilotPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/settings" element={<SettingsPage />} />

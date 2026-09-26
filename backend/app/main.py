@@ -23,6 +23,9 @@ from app.routers import (
     collections,
     risk,
     liquidity,
+    orchestration,
+    copilot,
+    audit,
 )
 
 # Configure logging
@@ -122,6 +125,11 @@ app.include_router(fraud.router, prefix=settings.API_V1_STR)
 app.include_router(collections.router, prefix=settings.API_V1_STR)
 app.include_router(risk.router, prefix=settings.API_V1_STR)
 app.include_router(liquidity.router, prefix=settings.API_V1_STR)
+
+# Multi-Agent Orchestration, Decision Auditing & Copilot
+app.include_router(orchestration.router, prefix=settings.API_V1_STR)
+app.include_router(copilot.router, prefix=settings.API_V1_STR)
+app.include_router(audit.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

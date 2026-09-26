@@ -14,6 +14,7 @@ import {
   UserCheck,
   ChevronRight,
   Sparkles,
+  Cpu,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { name: 'Collections', path: '/collections', icon: PiggyBank },
   { name: 'Risk Intelligence', path: '/risk', icon: Activity },
   { name: 'Liquidity Intelligence', path: '/liquidity', icon: Coins },
+  { name: 'Loan Analysis', path: '/loan-analysis', icon: Cpu, badge: 'LangGraph' },
   { name: 'AI Copilot', path: '/copilot', icon: Bot, isSpecial: true },
   { name: 'Reports', path: '/reports', icon: FileText },
   { name: 'Settings', path: '/settings', icon: Settings },
