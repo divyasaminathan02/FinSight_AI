@@ -112,12 +112,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('finsight_user');
   };
 
+  const PERSONA_MAP: Record<User['role'], { name: string; email: string; dept: string }> = {
+    RISK_MANAGER: { name: 'Arjun Mehta', email: 'arjun.mehta@finsight.ai', dept: 'Portfolio Risk Management' },
+    CREDIT_OFFICER: { name: 'Priya Sharma', email: 'priya.sharma@finsight.ai', dept: 'Credit Underwriting Desk' },
+    COLLECTION_MANAGER: { name: 'Vikram Singh', email: 'vikram.singh@finsight.ai', dept: 'Delinquency & Remediation Desk' },
+    FINANCE_MANAGER: { name: 'Sanjay Rao', email: 'sanjay.rao@finsight.ai', dept: 'Treasury & ALM Operations' },
+    ANALYST: { name: 'Kavita Verma', email: 'kavita.verma@finsight.ai', dept: 'Portfolio Intelligence & Analytics' },
+    AUDITOR: { name: 'Rahul Sen', email: 'rahul.sen@finsight.ai', dept: 'Regulatory Compliance & Audit' },
+    ADMIN: { name: 'Chief Risk Officer', email: 'admin@finsight.ai', dept: 'Executive Risk Committee' },
+  };
+
   const switchRole = (newRole: User['role']) => {
-    if (user) {
-      const updated = { ...user, role: newRole };
-      setUser(updated);
-      localStorage.setItem('finsight_user', JSON.stringify(updated));
-    }
+    const persona = PERSONA_MAP[newRole] || { name: 'Institutional Officer', email: `${newRole.toLowerCase()}@finsight.ai`, dept: 'Enterprise Risk' };
+    const updated: User = {
+      id: user?.id || 1,
+      role: newRole,
+      full_name: persona.name,
+      email: persona.email,
+      department: persona.dept,
+      is_active: true,
+    };
+    setUser(updated);
+    localStorage.setItem('finsight_user', JSON.stringify(updated));
   };
 
   return (

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: finsight-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: finsight_enterprise_db
+      POSTGRES_USER: finsight_user
+      POSTGRES_PASSWORD: FinSightSecurePassword2026!
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finsight_user -d finsight_enterprise_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: finsight-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://finsight_user:FinSightSecurePassword2026!@db:5432/finsight_enterprise_db
+      JWT_SECRET: finsight-ai-enterprise-secret-key-super-secure-jwt-2026-prod
+      ENVIRONMENT: production
+      LLM_PROVIDER: gemini
+      LLM_API_KEY: ${LLM_API_KEY:-AIzaSyDemoKey}
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: finsight-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
