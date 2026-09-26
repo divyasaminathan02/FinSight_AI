@@ -48,6 +48,11 @@ class LoanApplication(Base):
     application_velocity = Column(Integer, default=1)  # Number of applications submitted in 7 days
     risk_score = Column(Float, default=50.0)  # Calculated AI risk score
     default_probability = Column(Float, default=0.03)
+    approved_amount = Column(Float, nullable=True)
+    reviewer_notes = Column(Text, nullable=True)
+    reviewed_by = Column(String(100), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    disbursed_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
     customer = relationship("Customer", back_populates="applications")

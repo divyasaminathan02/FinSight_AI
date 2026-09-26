@@ -11,8 +11,38 @@ from sqlalchemy import desc
 
 from app.database import get_db
 from app.models.audit import LoanDecisionAudit
+from app.models.users import AuditLog
 
 router = APIRouter(prefix="/audit", tags=["Audit Trail"])
+
+@router.get("/logs")
+def get_general_audit_logs(
+    limit: int = Query(50, ge=1, le=200),
+    action: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(AuditLog)
+    if action:
+        query = query.filter(AuditLog.action.ilike(f"%{action}%"))
+    logs = query.order_by(desc(AuditLog.created_at)).limit(limit).all()
+    
+    results = []
+    for log in logs:
+        details = {}
+        try:
+            details = json.loads(log.details_json or "{}")
+        except Exception:
+            details = {"raw": log.details_json}
+        results.append({
+            "id": log.id,
+            "action": log.action,
+            "resource": log.resource,
+            "user": log.user.full_name if log.user else "System / Officer",
+            "details": details,
+            "created_at": log.created_at.isoformat() if log.created_at else None
+        })
+    return {"total": len(results), "logs": results}
+
 
 @router.get("/decisions")
 def get_decision_audits(

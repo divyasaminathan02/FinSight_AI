@@ -29,6 +29,7 @@ from app.routers import (
     events,
     reports,
     settings as settings_router,
+    finance,
 )
 
 # Configure logging
@@ -174,6 +175,7 @@ app.include_router(audit.router, prefix=settings.API_V1_STR)
 app.include_router(events.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(settings_router.router, prefix=settings.API_V1_STR)
+app.include_router(finance.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

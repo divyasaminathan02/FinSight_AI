@@ -7,6 +7,7 @@ from app.models.liquidity import LiquidityRecord
 from app.models.agents import AgentRun, AgentDecision
 from app.models.notifications import Notification
 from app.models.audit import LoanDecisionAudit
+from app.models.portal_models import LoanProduct, Document, SupportTicket
 
 __all__ = [
     "User",
@@ -27,4 +28,7 @@ __all__ = [
     "AgentDecision",
     "Notification",
     "LoanDecisionAudit",
+    "LoanProduct",
+    "Document",
+    "SupportTicket",
 ]

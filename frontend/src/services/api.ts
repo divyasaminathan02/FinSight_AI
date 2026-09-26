@@ -221,12 +221,96 @@ export const liquidityApi = {
 };
 
 export const loansApi = {
-  list: async (params?: { page?: number; page_size?: number; product_type?: string; status?: string; search?: string }) => {
+  list: async (params?: { page?: number; page_size?: number; product_type?: string; status?: string; search?: string; customer_id?: string }) => {
     const res = await api.get('/loans', { params });
     return res.data;
   },
   get: async (id: string | number) => {
     const res = await api.get(`/loans/${id}`);
+    return res.data;
+  },
+  getApplications: async (params?: { page?: number; page_size?: number; status?: string; search?: string; customer_id?: string }) => {
+    const res = await api.get('/loans/applications', { params });
+    return res.data;
+  },
+  apply: async (payload: {
+    customer_id?: string;
+    product_type: string;
+    requested_amount: number;
+    requested_tenure: number;
+    purpose: string;
+    monthly_income?: number;
+  }) => {
+    const res = await api.post('/loans/apply', payload);
+    return res.data;
+  },
+  reviewApplication: async (applicationId: string, payload: {
+    action: string;
+    approved_amount?: number;
+    notes?: string;
+    reviewer_name?: string;
+  }) => {
+    const res = await api.post(`/loans/applications/${applicationId}/review`, payload);
+    return res.data;
+  },
+  disburseApplication: async (applicationId: string, payload: {
+    interest_rate?: number;
+    tenure?: number;
+    disbursement_account?: string;
+    remarks?: string;
+  }) => {
+    const res = await api.post(`/loans/applications/${applicationId}/disburse`, payload);
+    return res.data;
+  },
+  pay: async (loanId: string | number, payload: {
+    amount: number;
+    payment_method?: string;
+    reference_no?: string;
+  }) => {
+    const res = await api.post(`/loans/${loanId}/pay`, payload);
+    return res.data;
+  },
+  getSchedule: async (loanId: string | number) => {
+    const res = await api.get(`/loans/${loanId}/schedule`);
+    return res.data;
+  },
+  getProducts: async () => {
+    const res = await api.get('/loans/products');
+    return res.data;
+  },
+  createProduct: async (prod: any) => {
+    const res = await api.post('/loans/products', prod);
+    return res.data;
+  },
+  getDocuments: async (params?: { customer_id?: string; status?: string }) => {
+    const res = await api.get('/loans/documents', { params });
+    return res.data;
+  },
+  uploadDocument: async (payload: { customer_id: number; doc_type: string; file_name: string; application_id?: number }) => {
+    const res = await api.post('/loans/documents/upload', null, { params: payload });
+    return res.data;
+  },
+  verifyDocument: async (docId: string, action: 'VERIFIED' | 'REJECTED', notes?: string) => {
+    const res = await api.post(`/loans/documents/${docId}/verify`, null, { params: { action, notes } });
+    return res.data;
+  },
+  getSupportTickets: async (params?: { customer_id?: string; status?: string }) => {
+    const res = await api.get('/loans/support-tickets', { params });
+    return res.data;
+  },
+  createSupportTicket: async (payload: { customer_id: number; subject: string; category?: string; priority?: string; initial_message?: string }) => {
+    const res = await api.post('/loans/support-tickets', null, { params: payload });
+    return res.data;
+  },
+};
+
+export const financeApi = {
+  getOverview: async () => {
+    const res = await api.get('/finance/overview');
+    return res.data;
+  },
+  getProductPerformance: async () => {
+    const res = await api.get('/finance/product-performance');
     return res.data;
   },
 };

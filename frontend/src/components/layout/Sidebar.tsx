@@ -15,12 +15,21 @@ import {
   ChevronRight,
   Sparkles,
   Cpu,
+  ClipboardCheck,
+  Layers,
+  DollarSign,
+  TrendingUp,
+  Shield,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
   { name: 'Overview', path: '/', icon: LayoutDashboard },
-  { name: 'Credit Intelligence', path: '/credit', icon: CreditCard, badge: 'Active' },
+  { name: 'Executive Command', path: '/executive', icon: TrendingUp, badge: 'C-Suite' },
+  { name: 'Underwriting Queue', path: '/underwriting-queue', icon: ClipboardCheck, badge: 'Queue' },
+  { name: 'Operations Desk', path: '/operations', icon: Layers },
+  { name: 'Finance & Treasury', path: '/finance', icon: DollarSign },
+  { name: 'Credit Intelligence', path: '/credit', icon: CreditCard },
   { name: 'Fraud Intelligence', path: '/fraud', icon: ShieldAlert, alert: true },
   { name: 'Customer Intelligence', path: '/customer', icon: Users },
   { name: 'Collections', path: '/collections', icon: PiggyBank },
@@ -28,6 +37,7 @@ const NAV_ITEMS = [
   { name: 'Liquidity Intelligence', path: '/liquidity', icon: Coins },
   { name: 'Loan Analysis', path: '/loan-analysis', icon: Cpu, badge: 'LangGraph' },
   { name: 'AI Copilot', path: '/copilot', icon: Bot, isSpecial: true },
+  { name: 'Audit Trail', path: '/audit-logs', icon: Shield },
   { name: 'Reports', path: '/reports', icon: FileText },
   { name: 'Settings', path: '/settings', icon: Settings },
 ];
@@ -142,9 +152,12 @@ export const Sidebar: React.FC = () => {
             >
               <option value="RISK_MANAGER">Risk Manager</option>
               <option value="CREDIT_OFFICER">Credit Officer</option>
+              <option value="OPERATIONS">Operations Desk</option>
               <option value="COLLECTION_MANAGER">Collection Manager</option>
               <option value="FINANCE_MANAGER">Finance Manager</option>
+              <option value="EXECUTIVE">Executive / CEO</option>
               <option value="ADMIN">CRO / Admin</option>
+              <option value="CUSTOMER">Customer / Borrower</option>
               <option value="ANALYST">Analyst</option>
               <option value="AUDITOR">Auditor</option>
             </select>

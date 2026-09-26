@@ -2,7 +2,7 @@ export interface User {
   id: number;
   email: string;
   full_name: string;
-  role: 'ADMIN' | 'CREDIT_OFFICER' | 'RISK_MANAGER' | 'COLLECTION_MANAGER' | 'FINANCE_MANAGER' | 'ANALYST' | 'AUDITOR';
+  role: 'ADMIN' | 'CREDIT_OFFICER' | 'RISK_MANAGER' | 'COLLECTION_MANAGER' | 'FINANCE_MANAGER' | 'ANALYST' | 'AUDITOR' | 'CUSTOMER' | 'OPERATIONS' | 'EXECUTIVE';
   department?: string;
   is_active: boolean;
   last_login?: string;
@@ -179,3 +179,114 @@ export interface NotificationItem {
   is_read: boolean;
   created_at: string;
 }
+
+export interface LoanApplicationItem {
+  id: number;
+  application_id: string;
+  customer_id: number;
+  customer_name?: string;
+  customer_identifier?: string;
+  customer_phone?: string;
+  customer_income?: number;
+  customer_cibil?: number;
+  product_type: string;
+  requested_amount: number;
+  requested_tenure: number;
+  purpose?: string;
+  status: string;
+  risk_score: number;
+  default_probability: number;
+  approved_amount?: number;
+  reviewer_notes?: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  disbursed_at?: string;
+  created_at: string;
+}
+
+export interface LoanProductItem {
+  id?: number;
+  product_code: string;
+  name: string;
+  category: string;
+  min_amount: number;
+  max_amount: number;
+  interest_rate: number;
+  min_tenure: number;
+  max_tenure: number;
+  processing_fee_pct: number;
+  is_active: boolean;
+  description?: string;
+}
+
+export interface DocumentItem {
+  id: number;
+  doc_id: string;
+  customer_id: number;
+  application_id?: number;
+  doc_type: string;
+  file_name: string;
+  file_size_kb: number;
+  status: string;
+  verified_by?: string;
+  verification_notes?: string;
+  uploaded_at: string;
+  verified_at?: string;
+}
+
+export interface SupportTicketItem {
+  id: number;
+  ticket_id: string;
+  customer_id: number;
+  customer_name?: string;
+  subject: string;
+  category: string;
+  priority: string;
+  status: string;
+  assigned_to?: string;
+  messages: Array<{ sender: string; text: string; time: string }>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AmortizationScheduleRow {
+  installment_no: number;
+  due_date: string;
+  emi: number;
+  principal: number;
+  interest: number;
+  remaining_balance: number;
+  status: 'Paid' | 'Upcoming';
+}
+
+export interface FinanceOverviewData {
+  kpis: {
+    total_aum_inr: number;
+    total_aum_cr: number;
+    total_disbursed_inr: number;
+    total_disbursed_cr: number;
+    total_collected_inr: number;
+    total_collected_cr: number;
+    monthly_interest_revenue_cr: number;
+    net_interest_income_cr: number;
+    net_interest_margin_pct: number;
+    cost_of_funds_pct: number;
+    weighted_avg_yield_pct: number;
+    expected_provision_cr: number;
+    npa_ratio_pct: number;
+  };
+  aging_buckets: {
+    standard_cr: number;
+    bucket1_1_30_dpd_cr: number;
+    bucket2_31_60_dpd_cr: number;
+    bucket3_61_90_dpd_cr: number;
+    npa_90_plus_cr: number;
+  };
+  cash_flow_trend: Array<{
+    month: string;
+    disbursements_cr: number;
+    collections_cr: number;
+    net_cashflow_cr: number;
+  }>;
+}
+

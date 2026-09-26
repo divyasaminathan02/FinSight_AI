@@ -120,6 +120,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ANALYST: { name: 'Kavita Verma', email: 'kavita.verma@finsight.ai', dept: 'Portfolio Intelligence & Analytics' },
     AUDITOR: { name: 'Rahul Sen', email: 'rahul.sen@finsight.ai', dept: 'Regulatory Compliance & Audit' },
     ADMIN: { name: 'Chief Risk Officer', email: 'admin@finsight.ai', dept: 'Executive Risk Committee' },
+    CUSTOMER: { name: 'Rajesh Kumar Verma', email: 'rajesh.verma@customer.finsight.ai', dept: 'Borrower (CUST-00001)' },
+    OPERATIONS: { name: 'Deepa Nair', email: 'deepa.nair@finsight.ai', dept: 'Loan Operations & Disbursement' },
+    EXECUTIVE: { name: 'Vikramaditya Singhania', email: 'ceo@finsight.ai', dept: 'Office of the CEO & Board' },
   };
 
   const switchRole = (newRole: User['role']) => {

@@ -78,6 +78,9 @@ export const LoginPage: React.FC = () => {
     { name: 'Sanjay Rao', role: 'FINANCE_MANAGER', label: 'Finance Manager', email: 'sanjay.rao@finsight.ai', pass: 'FinSight@2026' },
     { name: 'Kavita Verma', role: 'ANALYST', label: 'Financial Analyst', email: 'kavita.verma@finsight.ai', pass: 'FinSight@2026' },
     { name: 'Rahul Sen', role: 'AUDITOR', label: 'Compliance Auditor', email: 'rahul.sen@finsight.ai', pass: 'FinSight@2026' },
+    { name: 'Deepa Nair', role: 'OPERATIONS', label: 'Operations Desk', email: 'deepa.nair@finsight.ai', pass: 'FinSight@2026' },
+    { name: 'Vikramaditya Singhania', role: 'EXECUTIVE', label: 'Executive / CEO', email: 'ceo@finsight.ai', pass: 'FinSight@2026' },
+    { name: 'Rajesh Kumar Verma', role: 'CUSTOMER', label: 'Borrower', email: 'rajesh.verma@customer.finsight.ai', pass: 'FinSight@2026' },
     { name: 'Chief Risk Officer', role: 'ADMIN', label: 'CRO / Admin', email: 'admin@finsight.ai', pass: 'FinSight@Admin2026' },
   ];
 

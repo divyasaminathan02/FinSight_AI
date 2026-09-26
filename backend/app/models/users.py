@@ -12,6 +12,9 @@ class UserRole(str, enum.Enum):
     FINANCE_MANAGER = "FINANCE_MANAGER"
     ANALYST = "ANALYST"
     AUDITOR = "AUDITOR"
+    CUSTOMER = "CUSTOMER"
+    OPERATIONS = "OPERATIONS"
+    EXECUTIVE = "EXECUTIVE"
 
 class User(Base):
     __tablename__ = "users"
