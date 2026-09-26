@@ -221,3 +221,20 @@ class CustomerIntelligenceAgent:
         finally:
             if close_db:
                 db.close()
+
+    @classmethod
+    def get_model_info(cls) -> Dict[str, Any]:
+        from ml.registry import ModelRegistry
+        meta = ModelRegistry.get_model_metadata("customer_intelligence") or {}
+        return {
+            "model_name": "Customer Intelligence Agent",
+            "model_type": meta.get("model_type", "K-Means Clustering + Churn Predictor"),
+            "features": meta.get("features", []),
+            "parameters": meta.get("parameters", {}),
+            "metrics": meta.get("metrics", {}),
+            "status": "Production"
+        }
+
+CustomerAgent = CustomerIntelligenceAgent
+customer_agent = CustomerIntelligenceAgent()
+

@@ -154,3 +154,6 @@ class CreditIntelligenceAgent:
     # Support instance method calls
     def __call__(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self.evaluate_credit_application(data)
+
+CreditAgent = CreditIntelligenceAgent
+credit_agent = CreditIntelligenceAgent()

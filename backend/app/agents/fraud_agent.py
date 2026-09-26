@@ -223,3 +223,19 @@ class FraudIntelligenceAgent:
             "nodes": nodes,
             "links": links
         }
+
+    @classmethod
+    def get_model_info(cls) -> Dict[str, Any]:
+        meta = ModelRegistry.get_model_metadata("fraud_intelligence") or {}
+        return {
+            "model_name": "Fraud Intelligence Agent",
+            "model_type": meta.get("model_type", "Isolation Forest + NetworkX Graph"),
+            "features": meta.get("features", []),
+            "parameters": meta.get("parameters", {}),
+            "metrics": meta.get("metrics", {}),
+            "status": "Production"
+        }
+
+FraudAgent = FraudIntelligenceAgent
+fraud_agent = FraudIntelligenceAgent()
+

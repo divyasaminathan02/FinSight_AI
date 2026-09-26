@@ -113,6 +113,11 @@ class CollectionsIntelligenceAgent:
                 db.close()
 
     @classmethod
+    def get_customer_collections(cls, customer_id: Any, db: Optional[Session] = None) -> Dict[str, Any]:
+        """Alias for get_customer_collection_assessment."""
+        return cls.get_customer_collection_assessment(customer_id, db=db)
+
+    @classmethod
     def get_priorities(cls, limit: int = 25, db: Optional[Session] = None) -> Dict[str, Any]:
         """
         Retrieves prioritized recovery queues with both priorities_summary and priority_queues.
@@ -176,3 +181,20 @@ class CollectionsIntelligenceAgent:
 
     def __call__(self, limit: int = 25, db: Optional[Session] = None) -> Dict[str, Any]:
         return self.get_priorities(limit=limit, db=db)
+
+    @classmethod
+    def get_model_info(cls) -> Dict[str, Any]:
+        from ml.registry import ModelRegistry
+        meta = ModelRegistry.get_model_metadata("collections_intelligence") or {}
+        return {
+            "model_name": "Collections Intelligence Agent",
+            "model_type": meta.get("model_type", "Multi-Target XGBoost Classifier & Regressor"),
+            "features": meta.get("features", []),
+            "parameters": meta.get("parameters", {}),
+            "metrics": meta.get("metrics", {}),
+            "status": "Production"
+        }
+
+CollectionsAgent = CollectionsIntelligenceAgent
+collections_agent = CollectionsIntelligenceAgent()
+

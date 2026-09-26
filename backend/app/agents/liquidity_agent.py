@@ -105,15 +105,17 @@ class LiquidityIntelligenceAgent:
             "potential_cash_gap": 0.0 if running_balance > 0 else abs(round(running_balance, 1)),
             "liquidity_buffer": 1.45,
             "liquidity_buffer_ratio": 1.45,
+            "lcr_buffer_ratio": 1.45,
             "daily_projections": daily_projections,
             "projections": daily_projections
         }
         return forecast_res
 
     @classmethod
-    def get_forecast(cls, horizon_days: int = 30) -> Dict[str, Any]:
+    def get_forecast(cls, horizon_days: int = 30, days: Optional[int] = None) -> Dict[str, Any]:
         """Alias for forecast_liquidity."""
-        return cls.forecast_liquidity(horizon_days=horizon_days)
+        target_horizon = days if days is not None else horizon_days
+        return cls.forecast_liquidity(horizon_days=target_horizon)
 
     @classmethod
     def get_scenarios(cls) -> Dict[str, Any]:
@@ -164,3 +166,20 @@ class LiquidityIntelligenceAgent:
             "horizon": "30-Day Stress Shock Simulation",
             "scenarios": scenarios
         }
+
+    @classmethod
+    def get_model_info(cls) -> Dict[str, Any]:
+        from ml.registry import ModelRegistry
+        meta = ModelRegistry.get_model_metadata("liquidity_intelligence") or {}
+        return {
+            "model_name": "Liquidity Intelligence Agent",
+            "model_type": meta.get("model_type", "Time-Lagged XGBoost Regressor"),
+            "features": meta.get("features", []),
+            "parameters": meta.get("parameters", {}),
+            "metrics": meta.get("metrics", {}),
+            "status": "Production"
+        }
+
+LiquidityAgent = LiquidityIntelligenceAgent
+liquidity_agent = LiquidityIntelligenceAgent()
+

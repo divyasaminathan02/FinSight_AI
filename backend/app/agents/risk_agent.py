@@ -235,3 +235,20 @@ class RiskIntelligenceAgent:
         finally:
             if close_db:
                 db.close()
+
+    @classmethod
+    def get_model_info(cls) -> Dict[str, Any]:
+        from ml.registry import ModelRegistry
+        meta = ModelRegistry.get_model_metadata("risk_intelligence") or {}
+        return {
+            "model_name": "Risk Intelligence Agent",
+            "model_type": meta.get("model_type", "Composite HHI & Delinquency Aggregator"),
+            "features": meta.get("features", []),
+            "parameters": meta.get("parameters", {}),
+            "metrics": meta.get("metrics", {}),
+            "status": "Production"
+        }
+
+RiskAgent = RiskIntelligenceAgent
+risk_agent = RiskIntelligenceAgent()
+
