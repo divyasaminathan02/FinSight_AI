@@ -98,6 +98,22 @@ export const Sidebar: React.FC = () => {
             </NavLink>
           );
         })}
+
+        <div className="px-2 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          Borrower Facing
+        </div>
+        <NavLink
+          to="/customer-portal"
+          className="flex items-center justify-between px-2.5 py-2 rounded-md text-[13px] font-medium text-emerald-400 hover:bg-emerald-950/40 hover:text-emerald-300 transition-all border border-emerald-900/30"
+        >
+          <div className="flex items-center gap-2.5">
+            <CreditCard className="w-4 h-4 text-emerald-400" />
+            <span>Borrower Portal</span>
+          </div>
+          <span className="text-[9px] px-1.5 py-0.5 bg-emerald-900/60 text-emerald-300 rounded font-bold">
+            Live
+          </span>
+        </NavLink>
       </div>
 
       {/* Bottom Profile / Role Section */}

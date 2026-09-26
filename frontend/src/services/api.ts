@@ -33,6 +33,16 @@ export const authApi = {
     const res = await api.post('/auth/login', { email, password });
     return res.data;
   },
+  register: async (userData: {
+    email: string;
+    password: string;
+    full_name: string;
+    role: string;
+    department?: string;
+  }): Promise<{ message: string; user: User }> => {
+    const res = await api.post('/auth/register', userData);
+    return res.data;
+  },
   getMe: async (): Promise<User> => {
     const res = await api.get('/auth/me');
     return res.data;
@@ -294,6 +304,71 @@ export const auditApi = {
   },
   getDecisionDetail: async (auditId: string) => {
     const res = await api.get(`/audit/decisions/${auditId}`);
+    return res.data;
+  },
+};
+
+// --- Event Simulation Engine API ---
+export const eventsApi = {
+  getTypes: async () => {
+    const res = await api.get('/events/types');
+    return res.data;
+  },
+  simulate: async (eventType: string, payload: Record<string, any> = {}) => {
+    const res = await api.post('/events/simulate', { event_type: eventType, payload });
+    return res.data;
+  },
+  getHistory: async (limit = 50) => {
+    const res = await api.get('/events/history', { params: { limit } });
+    return res.data;
+  },
+};
+
+// --- Enterprise Reports API ---
+export const reportsApi = {
+  getList: async () => {
+    const res = await api.get('/reports/list');
+    return res.data;
+  },
+  getData: async (reportType: string) => {
+    const res = await api.get(`/reports/data/${reportType}`);
+    return res.data;
+  },
+  downloadCsvUrl: (reportType: string) => `/api/reports/export/${reportType}`,
+};
+
+// --- System Configuration & Risk Policies API ---
+export const settingsApi = {
+  getConfig: async () => {
+    const res = await api.get('/settings/config');
+    return res.data;
+  },
+  updateConfig: async (payload: {
+    risk_thresholds?: Record<string, any>;
+    decision_policies?: Record<string, any>;
+    notification_preferences?: Record<string, any>;
+  }) => {
+    const res = await api.put('/settings/config', payload);
+    return res.data;
+  },
+};
+
+// --- System Health API ---
+export const healthApi = {
+  getStatus: async () => {
+    const res = await api.get('/health');
+    return res.data;
+  },
+  getDatabase: async () => {
+    const res = await api.get('/health/database');
+    return res.data;
+  },
+  getModels: async () => {
+    const res = await api.get('/health/models');
+    return res.data;
+  },
+  getLlm: async () => {
+    const res = await api.get('/health/llm');
     return res.data;
   },
 };

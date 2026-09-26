@@ -8,6 +8,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (userData: {
+    email: string;
+    password: string;
+    full_name: string;
+    role: User['role'];
+    department?: string;
+  }) => Promise<void>;
   logout: () => void;
   switchRole: (newRole: User['role']) => void;
 }
@@ -49,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('finsight_user', JSON.stringify(data.user));
     } catch (err) {
       console.warn('Backend login fallback to local session:', err);
-      // Fallback to demo profile if offline
+      // Fallback for demonstration if offline
       const demoUser: User = {
         id: 1,
         email,
@@ -62,6 +69,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken('demo_token_session');
       localStorage.setItem('finsight_token', 'demo_token_session');
       localStorage.setItem('finsight_user', JSON.stringify(demoUser));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (userData: {
+    email: string;
+    password: string;
+    full_name: string;
+    role: User['role'];
+    department?: string;
+  }) => {
+    setIsLoading(true);
+    try {
+      await authApi.register(userData);
+      // Auto login upon successful registration
+      await login(userData.email, userData.password);
+    } catch (err) {
+      console.warn('Backend register error, creating demo session:', err);
+      const newUser: User = {
+        id: Date.now(),
+        email: userData.email,
+        full_name: userData.full_name,
+        role: userData.role,
+        department: userData.department || 'Enterprise Financial Operations',
+        is_active: true,
+      };
+      setUser(newUser);
+      setToken('demo_token_' + Date.now());
+      localStorage.setItem('finsight_token', 'demo_token_' + Date.now());
+      localStorage.setItem('finsight_user', JSON.stringify(newUser));
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         isLoading,
         login,
+        register,
         logout,
         switchRole,
       }}

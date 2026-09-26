@@ -26,6 +26,9 @@ from app.routers import (
     orchestration,
     copilot,
     audit,
+    events,
+    reports,
+    settings as settings_router,
 )
 
 # Configure logging
@@ -93,6 +96,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Production Security Headers & Rate Limiting Middleware
+import time
+from collections import defaultdict
+
+_rate_limit_records = defaultdict(list)
+RATE_LIMIT_PER_MINUTE = 180
+
+@app.middleware("http")
+async def security_and_rate_limit_middleware(request: Request, call_next):
+    # 1. Rate Limiting Check
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    now = time.time()
+    
+    # Filter out requests older than 60s
+    reqs = [t for t in _rate_limit_records[client_ip] if now - t < 60]
+    _rate_limit_records[client_ip] = reqs
+    
+    if len(reqs) >= RATE_LIMIT_PER_MINUTE and not request.url.path.startswith("/docs"):
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Too many requests. Please throttle your institutional API calls."}
+        )
+    _rate_limit_records[client_ip].append(now)
+
+    # 2. Process Request
+    response = await call_next(request)
+
+    # 3. Apply Production Security Headers
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+
+    return response
+
 # Exception handlers
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -130,6 +169,11 @@ app.include_router(liquidity.router, prefix=settings.API_V1_STR)
 app.include_router(orchestration.router, prefix=settings.API_V1_STR)
 app.include_router(copilot.router, prefix=settings.API_V1_STR)
 app.include_router(audit.router, prefix=settings.API_V1_STR)
+
+# Event Simulation Engine, Enterprise Reports & Dynamic Settings
+app.include_router(events.router, prefix=settings.API_V1_STR)
+app.include_router(reports.router, prefix=settings.API_V1_STR)
+app.include_router(settings_router.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

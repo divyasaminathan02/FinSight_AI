@@ -152,3 +152,11 @@ class ModelRegistry:
         """
         meta = cls.load_all_metadata()
         return meta.get(model_name)
+
+    @classmethod
+    def list_registered_models(cls) -> Dict[str, Any]:
+        """
+        Lists all registered model metadata.
+        """
+        return cls.load_all_metadata()
+

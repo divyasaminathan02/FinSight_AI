@@ -15,6 +15,7 @@ import { LoanAnalysisPage } from './pages/LoanAnalysisPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
+import { CustomerPortalPage } from './pages/CustomerPortalPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,7 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/customer-portal" element={<CustomerPortalPage />} />
 
       {/* Main Shell Layout */}
       <Route element={<Layout onRefresh={handleRefresh} isRefreshing={isRefreshing} />}>
