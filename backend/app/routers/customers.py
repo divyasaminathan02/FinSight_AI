@@ -6,8 +6,9 @@ from sqlalchemy import func, desc
 from app.database import get_db
 from app.models.customers import Customer, CustomerProfile
 from app.schemas.customers import CustomerListResponse, CustomerListItem
+from app.agents.customer_agent import CustomerIntelligenceAgent
 
-router = APIRouter(prefix="/customers", tags=["Customers"])
+router = APIRouter(prefix="/customers", tags=["Customer Intelligence"])
 
 @router.get("", response_model=CustomerListResponse)
 def list_customers(
@@ -66,7 +67,6 @@ def list_customers(
             created_at=c.created_at
         ))
         
-    # Summary aggregations
     avg_score = db.query(func.avg(Customer.credit_score)).scalar() or 720.0
     tier_counts = {
         "Low": db.query(func.count(Customer.id)).filter(Customer.risk_tier == "Low").scalar() or 0,
@@ -86,6 +86,35 @@ def list_customers(
             "tier_distribution": tier_counts
         }
     )
+
+@router.get("/segments")
+def get_customer_segments(db: Session = Depends(get_db)):
+    """
+    Returns K-Means segmentation distributions and characteristics.
+    """
+    return CustomerIntelligenceAgent.get_segments_distribution(db)
+
+@router.get("/{customer_id}/360")
+def get_customer_360_profile(customer_id: str, db: Session = Depends(get_db)):
+    """
+    Returns complete Customer 360 profile with financial health, stress, churn risk, and cross-sell.
+    """
+    return CustomerIntelligenceAgent.get_customer_360(customer_id, db)
+
+@router.get("/{customer_id}/health")
+def get_customer_health(customer_id: str, db: Session = Depends(get_db)):
+    """
+    Returns financial health score breakdown.
+    """
+    profile_360 = CustomerIntelligenceAgent.get_customer_360(customer_id, db)
+    return {
+        "customer_id": customer_id,
+        "financial_health_score": profile_360["financial_health_score"],
+        "category": profile_360["financial_health_category"],
+        "financial_stress_score": profile_360["financial_stress_score"],
+        "engagement_score": profile_360["engagement_score"],
+        "churn_probability": profile_360["churn_probability_pct"]
+    }
 
 @router.get("/{customer_id}")
 def get_customer_details(customer_id: str, db: Session = Depends(get_db)):
