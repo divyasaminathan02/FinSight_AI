@@ -19,12 +19,12 @@ import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
   { name: 'Overview', path: '/', icon: LayoutDashboard },
-  { name: 'Credit Intelligence', path: '/credit-intelligence', icon: CreditCard, badge: 'Active' },
-  { name: 'Fraud Intelligence', path: '/fraud-intelligence', icon: ShieldAlert, alert: true },
-  { name: 'Customer Intelligence', path: '/customer-intelligence', icon: Users },
+  { name: 'Credit Intelligence', path: '/credit', icon: CreditCard, badge: 'Active' },
+  { name: 'Fraud Intelligence', path: '/fraud', icon: ShieldAlert, alert: true },
+  { name: 'Customer Intelligence', path: '/customer', icon: Users },
   { name: 'Collections', path: '/collections', icon: PiggyBank },
-  { name: 'Risk Intelligence', path: '/risk-intelligence', icon: Activity },
-  { name: 'Liquidity Intelligence', path: '/liquidity-intelligence', icon: Coins },
+  { name: 'Risk Intelligence', path: '/risk', icon: Activity },
+  { name: 'Liquidity Intelligence', path: '/liquidity', icon: Coins },
   { name: 'AI Copilot', path: '/copilot', icon: Bot, isSpecial: true },
   { name: 'Reports', path: '/reports', icon: FileText },
   { name: 'Settings', path: '/settings', icon: Settings },

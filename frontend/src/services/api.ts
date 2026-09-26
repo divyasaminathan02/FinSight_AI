@@ -77,6 +77,74 @@ export const agentsApi = {
   },
 };
 
+// --- AGENT 1: Credit Intelligence API ---
+export const creditApi = {
+  evaluate: async (payload: {
+    income: number;
+    credit_score: number;
+    loan_amount: number;
+    tenure: number;
+    total_emi?: number;
+    employment_type?: string;
+    credit_utilization?: number;
+    previous_dpd?: number;
+    previous_defaults?: number;
+    bank_balance?: number;
+    income_stability?: number;
+  }) => {
+    const res = await api.post('/credit/evaluate', payload);
+    return res.data;
+  },
+  getModelInfo: async () => {
+    const res = await api.get('/credit/model-info');
+    return res.data;
+  },
+  getMetrics: async () => {
+    const res = await api.get('/credit/metrics');
+    return res.data;
+  },
+};
+
+// --- AGENT 2: Fraud Intelligence API ---
+export const fraudApi = {
+  analyze: async (payload: {
+    customer_id?: number;
+    device_id: string;
+    phone_hash?: string;
+    address_hash?: string;
+    requested_amount: number;
+    application_velocity: number;
+    income?: number;
+  }) => {
+    const res = await api.post('/fraud/analyze', payload);
+    return res.data;
+  },
+  getAlerts: async () => {
+    const res = await api.get('/fraud/alerts');
+    return res.data;
+  },
+  getNetwork: async (customerId: number | string) => {
+    const res = await api.get(`/fraud/network/${customerId}`);
+    return res.data;
+  },
+};
+
+// --- AGENT 3: Customer Intelligence API ---
+export const customerApi = {
+  get360: async (customerId: number | string) => {
+    const res = await api.get(`/customers/${customerId}/360`);
+    return res.data;
+  },
+  getHealth: async (customerId: number | string) => {
+    const res = await api.get(`/customers/${customerId}/health`);
+    return res.data;
+  },
+  getSegments: async () => {
+    const res = await api.get('/customers/segments');
+    return res.data;
+  },
+};
+
 export const customersApi = {
   list: async (params?: { page?: number; page_size?: number; search?: string; risk_tier?: string }) => {
     const res = await api.get('/customers', { params });
@@ -84,6 +152,60 @@ export const customersApi = {
   },
   get: async (id: string | number) => {
     const res = await api.get(`/customers/${id}`);
+    return res.data;
+  },
+};
+
+// --- AGENT 4: Collections Intelligence API ---
+export const collectionsApi = {
+  getPriorities: async (params?: number | { priority?: string; limit?: number }) => {
+    const limit = typeof params === 'number' ? params : (params?.limit || 25);
+    const priority = typeof params === 'object' ? params?.priority : undefined;
+    const res = await api.get('/collections/priorities', { params: { limit, priority } });
+    return res.data;
+  },
+  getPerformance: async () => {
+    const res = await api.get('/collections/performance');
+    return res.data;
+  },
+  getCustomerAssessment: async (customerId: number | string) => {
+    const res = await api.get(`/collections/${customerId}`);
+    return res.data;
+  },
+  getCustomerCollections: async (customerId: number | string) => {
+    const res = await api.get(`/collections/${customerId}`);
+    return res.data;
+  },
+};
+
+// --- AGENT 5: Risk Intelligence API ---
+export const riskApi = {
+  getPortfolio: async (weights?: { w_credit?: number; w_delinquency?: number; w_fraud?: number; w_liquidity?: number; w_concentration?: number }) => {
+    const res = await api.get('/risk/portfolio', { params: weights });
+    return res.data;
+  },
+  getSignals: async () => {
+    const res = await api.get('/risk/signals');
+    return res.data;
+  },
+  getTrends: async () => {
+    const res = await api.get('/risk/trends');
+    return res.data;
+  },
+};
+
+// --- AGENT 6: Liquidity Intelligence API ---
+export const liquidityApi = {
+  getCurrent: async () => {
+    const res = await api.get('/liquidity/current');
+    return res.data;
+  },
+  getForecast: async (horizonDays: number = 30) => {
+    const res = await api.get('/liquidity/forecast', { params: { horizon_days: horizonDays } });
+    return res.data;
+  },
+  getScenarios: async () => {
+    const res = await api.get('/liquidity/scenarios');
     return res.data;
   },
 };

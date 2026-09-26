@@ -18,6 +18,11 @@ from app.routers import (
     loans,
     transactions,
     notifications,
+    credit,
+    fraud,
+    collections,
+    risk,
+    liquidity,
 )
 
 # Configure logging
@@ -70,7 +75,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="AI-Powered Financial Intelligence System for NBFCs with 6 Coordinated Agents",
+    description="AI-Powered Financial Intelligence System for NBFCs with 6 Coordinated ML Agents",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
@@ -79,7 +84,7 @@ app = FastAPI(
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all for local development & cross-port Vite integration
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -110,6 +115,13 @@ app.include_router(customers.router, prefix=settings.API_V1_STR)
 app.include_router(loans.router, prefix=settings.API_V1_STR)
 app.include_router(transactions.router, prefix=settings.API_V1_STR)
 app.include_router(notifications.router, prefix=settings.API_V1_STR)
+
+# Six Specialized Intelligence Agent Routers
+app.include_router(credit.router, prefix=settings.API_V1_STR)
+app.include_router(fraud.router, prefix=settings.API_V1_STR)
+app.include_router(collections.router, prefix=settings.API_V1_STR)
+app.include_router(risk.router, prefix=settings.API_V1_STR)
+app.include_router(liquidity.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

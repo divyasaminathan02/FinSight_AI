@@ -41,11 +41,16 @@ const AppRoutes: React.FC = () => {
       {/* Main Shell Layout */}
       <Route element={<Layout onRefresh={handleRefresh} isRefreshing={isRefreshing} />}>
         <Route path="/" element={<OverviewPage />} />
+        <Route path="/credit" element={<CreditIntelligencePage />} />
         <Route path="/credit-intelligence" element={<CreditIntelligencePage />} />
+        <Route path="/fraud" element={<FraudIntelligencePage />} />
         <Route path="/fraud-intelligence" element={<FraudIntelligencePage />} />
+        <Route path="/customer" element={<CustomerIntelligencePage />} />
         <Route path="/customer-intelligence" element={<CustomerIntelligencePage />} />
         <Route path="/collections" element={<CollectionsPage />} />
+        <Route path="/risk" element={<RiskIntelligencePage />} />
         <Route path="/risk-intelligence" element={<RiskIntelligencePage />} />
+        <Route path="/liquidity" element={<LiquidityIntelligencePage />} />
         <Route path="/liquidity-intelligence" element={<LiquidityIntelligencePage />} />
         <Route path="/copilot" element={<AICopilotPage />} />
         <Route path="/reports" element={<ReportsPage />} />
