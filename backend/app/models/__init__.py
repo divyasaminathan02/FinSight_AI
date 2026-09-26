@@ -6,6 +6,7 @@ from app.models.assessments import CreditAssessment, FraudAlert, CollectionRecor
 from app.models.liquidity import LiquidityRecord
 from app.models.agents import AgentRun, AgentDecision
 from app.models.notifications import Notification
+from app.models.audit import LoanDecisionAudit
 
 __all__ = [
     "User",
@@ -25,4 +26,5 @@ __all__ = [
     "AgentRun",
     "AgentDecision",
     "Notification",
+    "LoanDecisionAudit",
 ]
