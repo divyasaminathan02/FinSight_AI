@@ -211,17 +211,17 @@ export const OperationsPortalPage: React.FC = () => {
       </div>
 
       {activeTab === 'queue' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-[#F0F7FF] border border-blue-200 rounded-xl p-5 shadow-sm space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-blue-200">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-slate-500 font-medium flex items-center gap-1">
-                <Filter className="w-3.5 h-3.5" /> Filters:
+              <span className="text-blue-950 font-bold flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5 text-blue-700" /> Filters:
               </span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+                className="bg-white border border-blue-200 text-slate-800 font-medium rounded-lg px-2.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 shadow-xs"
               >
                 <option value="">All Workflow Stages</option>
                 <option value="APPROVED">Approved by Risk</option>
@@ -235,7 +235,7 @@ export const OperationsPortalPage: React.FC = () => {
               <select
                 value={productFilter}
                 onChange={(e) => setProductFilter(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+                className="bg-white border border-blue-200 text-slate-800 font-medium rounded-lg px-2.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 shadow-xs"
               >
                 <option value="">All Products</option>
                 <option value="MSME Business Loan">MSME Business Loan</option>
@@ -247,7 +247,7 @@ export const OperationsPortalPage: React.FC = () => {
               <select
                 value={riskFilter}
                 onChange={(e) => setRiskFilter(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+                className="bg-white border border-blue-200 text-slate-800 font-medium rounded-lg px-2.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 shadow-xs"
               >
                 <option value="">All Risk Tiers</option>
                 <option value="LOW">Low Risk</option>
@@ -258,102 +258,102 @@ export const OperationsPortalPage: React.FC = () => {
               {(statusFilter || productFilter || riskFilter) && (
                 <button
                   onClick={() => { setStatusFilter(''); setProductFilter(''); setRiskFilter(''); }}
-                  className="text-xs text-purple-400 hover:text-purple-300 underline cursor-pointer ml-1"
+                  className="text-xs text-blue-700 hover:text-blue-900 font-bold underline cursor-pointer ml-1"
                 >
                   Clear Filters
                 </button>
               )}
             </div>
 
-            <div className="text-xs text-slate-400 font-medium">
-              Showing <span className="text-white font-bold">{cases.length}</span> active operations cases
+            <div className="text-xs text-blue-950 font-semibold">
+              Showing <span className="text-blue-950 font-extrabold">{cases.length}</span> active operations cases
             </div>
           </div>
 
-          {/* Cases Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-800/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-700">
+          {/* Cases Table in Light Pale Blue Shade */}
+          <div className="overflow-x-auto rounded-xl border border-blue-200 shadow-xs bg-[#F0F7FF]">
+            <table className="w-full text-left text-xs bg-white">
+              <thead className="bg-[#E1EFFF] text-blue-950 uppercase text-[11px] font-extrabold tracking-wider border-b border-blue-200">
                 <tr>
-                  <th className="py-3 px-3">Application</th>
-                  <th className="py-3 px-3">Customer</th>
-                  <th className="py-3 px-3">Product</th>
-                  <th className="py-3 px-3">Approved Sanction</th>
-                  <th className="py-3 px-3">Cross-Module Gates</th>
-                  <th className="py-3 px-3">Stage / Disb Status</th>
-                  <th className="py-3 px-3">Assigned Ops</th>
-                  <th className="py-3 px-3 text-right">Actions</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Application</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Customer</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Product</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Approved Sanction</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Cross-Module Gates</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Stage / Disb Status</th>
+                  <th className="py-3.5 px-3 text-blue-950 font-bold">Assigned Ops</th>
+                  <th className="py-3.5 px-3 text-right text-blue-950 font-bold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-blue-100">
                 {casesLoading ? (
                   <tr>
-                    <td colSpan={8} className="text-center py-8 text-slate-500">
+                    <td colSpan={8} className="text-center py-8 text-blue-900 font-semibold">
                       Loading operations queue from database...
                     </td>
                   </tr>
                 ) : cases.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="text-center py-8 text-slate-500">
+                    <td colSpan={8} className="text-center py-8 text-slate-600 font-medium">
                       No applications found matching the selected operations filters.
                     </td>
                   </tr>
                 ) : (
                   cases.map((c: any) => (
-                    <tr key={c.application_id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3 px-3 font-mono font-semibold text-white">
+                    <tr key={c.application_id} className="bg-white hover:bg-[#F0F7FF] transition-colors">
+                      <td className="py-3.5 px-3 font-mono font-bold text-blue-950">
                         {c.application_id}
                       </td>
-                      <td className="py-3 px-3">
-                        <div className="font-medium text-white">{c.customer_name}</div>
-                        <div className="text-[10px] text-slate-500 font-mono">{c.customer_id}</div>
+                      <td className="py-3.5 px-3">
+                        <div className="font-bold text-slate-900 text-xs">{c.customer_name}</div>
+                        <div className="text-[11px] text-slate-600 font-mono font-medium">{c.customer_id}</div>
                       </td>
-                      <td className="py-3 px-3 text-slate-300">
+                      <td className="py-3.5 px-3 text-slate-800 font-semibold">
                         {c.loan_product}
                       </td>
-                      <td className="py-3 px-3 font-semibold text-white">
+                      <td className="py-3.5 px-3 font-bold text-slate-900">
                         ₹{c.approved_amount?.toLocaleString() || '0'}
                       </td>
-                      <td className="py-3 px-3">
+                      <td className="py-3.5 px-3">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                            c.kyc_status === 'VERIFIED' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400'
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            c.kyc_status === 'VERIFIED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'
                           }`}>
                             KYC: {c.kyc_status}
                           </span>
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                            c.fraud_status === 'CLEARED' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-400'
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            c.fraud_status === 'CLEARED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-rose-100 text-rose-900 border border-rose-300'
                           }`}>
                             Fraud: {c.fraud_status}
                           </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-950 text-blue-400 border border-blue-800">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300">
                             Risk: {c.risk_status}
                           </span>
                         </div>
                       </td>
-                      <td className="py-3 px-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                      <td className="py-3.5 px-3">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                           c.workflow_stage === 'DISBURSED' || c.disbursement_status === 'DISBURSED'
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                             : c.workflow_stage === 'READY_FOR_DISBURSEMENT'
-                            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30 animate-pulse'
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-purple-100 text-purple-800 border border-purple-300 animate-pulse'
+                            : 'bg-amber-100 text-amber-900 border border-amber-300'
                         }`}>
                           {c.workflow_stage}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-slate-400">
+                      <td className="py-3.5 px-3 text-slate-800 font-semibold">
                         {c.assigned_officer}
                       </td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-3.5 px-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           {/* Pre-check button */}
                           <button
                             onClick={() => setCheckAppId(c.application_id)}
-                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1"
+                            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
                             title="Run Pre-Disbursement Checklist"
                           >
-                            <Shield className="w-3 h-3 text-amber-400" />
+                            <Shield className="w-3.5 h-3.5 text-amber-600" />
                             <span>Pre-Check</span>
                           </button>
 
@@ -361,9 +361,9 @@ export const OperationsPortalPage: React.FC = () => {
                           {c.workflow_stage !== 'DISBURSED' && (
                             <button
                               onClick={() => setDisburseAppId(c.application_id)}
-                              className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow-md shadow-purple-500/20 transition-all cursor-pointer flex items-center gap-1"
+                              className="px-2.5 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1"
                             >
-                              <Zap className="w-3 h-3" />
+                              <Zap className="w-3.5 h-3.5" />
                               <span>Disburse</span>
                             </button>
                           )}
@@ -371,7 +371,7 @@ export const OperationsPortalPage: React.FC = () => {
                           {/* Actions Dropdown */}
                           <button
                             onClick={() => setActionModalApp({ id: c.application_id, action: 'ADD_NOTE' })}
-                            className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs cursor-pointer"
+                            className="px-2 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold cursor-pointer"
                             title="Add Note or Assign"
                           >
                             •••
@@ -391,41 +391,41 @@ export const OperationsPortalPage: React.FC = () => {
       {activeTab === 'manager' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
-              <span className="text-xs text-slate-400">Total Portfolio Disbursed</span>
-              <div className="text-3xl font-bold text-white tracking-tight">
-                ₹{((mgrData?.total_disbursed_volume || 0) / 10000000).toFixed(2)} <span className="text-xs font-normal text-slate-400">Cr</span>
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
+              <span className="text-xs text-slate-600 font-bold">Total Portfolio Disbursed</span>
+              <div className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                ₹{((mgrData?.total_disbursed_volume || 0) / 10000000).toFixed(2)} <span className="text-xs font-semibold text-slate-500">Cr</span>
               </div>
-              <p className="text-xs text-slate-500">Core capital released across facilities</p>
+              <p className="text-xs text-slate-600 font-medium">Core capital released across facilities</p>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
-              <span className="text-xs text-slate-400">Active Live Facilities</span>
-              <div className="text-3xl font-bold text-emerald-400 tracking-tight">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
+              <span className="text-xs text-slate-600 font-bold">Active Live Facilities</span>
+              <div className="text-3xl font-extrabold text-emerald-700 tracking-tight">
                 {mgrData?.active_loans || 0}
               </div>
-              <p className="text-xs text-slate-500">Currently servicing loan accounts</p>
+              <p className="text-xs text-slate-600 font-medium">Currently servicing loan accounts</p>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
-              <span className="text-xs text-slate-400">Pending Operations Review</span>
-              <div className="text-3xl font-bold text-purple-400 tracking-tight">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
+              <span className="text-xs text-slate-600 font-bold">Pending Operations Review</span>
+              <div className="text-3xl font-extrabold text-purple-700 tracking-tight">
                 {mgrData?.pending_operations_review || 0}
               </div>
-              <p className="text-xs text-slate-500">Applications awaiting pre-check or disbursement</p>
+              <p className="text-xs text-slate-600 font-medium">Applications awaiting pre-check or disbursement</p>
             </div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
-            <h3 className="text-sm font-bold text-white">Operations Officer Workload Distribution</h3>
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <h3 className="text-sm font-bold text-slate-900">Operations Officer Workload Distribution</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {(mgrData?.team_activity || []).map((t: any, idx: number) => (
-                <div key={idx} className="p-3 bg-slate-800/60 rounded-xl border border-slate-700/60 flex items-center justify-between">
+                <div key={idx} className="p-3 bg-[#F0F7FF] rounded-xl border border-blue-200 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <UserCheck className="w-4 h-4 text-purple-400" />
-                    <span className="text-xs font-semibold text-white">{t.officer}</span>
+                    <UserCheck className="w-4 h-4 text-purple-600" />
+                    <span className="text-xs font-bold text-slate-900">{t.officer}</span>
                   </div>
-                  <span className="text-xs font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded-full border border-purple-800">
+                  <span className="text-xs font-bold text-purple-800 bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200">
                     {t.assigned_cases} Cases
                   </span>
                 </div>
@@ -439,55 +439,55 @@ export const OperationsPortalPage: React.FC = () => {
       {/* MODAL 1: PRE-DISBURSEMENT CHECKLIST MODAL */}
       {/* ============================================================== */}
       {checkAppId && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-bold text-white">Pre-Disbursement Validation Checklist</h3>
+                <Shield className="w-5 h-5 text-amber-600" />
+                <h3 className="text-base font-bold text-slate-900">Pre-Disbursement Validation Checklist</h3>
               </div>
               <button
                 onClick={() => setCheckAppId(null)}
-                className="text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {checkLoading ? (
-              <div className="py-8 text-center text-xs text-slate-400">Verifying conditions...</div>
+              <div className="py-8 text-center text-xs text-slate-600 font-semibold">Verifying conditions...</div>
             ) : checkData ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                <div className="flex items-center justify-between text-xs bg-[#F0F7FF] p-3 rounded-xl border border-blue-200">
                   <div>
-                    <span className="text-slate-400">Application: </span>
-                    <span className="font-mono font-bold text-white">{checkData.application_id}</span>
+                    <span className="text-slate-600 font-medium">Application: </span>
+                    <span className="font-mono font-bold text-blue-950">{checkData.application_id}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400">Borrower: </span>
-                    <span className="font-semibold text-white">{checkData.customer_name}</span>
+                    <span className="text-slate-600 font-medium">Borrower: </span>
+                    <span className="font-bold text-slate-900">{checkData.customer_name}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-xs font-bold text-slate-300">Mandatory Regulatory & Policy Conditions:</span>
+                  <span className="text-xs font-bold text-slate-800">Mandatory Regulatory & Policy Conditions:</span>
                   <div className="space-y-1.5">
                     {checkData.checklist.map((item: any) => (
                       <div
                         key={item.code}
                         className={`flex items-center justify-between p-2.5 rounded-xl border text-xs transition-colors ${
                           item.passed
-                            ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-300'
-                            : 'bg-rose-950/40 border-rose-800/60 text-rose-300'
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-900 font-semibold'
+                            : 'bg-rose-50 border-rose-200 text-rose-900 font-semibold'
                         }`}
                       >
-                        <span className="font-medium">{item.label}</span>
+                        <span className="font-semibold">{item.label}</span>
                         {item.passed ? (
-                          <span className="flex items-center gap-1 font-bold text-emerald-400 text-[11px]">
+                          <span className="flex items-center gap-1 font-bold text-emerald-700 text-[11px]">
                             <CheckCircle className="w-3.5 h-3.5" /> PASSED
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 font-bold text-rose-400 text-[11px]">
+                          <span className="flex items-center gap-1 font-bold text-rose-700 text-[11px]">
                             <XCircle className="w-3.5 h-3.5" /> MISSING
                           </span>
                         )}
@@ -497,19 +497,19 @@ export const OperationsPortalPage: React.FC = () => {
                 </div>
 
                 {checkData.all_passed ? (
-                  <div className="p-3 bg-emerald-950/60 border border-emerald-700 rounded-xl text-emerald-200 text-xs flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-900 text-xs flex items-center gap-2 font-medium">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>All mandatory conditions verified! Application is formally cleared for core capital disbursement.</span>
                   </div>
                 ) : (
-                  <div className="p-3 bg-rose-950/60 border border-rose-700 rounded-xl text-rose-200 text-xs space-y-1">
-                    <div className="font-bold flex items-center gap-1.5 text-rose-400">
+                  <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-900 text-xs space-y-1">
+                    <div className="font-bold flex items-center gap-1.5 text-rose-700">
                       <AlertTriangle className="w-4 h-4" /> Disbursement Blocked
                     </div>
-                    <p className="text-[11px]">
+                    <p className="text-[11px] font-semibold">
                       The following mandatory requirement(s) must be fulfilled:
                     </p>
-                    <ul className="list-disc list-inside text-[11px] text-rose-300 font-medium">
+                    <ul className="list-disc list-inside text-[11px] text-rose-800 font-medium">
                       {checkData.missing_conditions.map((m: string, i: number) => (
                         <li key={i}>{m}</li>
                       ))}
@@ -517,10 +517,10 @@ export const OperationsPortalPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
                   <button
                     onClick={() => refetchCheck()}
-                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 cursor-pointer"
+                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-300 cursor-pointer"
                   >
                     Re-Verify Checks
                   </button>
@@ -531,7 +531,7 @@ export const OperationsPortalPage: React.FC = () => {
                         setCheckAppId(null);
                         setDisburseAppId(targetId);
                       }}
-                      className="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-500/20 cursor-pointer flex items-center gap-1.5"
+                      className="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer flex items-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>Proceed to Disburse</span>
@@ -548,86 +548,86 @@ export const OperationsPortalPage: React.FC = () => {
       {/* MODAL 2: DISBURSEMENT DETAILS & DEMO EXECUTION MODAL */}
       {/* ============================================================== */}
       {disburseAppId && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-400" />
-                <h3 className="text-base font-bold text-white">Execute Demo Core Disbursement</h3>
+                <Zap className="w-5 h-5 text-purple-600" />
+                <h3 className="text-base font-bold text-slate-900">Execute Demo Core Disbursement</h3>
               </div>
               <button
                 onClick={() => setDisburseAppId(null)}
-                className="text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {disbDetailsLoading ? (
-              <div className="py-8 text-center text-xs text-slate-400">Calculating financial terms...</div>
+              <div className="py-8 text-center text-xs text-slate-600 font-semibold">Calculating financial terms...</div>
             ) : disbDetails ? (
               <div className="space-y-4 text-xs">
-                <div className="p-3 bg-purple-950/40 border border-purple-800/60 rounded-xl space-y-1">
-                  <div className="font-bold text-white text-sm">{disbDetails.customer_name}</div>
-                  <div className="text-slate-400 text-[11px]">
-                    Product: <span className="text-slate-200">{disbDetails.product_type}</span> | Account Ref:{' '}
-                    <span className="font-mono text-purple-300">{disbDetails.loan_number}</span>
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded-xl space-y-1">
+                  <div className="font-bold text-slate-900 text-sm">{disbDetails.customer_name}</div>
+                  <div className="text-slate-600 text-[11px] font-medium">
+                    Product: <span className="text-purple-900 font-semibold">{disbDetails.product_type}</span> | Account Ref:{' '}
+                    <span className="font-mono font-bold text-purple-800">{disbDetails.loan_number}</span>
                   </div>
                 </div>
 
                 {/* Financial Ledger Details */}
-                <div className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
-                    <span className="text-slate-400">Sanctioned Principal:</span>
-                    <span className="font-bold text-white text-sm">
+                <div className="bg-[#F8FAFC] p-3.5 rounded-xl border border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200">
+                    <span className="text-slate-600 font-medium">Sanctioned Principal:</span>
+                    <span className="font-bold text-slate-900 text-sm">
                       ₹{disbDetails.approved_amount?.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
-                    <span className="text-slate-400">Processing Fee ({disbDetails.processing_fee_pct}%):</span>
-                    <span className="text-rose-400 font-semibold">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200">
+                    <span className="text-slate-600 font-medium">Processing Fee ({disbDetails.processing_fee_pct}%):</span>
+                    <span className="text-rose-600 font-bold">
                       - ₹{disbDetails.processing_fee?.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
-                    <span className="text-slate-300 font-bold">Net Credited Capital:</span>
-                    <span className="font-extrabold text-emerald-400 text-sm">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200">
+                    <span className="text-slate-800 font-bold">Net Credited Capital:</span>
+                    <span className="font-extrabold text-emerald-600 text-sm">
                       ₹{disbDetails.net_disbursement_amount?.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1">
-                    <span className="text-slate-400">Monthly EMI (P+I):</span>
-                    <span className="font-semibold text-purple-300">
+                    <span className="text-slate-600 font-medium">Monthly EMI (P+I):</span>
+                    <span className="font-bold text-purple-700">
                       ₹{disbDetails.monthly_emi?.toLocaleString()} / mo ({disbDetails.tenure_months} mos @ {disbDetails.interest_rate}%)
                     </span>
                   </div>
                 </div>
 
                 {/* Bank Account Mandate */}
-                <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/80 space-y-1">
-                  <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
-                    <Building className="w-3.5 h-3.5 text-blue-400" /> Borrower Bank Account Mandate:
+                <div className="p-3 bg-[#F0F7FF] rounded-xl border border-blue-200 space-y-1">
+                  <span className="text-[11px] font-bold text-blue-950 flex items-center gap-1.5">
+                    <Building className="w-3.5 h-3.5 text-blue-600" /> Borrower Bank Account Mandate:
                   </span>
-                  <div className="text-[11px] text-slate-300 font-mono">
+                  <div className="text-[11px] text-blue-900 font-mono font-medium">
                     {disbDetails.bank_details.bank_name} - A/C: {disbDetails.bank_details.account_number} (IFSC: {disbDetails.bank_details.ifsc})
                   </div>
                 </div>
 
-                <div className="p-2.5 bg-slate-800/40 rounded-xl text-[10px] text-slate-400">
-                  <span className="font-bold text-slate-300">Atomic Process:</span> Executes demo RTGS/NEFT transaction, creates active Loan account in core ledger, generates {disbDetails.tenure_months}-installment repayment schedule, updates Customer Portal, and generates audit trail.
+                <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[10px] text-slate-600">
+                  <span className="font-bold text-slate-800">Atomic Process:</span> Executes demo RTGS/NEFT transaction, creates active Loan account in core ledger, generates {disbDetails.tenure_months}-installment repayment schedule, updates Customer Portal, and generates audit trail.
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
                   <button
                     onClick={() => setDisburseAppId(null)}
-                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 cursor-pointer"
+                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-300 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={() => disburseMutation.mutate({ appId: disburseAppId, payload: { channel: 'NEFT/RTGS' } })}
                     disabled={disburseMutation.isPending}
-                    className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 cursor-pointer flex items-center gap-1.5 transition-all"
+                    className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer flex items-center gap-1.5 transition-all"
                   >
                     <CheckCircle className="w-4 h-4" />
                     <span>{disburseMutation.isPending ? 'Processing Core Disbursal...' : 'Confirm Demo Disbursement'}</span>
@@ -643,13 +643,13 @@ export const OperationsPortalPage: React.FC = () => {
       {/* MODAL 3: OPERATIONS ACTION MODAL (ASSIGN, ESCALATE, ADD NOTE) */}
       {/* ============================================================== */}
       {actionModalApp && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <h3 className="font-bold text-white text-sm">Operations Action — {actionModalApp.id}</h3>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <h3 className="font-bold text-slate-900 text-sm">Operations Action — {actionModalApp.id}</h3>
               <button
                 onClick={() => setActionModalApp(null)}
-                className="text-slate-400 hover:text-white text-base cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 text-base cursor-pointer"
               >
                 ✕
               </button>
@@ -657,11 +657,11 @@ export const OperationsPortalPage: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label className="text-slate-400 text-[11px] block mb-1">Select Action</label>
+                <label className="text-slate-700 font-bold text-[11px] block mb-1">Select Action</label>
                 <select
                   value={actionModalApp.action}
                   onChange={(e) => setActionModalApp({ ...actionModalApp, action: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-slate-300 text-slate-900 font-medium rounded-xl p-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 >
                   <option value="ADD_NOTE">Add Operational Note</option>
                   <option value="ASSIGN">Assign Officer</option>
@@ -673,46 +673,46 @@ export const OperationsPortalPage: React.FC = () => {
 
               {actionModalApp.action === 'ASSIGN' && (
                 <div>
-                  <label className="text-slate-400 text-[11px] block mb-1">Target Officer Name</label>
+                  <label className="text-slate-700 font-bold text-[11px] block mb-1">Target Officer Name</label>
                   <input
                     type="text"
                     value={targetOfficer}
                     onChange={(e) => setTargetOfficer(e.target.value)}
                     placeholder="e.g., Rajesh Operations"
-                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                    className="w-full bg-[#F8FAFC] border border-slate-300 text-slate-900 font-medium rounded-xl p-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
               )}
 
               {actionModalApp.action === 'ESCALATE' && (
                 <div>
-                  <label className="text-slate-400 text-[11px] block mb-1">Mandatory Escalation Reason</label>
+                  <label className="text-slate-700 font-bold text-[11px] block mb-1">Mandatory Escalation Reason</label>
                   <input
                     type="text"
                     value={actionReason}
                     onChange={(e) => setActionReason(e.target.value)}
                     placeholder="e.g., Bank mandate mismatch / KYC anomaly detected"
-                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                    className="w-full bg-[#F8FAFC] border border-slate-300 text-slate-900 font-medium rounded-xl p-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
               )}
 
               <div>
-                <label className="text-slate-400 text-[11px] block mb-1">Notes / Instructions</label>
+                <label className="text-slate-700 font-bold text-[11px] block mb-1">Notes / Instructions</label>
                 <textarea
                   rows={3}
                   value={actionNotes}
                   onChange={(e) => setActionNotes(e.target.value)}
                   placeholder="Enter detailed remarks for audit trail..."
-                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-slate-300 text-slate-900 font-medium rounded-xl p-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
               <button
                 onClick={() => setActionModalApp(null)}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl border border-slate-300"
               >
                 Cancel
               </button>
@@ -727,7 +727,7 @@ export const OperationsPortalPage: React.FC = () => {
                   }
                 })}
                 disabled={actionMutation.isPending}
-                className="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-md cursor-pointer"
+                className="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-sm cursor-pointer"
               >
                 {actionMutation.isPending ? 'Saving...' : 'Submit Action'}
               </button>

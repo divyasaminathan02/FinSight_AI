@@ -160,43 +160,43 @@ export const RiskIntelligencePage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="finsight-card p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-[#0B132B] text-white border-slate-800 shadow-xl">
+      <div className="finsight-card p-6 bg-white border border-slate-200 shadow-sm rounded-xl text-slate-900">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+            <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/20">
               <Activity className="w-7 h-7 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-white">Risk Intelligence & Portfolio Review</h1>
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">Risk Intelligence & Portfolio Review</h1>
                 <Badge variant={portfolioRisk?.risk_category === 'LOW' ? 'positive' : portfolioRisk?.risk_category === 'MODERATE' ? 'warning' : 'critical'}>
                   Risk Tier: {portfolioRisk?.risk_category || 'MODERATE'}
                 </Badge>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-slate-700 font-semibold mt-0.5">
                 Macro Portfolio Risk, HHI Concentration Indices, Underwriting Risk Assessment & Multi-Agent Signals
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/60">
+          <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
             <button
               onClick={() => setActiveTab('macro')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === 'macro'
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200'
               }`}
             >
               Macro Risk & HHI
             </button>
             <button
               onClick={() => setActiveTab('analyst_queue')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === 'analyst_queue'
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200'
               }`}
             >
               Analyst Queue ({cases.length})
@@ -204,14 +204,14 @@ export const RiskIntelligencePage: React.FC = () => {
             {selectedAppId && (
               <button
                 onClick={() => setActiveTab('assessment')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                   activeTab === 'assessment'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200'
                 }`}
               >
                 <span>Assessment: {selectedAppId}</span>
-                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
               </button>
             )}
           </div>
@@ -223,15 +223,15 @@ export const RiskIntelligencePage: React.FC = () => {
         <div
           className={`p-4 rounded-xl text-xs font-medium flex items-center justify-between transition-all ${
             feedbackMsg.type === 'success'
-              ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800'
-              : 'bg-rose-950/80 text-rose-300 border border-rose-800'
+              ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
+              : 'bg-rose-50 text-rose-800 border border-rose-300'
           }`}
         >
           <div className="flex items-center gap-2">
-            {feedbackMsg.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-            <span>{feedbackMsg.text}</span>
+            {feedbackMsg.type === 'success' ? <CheckCircle className="w-4 h-4 text-emerald-700" /> : <AlertTriangle className="w-4 h-4 text-rose-700" />}
+            <span className="font-bold">{feedbackMsg.text}</span>
           </div>
-          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setFeedbackMsg(null)} className="text-slate-500 hover:text-slate-800">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -242,61 +242,61 @@ export const RiskIntelligencePage: React.FC = () => {
         <div className="space-y-6">
           {/* KPI Concentration & Pillar Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="finsight-card p-4">
-              <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl">
+              <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
                 <span>Product HHI Index</span>
                 <PieIcon className="w-4 h-4 text-indigo-600" />
               </div>
-              <div className="text-xl font-bold text-slate-900">
+              <div className="text-xl font-extrabold text-slate-900">
                 {portfolioRisk?.concentration?.product_hhi || 0.28}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">
-                {portfolioRisk?.concentration?.product_status || 'Concentrated'}
+              <div className="text-xs text-slate-700 font-semibold mt-1">
+                {portfolioRisk?.concentration?.product_status || 'Concentrated (Vehicle & MSME Loans)'}
               </div>
             </div>
 
-            <div className="finsight-card p-4">
-              <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl">
+              <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
                 <span>Geographic HHI</span>
                 <MapPin className="w-4 h-4 text-emerald-600" />
               </div>
-              <div className="text-xl font-bold text-slate-900">
+              <div className="text-xl font-extrabold text-slate-900">
                 {portfolioRisk?.concentration?.geographic_hhi || 1012.2}
               </div>
-              <div className="text-[11px] text-emerald-600 mt-1">
-                {portfolioRisk?.concentration?.geographic_status || 'Moderately Concentrated'}
+              <div className="text-xs text-emerald-800 font-bold mt-1">
+                {portfolioRisk?.concentration?.geographic_status || 'Moderately Concentrated (38% South)'}
               </div>
             </div>
 
-            <div className="finsight-card p-4">
-              <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl">
+              <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
                 <span>Expected Loss</span>
                 <TrendingUp className="w-4 h-4 text-amber-600" />
               </div>
-              <div className="text-xl font-bold text-slate-900">
+              <div className="text-xl font-extrabold text-slate-900">
                 {analystDash?.expected_loss_indicators?.expected_loss_formatted || '₹14.2 Lakhs'}
               </div>
-              <div className="text-[11px] text-amber-600 mt-1">
+              <div className="text-xs text-amber-800 font-bold mt-1">
                 Avg PD: {analystDash?.default_risk_indicators?.average_pd_pct || '3.2%'}
               </div>
             </div>
 
-            <div className="finsight-card p-4">
-              <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl">
+              <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
                 <span>Active Risk Signals</span>
                 <ShieldAlert className="w-4 h-4 text-rose-600" />
               </div>
-              <div className="text-xl font-bold text-slate-900">
-                {signalsData?.total_signals || 3} Detected
+              <div className="text-xl font-extrabold text-slate-900">
+                {signalsData?.total_signals || 5} Detected
               </div>
-              <div className="text-[11px] text-rose-600 mt-1">
+              <div className="text-xs text-rose-800 font-bold mt-1">
                 Continuous Multi-Agent Sync
               </div>
             </div>
           </div>
 
           {/* Historical Trend Chart */}
-          <RiskTrendChart data={trendData?.series || []} />
+          <RiskTrendChart data={trendData || []} />
         </div>
       )}
 
