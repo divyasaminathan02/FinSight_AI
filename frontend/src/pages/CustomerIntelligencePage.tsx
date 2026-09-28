@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { customerApi, customersApi } from '../services/api';
 import { Badge } from '../components/common/Badge';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { CustomerItem } from '../types';
 
 export const CustomerIntelligencePage: React.FC = () => {
@@ -46,7 +47,8 @@ export const CustomerIntelligencePage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <ErrorBoundary fallbackTitle="Unable to render Customer Intelligence Profile">
+      <div className="space-y-6">
       {/* Header Banner - Pale White Card with high contrast text */}
       <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -378,7 +380,9 @@ export const CustomerIntelligencePage: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 };
+
 
