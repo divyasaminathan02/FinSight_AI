@@ -173,33 +173,33 @@ export const KYCPortalPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="finsight-card p-6 bg-gradient-to-r from-[#071E22] via-[#0B132B] to-[#1D2D44] text-white border-teal-900/60 shadow-xl">
+      <div className="p-6 bg-white border border-slate-200 text-slate-900 rounded-2xl shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+            <div className="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center shadow-md shadow-teal-500/20 text-white">
               <ShieldCheck className="w-7 h-7 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-xl font-bold tracking-tight text-white">KYC & Compliance Verification Desk</h1>
-                <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">KYC & Compliance Verification Desk</h1>
+                <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
                   Compliance RBAC
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5 font-medium">
                 Government Identity Verification, Anti-Money Laundering (AML) Screening & Document Auditing
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/60">
+          <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'dashboard'
-                  ? 'bg-teal-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-teal-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Dashboard
@@ -208,8 +208,8 @@ export const KYCPortalPage: React.FC = () => {
               onClick={() => setActiveTab('cases')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'cases'
-                  ? 'bg-teal-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-teal-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Work Queue ({cases.length})
@@ -219,12 +219,12 @@ export const KYCPortalPage: React.FC = () => {
                 onClick={() => setActiveTab('review')}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   activeTab === 'review'
-                    ? 'bg-teal-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 <span>Dossier: {selectedCaseId}</span>
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
               </button>
             )}
           </div>

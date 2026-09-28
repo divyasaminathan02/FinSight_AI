@@ -161,33 +161,33 @@ export const FraudIntelligencePage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="finsight-card p-6 bg-gradient-to-r from-orange-950 via-[#0B132B] to-[#1F1724] text-white border-orange-900/60 shadow-xl">
+      <div className="p-6 bg-white border border-slate-200 text-slate-900 rounded-2xl shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-600/30">
+            <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-md shadow-orange-500/20 text-white">
               <ShieldAlert className="w-7 h-7 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-xl font-bold tracking-tight text-white">Fraud Forensics & Investigation Desk</h1>
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">Fraud Forensics & Investigation Desk</h1>
                 <Badge variant="elevated" pulse>
                   Isolation Forest ML
                 </Badge>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5 font-medium">
                 Multi-entity graph collisions, device/IP clustering, velocity surge detection, and syndicate audits
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/60">
+          <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'dashboard'
-                  ? 'bg-orange-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-orange-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Dashboard
@@ -196,8 +196,8 @@ export const FraudIntelligencePage: React.FC = () => {
               onClick={() => setActiveTab('cases')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'cases'
-                  ? 'bg-orange-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-orange-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Investigation Queue ({cases.length})
@@ -206,8 +206,8 @@ export const FraudIntelligencePage: React.FC = () => {
               onClick={() => setActiveTab('forensics')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'forensics'
-                  ? 'bg-orange-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-orange-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Forensics Sandbox
@@ -216,8 +216,8 @@ export const FraudIntelligencePage: React.FC = () => {
               onClick={() => setActiveTab('network')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'network'
-                  ? 'bg-orange-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-orange-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
               Entity Graph

@@ -112,25 +112,25 @@ export const OperationsPortalPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-md shadow-purple-500/20">
             <Layers className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Operations, Pre-Disbursement & Booking Desk</h1>
-            <p className="text-xs text-slate-400">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Operations, Pre-Disbursement & Booking Desk</h1>
+            <p className="text-xs text-slate-500">
               Institutional pre-disbursement verification, regulatory checks, demo core disbursement & loan account booking
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+          <div className="flex bg-slate-100 border border-slate-200 rounded-xl p-0.5">
             <button
               onClick={() => setActiveTab('queue')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'queue' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
+                activeTab === 'queue' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Operations Queue
@@ -138,7 +138,7 @@ export const OperationsPortalPage: React.FC = () => {
             <button
               onClick={() => setActiveTab('manager')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'manager' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
+                activeTab === 'manager' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Executive Console
@@ -147,9 +147,9 @@ export const OperationsPortalPage: React.FC = () => {
 
           <button
             onClick={() => { refetchDash(); refetchCases(); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-purple-400" />
+            <RefreshCw className="w-3.5 h-3.5 text-purple-600" />
             <span>Sync Ops</span>
           </button>
         </div>
@@ -157,53 +157,53 @@ export const OperationsPortalPage: React.FC = () => {
 
       {/* Real Backend Operational KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
-          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-amber-400" /> Awaiting Operations
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-1">
+          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-amber-500" /> Awaiting Operations
           </span>
-          <div className="text-2xl font-bold text-white tracking-tight">
+          <div className="text-2xl font-bold text-slate-900 tracking-tight">
             {dashData?.applications_awaiting_operations ?? 0}
           </div>
           <div className="text-[10px] text-slate-500">Approved facilities</div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
-          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5 text-blue-400" /> Disbursement Pending
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-1">
+          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-blue-500" /> Disbursement Pending
           </span>
-          <div className="text-2xl font-bold text-blue-400 tracking-tight">
+          <div className="text-2xl font-bold text-blue-700 tracking-tight">
             {dashData?.disbursement_pending ?? 0}
           </div>
           <div className="text-[10px] text-slate-500">Pre-checks active</div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
-          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5 text-purple-400" /> Pending Documents
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-1">
+          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-purple-500" /> Pending Documents
           </span>
-          <div className="text-2xl font-bold text-purple-400 tracking-tight">
+          <div className="text-2xl font-bold text-purple-700 tracking-tight">
             {dashData?.documents_pending ?? 0}
           </div>
           <div className="text-[10px] text-slate-500">Awaiting verification</div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
-          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Today's Disbursed
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-1">
+          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+            <DollarSign className="w-3.5 h-3.5 text-emerald-500" /> Today's Disbursed
           </span>
-          <div className="text-xl font-bold text-emerald-400 tracking-tight">
+          <div className="text-xl font-bold text-emerald-700 tracking-tight">
             ₹{((dashData?.today_disbursements?.amount || 0) / 100000).toFixed(1)}L
           </div>
-          <div className="text-[10px] text-emerald-400/80 font-medium">
+          <div className="text-[10px] text-emerald-700 font-semibold">
             {dashData?.today_disbursements?.count ?? 0} facilities booked
           </div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
-          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-400" /> Ops Exceptions
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-1">
+          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-500" /> Ops Exceptions
           </span>
-          <div className="text-2xl font-bold text-rose-400 tracking-tight">
+          <div className="text-2xl font-bold text-rose-600 tracking-tight">
             {dashData?.operational_exceptions ?? 0}
           </div>
           <div className="text-[10px] text-slate-500">Flagged for escalation</div>
@@ -211,11 +211,11 @@ export const OperationsPortalPage: React.FC = () => {
       </div>
 
       {activeTab === 'queue' && (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-slate-400 flex items-center gap-1">
+              <span className="text-slate-500 font-medium flex items-center gap-1">
                 <Filter className="w-3.5 h-3.5" /> Filters:
               </span>
               <select

@@ -211,35 +211,35 @@ export const SalesPortalPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-50/90 via-white to-blue-50/80 border border-blue-200/80 rounded-xl p-6 relative overflow-hidden shadow-xs">
         <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold mb-2">
               <Briefcase className="w-3.5 h-3.5" />
               Sales Officer Workspace
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Sales & Lead Pipeline Management</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Sales & Lead Pipeline Management</h1>
+            <p className="text-slate-600 text-sm mt-1">
               End-to-end institutional loan originations, lead qualifying, document collection, and workflow progression.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400">Assigned Officer:</span>
-            <span className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-blue-400 font-semibold text-xs">
+            <span className="text-xs text-slate-500 font-medium">Assigned Officer:</span>
+            <span className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-blue-700 font-semibold text-xs shadow-2xs">
               {dashData?.sales_officer || user?.full_name || 'Sales Officer'}
             </span>
           </div>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex gap-2 mt-6 border-b border-slate-800 pb-2">
+        <div className="flex gap-2 mt-6 border-b border-slate-200 pb-2">
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'dashboard'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Sales Dashboard
@@ -248,8 +248,8 @@ export const SalesPortalPage: React.FC = () => {
             onClick={() => setActiveTab('applications')}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'applications'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Application Work Queue ({applications.length})
@@ -258,8 +258,8 @@ export const SalesPortalPage: React.FC = () => {
             onClick={() => setActiveTab('leads')}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'leads'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Lead Management ({leads.length})
@@ -271,12 +271,12 @@ export const SalesPortalPage: React.FC = () => {
         <div
           className={`p-4 rounded-xl border flex items-center justify-between text-xs font-semibold ${
             feedbackMsg.type === 'success'
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-              : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
           <span>{feedbackMsg.text}</span>
-          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-slate-600">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -287,97 +287,113 @@ export const SalesPortalPage: React.FC = () => {
         <div className="space-y-6">
           {/* Real Backend KPI Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Assigned Leads</span>
-                <Users className="w-4 h-4 text-blue-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Assigned Leads</span>
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Users className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white mt-2">
+              <div className="text-2xl font-bold text-slate-900 mt-2">
                 {dashLoading ? '...' : dashData?.assigned_leads ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Directly assigned portfolio</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Directly assigned portfolio</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">New Applications</span>
-                <Briefcase className="w-4 h-4 text-indigo-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">New Applications</span>
+                <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <Briefcase className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white mt-2">
+              <div className="text-2xl font-bold text-slate-900 mt-2">
                 {dashLoading ? '...' : dashData?.new_applications ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Under review / new</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Under review / new</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Requires Action</span>
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Requires Action</span>
+                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-amber-400 mt-2">
+              <div className="text-2xl font-bold text-amber-600 mt-2">
                 {dashLoading ? '...' : dashData?.applications_requiring_action ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Docs pending / returned</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Docs pending / returned</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Pending Documents</span>
-                <FileText className="w-4 h-4 text-cyan-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Pending Documents</span>
+                <div className="w-7 h-7 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-cyan-400 mt-2">
+              <div className="text-2xl font-bold text-cyan-700 mt-2">
                 {dashLoading ? '...' : dashData?.pending_documents ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Verification items</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Verification items</div>
             </div>
           </div>
 
           {/* Monthly Sales & Conversion Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Monthly Sales</span>
-                <DollarSign className="w-4 h-4 text-emerald-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Monthly Sales</span>
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <DollarSign className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-emerald-400 mt-2">
+              <div className="text-2xl font-bold text-emerald-700 mt-2">
                 {dashLoading ? '...' : dashData?.monthly_sales_formatted ?? '₹0'}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Sanctioned volume (MTD)</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Sanctioned volume (MTD)</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Conversion Rate</span>
-                <TrendingUp className="w-4 h-4 text-purple-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Conversion Rate</span>
+                <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-purple-400 mt-2">
+              <div className="text-2xl font-bold text-purple-700 mt-2">
                 {dashLoading ? '...' : dashData?.conversion_rate_pct ?? '0%'}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Lead-to-sanction ratio</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Lead-to-sanction ratio</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Approved vs Rejected</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Approved vs Rejected</span>
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-xl font-bold text-white mt-2">
-                <span className="text-emerald-400">{dashData?.applications_approved ?? 0}</span>
-                <span className="text-slate-500 mx-1.5">/</span>
-                <span className="text-rose-400">{dashData?.applications_rejected ?? 0}</span>
+              <div className="text-xl font-bold text-slate-900 mt-2">
+                <span className="text-emerald-700">{dashData?.applications_approved ?? 0}</span>
+                <span className="text-slate-400 mx-1.5 font-normal">/</span>
+                <span className="text-rose-600">{dashData?.applications_rejected ?? 0}</span>
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Applications this month</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Applications this month</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Pending Tasks</span>
-                <Clock className="w-4 h-4 text-amber-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Pending Tasks</span>
+                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-amber-400 mt-2">
+              <div className="text-2xl font-bold text-amber-600 mt-2">
                 {dashLoading ? '...' : dashData?.pending_tasks ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">
                 {dashData?.customer_follow_ups ?? 0} follow-ups scheduled
               </div>
             </div>
@@ -385,12 +401,12 @@ export const SalesPortalPage: React.FC = () => {
 
           {/* Quick Recent Applications & Notifications */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-white">Recent Assigned Applications</h3>
+                <h3 className="text-sm font-bold text-slate-900">Recent Assigned Applications</h3>
                 <button
                   onClick={() => setActiveTab('applications')}
-                  className="text-xs text-blue-400 hover:text-blue-300 font-medium inline-flex items-center gap-1"
+                  className="text-xs text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1 cursor-pointer"
                 >
                   Work Queue <ChevronRight className="w-3.5 h-3.5" />
                 </button>
@@ -398,7 +414,7 @@ export const SalesPortalPage: React.FC = () => {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-800/60 text-slate-400">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3 rounded-l-lg">Application</th>
                       <th className="py-2.5 px-3">Borrower</th>
@@ -408,17 +424,17 @@ export const SalesPortalPage: React.FC = () => {
                       <th className="py-2.5 px-3 rounded-r-lg text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {dashData?.recent_applications?.slice(0, 6).map((a: any) => (
-                      <tr key={a.id} className="hover:bg-slate-800/40">
-                        <td className="py-3 px-3 font-semibold text-white">{a.application_id}</td>
-                        <td className="py-3 px-3 text-slate-300">{a.customer_name}</td>
-                        <td className="py-3 px-3 text-slate-400">{a.product_type}</td>
-                        <td className="py-3 px-3 text-slate-200 font-medium">
+                      <tr key={a.id} className="hover:bg-blue-50/40 transition-colors">
+                        <td className="py-3 px-3 font-semibold text-slate-900 font-mono">{a.application_id}</td>
+                        <td className="py-3 px-3 text-slate-700 font-medium">{a.customer_name}</td>
+                        <td className="py-3 px-3 text-slate-500">{a.product_type}</td>
+                        <td className="py-3 px-3 text-slate-900 font-semibold">
                           ₹{a.requested_amount?.toLocaleString()}
                         </td>
                         <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-semibold">
+                          <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
                             {a.status}
                           </span>
                         </td>
@@ -428,7 +444,7 @@ export const SalesPortalPage: React.FC = () => {
                               setSelectedApp(a);
                               setActiveTab('applications');
                             }}
-                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium"
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 rounded font-semibold text-xs cursor-pointer"
                           >
                             Manage
                           </button>
@@ -437,7 +453,7 @@ export const SalesPortalPage: React.FC = () => {
                     ))}
                     {(!dashData?.recent_applications || dashData.recent_applications.length === 0) && (
                       <tr>
-                        <td colSpan={6} className="py-6 text-center text-slate-500">
+                        <td colSpan={6} className="py-6 text-center text-slate-500 font-medium">
                           No recent applications in queue.
                         </td>
                       </tr>
@@ -448,20 +464,20 @@ export const SalesPortalPage: React.FC = () => {
             </div>
 
             {/* Notifications Feed */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white mb-3">Live Officer Alerts</h3>
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <h3 className="text-sm font-bold text-slate-900 mb-3">Live Officer Alerts</h3>
               <div className="space-y-2.5 max-h-72 overflow-y-auto">
                 {dashData?.notifications?.map((n: any) => (
-                  <div key={n.id} className="p-3 bg-slate-800/40 border border-slate-800 rounded-lg text-xs">
-                    <div className="font-semibold text-white">{n.title}</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">{n.message}</div>
-                    <div className="text-[10px] text-slate-500 mt-1">
+                  <div key={n.id} className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                    <div className="font-bold text-slate-900">{n.title}</div>
+                    <div className="text-[11px] text-slate-600 mt-0.5">{n.message}</div>
+                    <div className="text-[10px] text-slate-400 mt-1 font-medium">
                       {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 ))}
                 {(!dashData?.notifications || dashData.notifications.length === 0) && (
-                  <div className="text-center py-6 text-slate-500 text-xs">No alerts.</div>
+                  <div className="text-center py-6 text-slate-500 text-xs font-medium">No alerts.</div>
                 )}
               </div>
             </div>
@@ -471,24 +487,24 @@ export const SalesPortalPage: React.FC = () => {
 
       {/* VIEW 2: APPLICATION WORK QUEUE (/sales/applications) */}
       {activeTab === 'applications' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-white">Application Work Queue</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-sm font-bold text-slate-900">Application Work Queue</h3>
+              <p className="text-xs text-slate-500 font-medium">
                 Manage assigned cases, collect verification documents, and transition stages.
               </p>
             </div>
           </div>
 
           {/* Filters Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-2 border-t border-slate-800">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-2 border-t border-slate-200">
             <div>
-              <label className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Status</label>
+              <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Status</label>
               <select
                 value={appStatusFilter}
                 onChange={(e) => setAppStatusFilter(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="">All Statuses</option>
                 <option value="Under_Review">Under Review</option>
@@ -501,11 +517,11 @@ export const SalesPortalPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Product</label>
+              <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Product</label>
               <select
                 value={appProductFilter}
                 onChange={(e) => setAppProductFilter(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="">All Products</option>
                 <option value="MSME Business Loan">MSME Business Loan</option>
@@ -516,11 +532,11 @@ export const SalesPortalPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Risk Level</label>
+              <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Risk Level</label>
               <select
                 value={appRiskFilter}
                 onChange={(e) => setAppRiskFilter(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="">All Risk Levels</option>
                 <option value="Low">Low Risk</option>
@@ -530,11 +546,11 @@ export const SalesPortalPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">KYC Status</label>
+              <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">KYC Status</label>
               <select
                 value={appKycFilter}
                 onChange={(e) => setAppKycFilter(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="">All KYC</option>
                 <option value="VERIFIED">Verified</option>
@@ -544,11 +560,11 @@ export const SalesPortalPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Fraud Screen</label>
+              <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Fraud Screen</label>
               <select
                 value={appFraudFilter}
                 onChange={(e) => setAppFraudFilter(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="">All Fraud States</option>
                 <option value="CLEARED">Cleared</option>
@@ -560,7 +576,7 @@ export const SalesPortalPage: React.FC = () => {
           {/* Work Queue Table */}
           <div className="overflow-x-auto pt-2">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-800/80 text-slate-400">
+              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-3 rounded-l-lg">Application</th>
                   <th className="py-3 px-3">Borrower</th>
@@ -571,36 +587,36 @@ export const SalesPortalPage: React.FC = () => {
                   <th className="py-3 px-3 rounded-r-lg text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {applications.map((a: any) => (
-                  <tr key={a.id} className="hover:bg-slate-800/40">
+                  <tr key={a.id} className="hover:bg-blue-50/40 transition-colors">
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-white">{a.application_id}</div>
-                      <div className="text-[10px] text-slate-400">
+                      <div className="font-bold text-slate-900 font-mono">{a.application_id}</div>
+                      <div className="text-[10px] text-slate-500">
                         {new Date(a.created_at).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="font-medium text-slate-200">{a.customer_name}</div>
-                      <div className="text-[10px] text-slate-500">{a.customer_id}</div>
+                      <div className="font-semibold text-slate-800">{a.customer_name}</div>
+                      <div className="text-[10px] text-slate-500 font-mono">{a.customer_id}</div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-white">₹{a.requested_amount?.toLocaleString()}</div>
-                      <div className="text-[11px] text-slate-400">{a.product_type}</div>
+                      <div className="font-bold text-slate-900">₹{a.requested_amount?.toLocaleString()}</div>
+                      <div className="text-[11px] text-slate-500">{a.product_type}</div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[11px] font-semibold">
+                      <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold">
                         {a.status}
                       </span>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="text-[11px] font-medium text-slate-300">
-                        Risk: <span className={a.risk_level === 'High' ? 'text-rose-400' : 'text-emerald-400'}>{a.risk_level}</span>
+                      <div className="text-[11px] font-medium text-slate-700">
+                        Risk: <span className={a.risk_level === 'High' ? 'text-rose-700 font-bold' : 'text-emerald-700 font-bold'}>{a.risk_level}</span>
                       </div>
-                      <div className="text-[10px] text-slate-400">KYC: {a.kyc_status}</div>
+                      <div className="text-[10px] text-slate-500">KYC: {a.kyc_status}</div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="text-[11px] text-slate-300">{a.analyst_recommendation || 'Pending Review'}</div>
+                      <div className="text-[11px] text-slate-700 font-medium">{a.analyst_recommendation || 'Pending Review'}</div>
                       <div className="text-[10px] text-slate-500">{a.credit_analyst || 'Unassigned'}</div>
                     </td>
                     <td className="py-3.5 px-3 text-right">
@@ -610,7 +626,7 @@ export const SalesPortalPage: React.FC = () => {
                             setSelectedApp(a);
                             setActionType('NOTE');
                           }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-medium"
+                          className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-semibold cursor-pointer"
                           title="Add Note"
                         >
                           Note
@@ -620,7 +636,7 @@ export const SalesPortalPage: React.FC = () => {
                             setSelectedApp(a);
                             setActionType('DOC_REQUEST');
                           }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded text-[11px] font-medium"
+                          className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded text-[11px] font-semibold cursor-pointer"
                           title="Request Doc"
                         >
                           Doc
@@ -630,7 +646,7 @@ export const SalesPortalPage: React.FC = () => {
                             setSelectedApp(a);
                             setActionType('ADVANCE');
                           }}
-                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-[11px] font-semibold"
+                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold cursor-pointer"
                         >
                           Advance
                         </button>
@@ -640,7 +656,7 @@ export const SalesPortalPage: React.FC = () => {
                 ))}
                 {applications.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-500">
+                    <td colSpan={7} className="py-8 text-center text-slate-500 font-medium">
                       No applications found matching the current work queue filter.
                     </td>
                   </tr>
@@ -653,17 +669,17 @@ export const SalesPortalPage: React.FC = () => {
 
       {/* VIEW 3: LEAD MANAGEMENT */}
       {activeTab === 'leads' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-white">Institutional Lead Pipeline</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-sm font-bold text-slate-900">Institutional Lead Pipeline</h3>
+              <p className="text-xs text-slate-500 font-medium">
                 Track new leads, qualify prospective borrowers, schedule follow-ups, and convert to active customers.
               </p>
             </div>
             <button
               onClick={() => setIsCreateLeadOpen(true)}
-              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-blue-600/20"
+              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-blue-600/20 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Capture New Lead
             </button>
@@ -677,7 +693,7 @@ export const SalesPortalPage: React.FC = () => {
                 placeholder="Search leads by name, email, phone, city..."
                 value={leadSearch}
                 onChange={(e) => setLeadSearch(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -685,7 +701,7 @@ export const SalesPortalPage: React.FC = () => {
               <select
                 value={leadStatusFilter}
                 onChange={(e) => setLeadStatusFilter(e.target.value)}
-                className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none"
+                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none"
               >
                 <option value="ALL">All States</option>
                 <option value="NEW">NEW</option>
@@ -702,7 +718,7 @@ export const SalesPortalPage: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-800/80 text-slate-400">
+              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-3 rounded-l-lg">Lead Details</th>
                   <th className="py-3 px-3">Product & Amount</th>
@@ -712,38 +728,38 @@ export const SalesPortalPage: React.FC = () => {
                   <th className="py-3 px-3 rounded-r-lg text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {leads.map((l: any) => (
-                  <tr key={l.id} className="hover:bg-slate-800/40">
+                  <tr key={l.id} className="hover:bg-blue-50/40 transition-colors">
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-white">{l.full_name}</div>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="font-bold text-slate-900">{l.full_name}</div>
+                      <div className="text-[11px] text-slate-500">
                         {l.lead_id} • {l.phone || 'No phone'} • {l.city}
                       </div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-slate-200">₹{l.requested_amount?.toLocaleString()}</div>
-                      <div className="text-[10px] text-slate-400">{l.product_type}</div>
+                      <div className="font-bold text-slate-900">₹{l.requested_amount?.toLocaleString()}</div>
+                      <div className="text-[10px] text-slate-500">{l.product_type}</div>
                     </td>
-                    <td className="py-3.5 px-3 text-slate-300">
+                    <td className="py-3.5 px-3 text-slate-700 font-semibold">
                       ₹{l.annual_income?.toLocaleString()}
                     </td>
                     <td className="py-3.5 px-3">
                       <span
                         className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
                           l.status === 'NEW'
-                            ? 'bg-blue-500/10 text-blue-400'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : l.status === 'QUALIFIED' || l.status === 'CONVERTED'
-                            ? 'bg-emerald-500/10 text-emerald-400'
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                             : l.status === 'LOST'
-                            ? 'bg-rose-500/10 text-rose-400'
-                            : 'bg-amber-500/10 text-amber-400'
+                            ? 'bg-rose-50 text-rose-800 border border-rose-200'
+                            : 'bg-amber-50 text-amber-800 border border-amber-200'
                         }`}
                       >
                         {l.status}
                       </span>
                     </td>
-                    <td className="py-3.5 px-3 text-slate-400">
+                    <td className="py-3.5 px-3 text-slate-600">
                       {l.assigned_officer || l.assigned_to || 'Desk'}
                     </td>
                     <td className="py-3.5 px-3 text-right">
@@ -751,13 +767,13 @@ export const SalesPortalPage: React.FC = () => {
                         {l.status !== 'CONVERTED' && (
                           <button
                             onClick={() => convertLeadMutation.mutate(l.lead_id)}
-                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-semibold"
+                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-semibold cursor-pointer"
                           >
                             Convert
                           </button>
                         )}
                         {l.status === 'CONVERTED' && (
-                          <span className="text-[11px] text-emerald-400 font-semibold px-2">Converted</span>
+                          <span className="text-[11px] text-emerald-700 font-bold px-2">Converted</span>
                         )}
                       </div>
                     </td>
@@ -778,29 +794,29 @@ export const SalesPortalPage: React.FC = () => {
 
       {/* MODAL: APPLICATION ACTIONS */}
       {actionType && selectedApp && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-slate-900">
                   Action on {selectedApp.application_id}
                 </h3>
-                <div className="text-xs text-slate-400">Borrower: {selectedApp.customer_name}</div>
+                <div className="text-xs text-slate-500 font-medium">Borrower: {selectedApp.customer_name}</div>
               </div>
-              <button onClick={() => setActionType(null)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setActionType(null)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {actionType === 'NOTE' && (
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Add Case Note</label>
+                <label className="text-xs text-slate-500 font-semibold block mb-1">Add Case Note</label>
                 <textarea
                   rows={4}
                   placeholder="Record verification updates or customer phone interaction..."
                   value={modalInput1}
                   onChange={(e) => setModalInput1(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                 />
               </div>
             )}
@@ -808,23 +824,23 @@ export const SalesPortalPage: React.FC = () => {
             {actionType === 'DOC_REQUEST' && (
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Document Required</label>
+                  <label className="text-xs text-slate-500 font-semibold block mb-1">Document Required</label>
                   <input
                     type="text"
                     placeholder="e.g., Audited Balance Sheet 2025-26"
                     value={modalInput1}
                     onChange={(e) => setModalInput1(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Special Instructions</label>
+                  <label className="text-xs text-slate-500 font-semibold block mb-1">Special Instructions</label>
                   <textarea
                     rows={2}
                     placeholder="Provide specific details or formats needed from customer..."
                     value={modalInput2}
                     onChange={(e) => setModalInput2(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -832,11 +848,11 @@ export const SalesPortalPage: React.FC = () => {
 
             {actionType === 'ADVANCE' && (
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Advance Workflow Stage</label>
+                <label className="text-xs text-slate-500 font-semibold block mb-1">Advance Workflow Stage</label>
                 <select
                   value={modalInput1 || 'Credit_Review'}
                   onChange={(e) => setModalInput1(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none mb-3"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none mb-3"
                 >
                   <option value="Credit_Review">Credit Review (Underwriting Queue)</option>
                   <option value="Documents_Pending">Documents Pending</option>
@@ -849,7 +865,7 @@ export const SalesPortalPage: React.FC = () => {
                   placeholder="Reason / Notes for stage transition..."
                   value={modalInput2}
                   onChange={(e) => setModalInput2(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                 />
               </div>
             )}
@@ -857,7 +873,7 @@ export const SalesPortalPage: React.FC = () => {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setActionType(null)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -872,7 +888,7 @@ export const SalesPortalPage: React.FC = () => {
 
                   appActionMutation.mutate({ appId: selectedApp.application_id, type: actionType, payload });
                 }}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Submit Action
               </button>
@@ -883,15 +899,15 @@ export const SalesPortalPage: React.FC = () => {
 
       {/* MODAL: CAPTURE NEW LEAD */}
       {isCreateLeadOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-3.5">
-            <h3 className="text-sm font-bold text-white">Capture Prospective Borrower Lead</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-3.5 shadow-2xl">
+            <h3 className="text-sm font-bold text-slate-900">Capture Prospective Borrower Lead</h3>
             <input
               type="text"
               placeholder="Borrower Full Name *"
               value={leadName}
               onChange={(e) => setLeadName(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
             />
             <div className="grid grid-cols-2 gap-3">
               <input
@@ -899,23 +915,23 @@ export const SalesPortalPage: React.FC = () => {
                 placeholder="Email Address"
                 value={leadEmail}
                 onChange={(e) => setLeadEmail(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               />
               <input
                 type="text"
                 placeholder="Phone Number"
                 value={leadPhone}
                 onChange={(e) => setLeadPhone(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Loan Product</label>
+                <label className="text-[10px] text-slate-500 font-bold block mb-1">Loan Product</label>
                 <select
                   value={leadProduct}
                   onChange={(e) => setLeadProduct(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 >
                   <option value="MSME Business Loan">MSME Business Loan</option>
                   <option value="Vehicle Loan">Vehicle Loan</option>
@@ -924,32 +940,32 @@ export const SalesPortalPage: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">City</label>
+                <label className="text-[10px] text-slate-500 font-bold block mb-1">City</label>
                 <input
                   type="text"
                   value={leadCity}
                   onChange={(e) => setLeadCity(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Requested Amount (₹)</label>
+                <label className="text-[10px] text-slate-500 font-bold block mb-1">Requested Amount (₹)</label>
                 <input
                   type="number"
                   value={leadAmount}
                   onChange={(e) => setLeadAmount(Number(e.target.value))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Annual Income (₹)</label>
+                <label className="text-[10px] text-slate-500 font-bold block mb-1">Annual Income (₹)</label>
                 <input
                   type="number"
                   value={leadIncome}
                   onChange={(e) => setLeadIncome(Number(e.target.value))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 />
               </div>
             </div>
@@ -958,12 +974,12 @@ export const SalesPortalPage: React.FC = () => {
               placeholder="Initial inquiries, purpose, or lead source notes..."
               value={leadNote}
               onChange={(e) => setLeadNote(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsCreateLeadOpen(false)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>

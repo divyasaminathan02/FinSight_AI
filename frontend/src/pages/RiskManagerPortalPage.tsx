@@ -107,27 +107,27 @@ export const RiskManagerPortalPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="finsight-card p-6 bg-gradient-to-r from-[#1A0B2E] via-[#0B132B] to-[#162238] text-white border-purple-900/60 shadow-xl">
+      <div className="p-6 bg-white border border-purple-200/80 rounded-2xl shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-600/30">
+            <div className="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center shadow-md shadow-purple-600/20 text-white">
               <Shield className="w-7 h-7 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-xl font-bold tracking-tight text-white">Risk Manager Decision Console</h1>
-                <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <h1 className="text-xl font-bold tracking-tight text-slate-900">Risk Manager Decision Console</h1>
+                <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
                   Senior Authority
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5 font-medium">
                 Enterprise Portfolio Sanctions, Analyst Overrides, Concentration Audits & Risk Sign-offs
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Authority:</span>
-            <span className="text-xs font-bold text-emerald-400">Enterprise Sanction Limit: ₹10.0 Cr</span>
+            <span className="text-xs text-slate-500 font-medium">Authority:</span>
+            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">Enterprise Sanction Limit: ₹10.0 Cr</span>
           </div>
         </div>
       </div>

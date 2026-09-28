@@ -203,35 +203,35 @@ export const RelationshipPortalPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-r from-blue-50/90 via-white to-blue-50/80 border border-blue-200/80 rounded-xl p-6 relative overflow-hidden shadow-xs">
+        <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold mb-2">
               <Users className="w-3.5 h-3.5" />
               Relationship Management Portal
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Portfolio & Customer 360 Desk</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Portfolio & Customer 360 Desk</h1>
+            <p className="text-slate-600 text-sm mt-1">
               Serving assigned institutional accounts, real-time EMI tracking, follow-ups, and unified lifecycle auditing.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400">Assigned Manager:</span>
-            <span className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-emerald-400 font-semibold text-xs">
+            <span className="text-xs text-slate-500 font-medium">Assigned Manager:</span>
+            <span className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-blue-700 font-semibold text-xs shadow-2xs">
               {dashData?.manager_name || user?.full_name || 'RM Desk'}
             </span>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mt-6 border-b border-slate-800 pb-2">
+        <div className="flex gap-2 mt-6 border-b border-slate-200 pb-2">
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'dashboard'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Dashboard & KPIs
@@ -240,8 +240,8 @@ export const RelationshipPortalPage: React.FC = () => {
             onClick={() => setActiveTab('customers')}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'customers'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Assigned Accounts ({customersData?.length || 0})
@@ -255,8 +255,8 @@ export const RelationshipPortalPage: React.FC = () => {
             }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'timeline'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Unified Customer Timeline
@@ -268,12 +268,12 @@ export const RelationshipPortalPage: React.FC = () => {
         <div
           className={`p-4 rounded-xl border flex items-center justify-between text-xs font-semibold ${
             feedbackMsg.type === 'success'
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-              : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
           <span>{feedbackMsg.text}</span>
-          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-slate-600">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -284,52 +284,60 @@ export const RelationshipPortalPage: React.FC = () => {
         <div className="space-y-6">
           {/* KPI Metric Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Assigned Customers</span>
-                <Users className="w-4 h-4 text-emerald-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Assigned Customers</span>
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Users className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white mt-2">
+              <div className="text-2xl font-bold text-slate-900 mt-2">
                 {dashLoading ? '...' : dashData?.assigned_customers ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Active relationship scope</div>
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">Active relationship scope</div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Active Loans</span>
-                <Briefcase className="w-4 h-4 text-blue-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Active Loans</span>
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Briefcase className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white mt-2">
+              <div className="text-2xl font-bold text-slate-900 mt-2">
                 {dashLoading ? '...' : dashData?.active_loans ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">
                 {dashData?.customer_applications ?? 0} applications in pipeline
               </div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Upcoming EMI (7d)</span>
-                <Calendar className="w-4 h-4 text-amber-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Upcoming EMI (7d)</span>
+                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <Calendar className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white mt-2">
+              <div className="text-2xl font-bold text-slate-900 mt-2">
                 {dashLoading ? '...' : dashData?.upcoming_emi_amount_formatted ?? '₹0'}
               </div>
-              <div className="text-[11px] text-amber-400/80 mt-1">
+              <div className="text-[11px] text-amber-700 font-medium mt-1">
                 {dashData?.upcoming_emi_count ?? 0} accounts due soon
               </div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-xs transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-xs font-medium">Overdue Accounts</span>
-                <AlertTriangle className="w-4 h-4 text-rose-400" />
+                <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Overdue Accounts</span>
+                <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-rose-400 mt-2">
+              <div className="text-2xl font-bold text-rose-600 mt-2">
                 {dashLoading ? '...' : dashData?.overdue_accounts ?? 0}
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">
+              <div className="text-[11px] text-slate-500 mt-1 font-medium">
                 {dashData?.follow_ups ?? 0} active follow-up tasks
               </div>
             </div>
@@ -338,15 +346,17 @@ export const RelationshipPortalPage: React.FC = () => {
           {/* Quick Customers & Recent Tasks */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Quick Customer Accounts Table */}
-            <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-sm font-semibold text-white">Portfolio Overview</h3>
+                  <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <Briefcase className="w-3.5 h-3.5" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-900">Portfolio Overview</h3>
                 </div>
                 <button
                   onClick={() => setActiveTab('customers')}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center gap-1"
+                  className="text-xs text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1"
                 >
                   View All <ChevronRight className="w-3.5 h-3.5" />
                 </button>
@@ -354,7 +364,7 @@ export const RelationshipPortalPage: React.FC = () => {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-800/60 text-slate-400">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3 rounded-l-lg">Customer</th>
                       <th className="py-2.5 px-3">Monthly Income</th>
@@ -364,36 +374,36 @@ export const RelationshipPortalPage: React.FC = () => {
                       <th className="py-2.5 px-3 rounded-r-lg text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {dashData?.customers?.slice(0, 6).map((c: any) => (
-                      <tr key={c.id} className="hover:bg-slate-800/40">
+                      <tr key={c.id} className="hover:bg-blue-50/40 transition-colors">
                         <td className="py-3 px-3">
-                          <div className="font-semibold text-white">{c.name}</div>
-                          <div className="text-[11px] text-slate-400">{c.customer_id}</div>
+                          <div className="font-semibold text-slate-900">{c.name}</div>
+                          <div className="text-[11px] text-slate-500 font-mono">{c.customer_id}</div>
                         </td>
-                        <td className="py-3 px-3 text-slate-300">₹{c.income?.toLocaleString() || '0'}</td>
+                        <td className="py-3 px-3 text-slate-700 font-medium">₹{c.income?.toLocaleString() || '0'}</td>
                         <td className="py-3 px-3">
                           <span
-                            className={`font-semibold ${
-                              c.credit_score >= 700 ? 'text-emerald-400' : 'text-amber-400'
+                            className={`font-bold ${
+                              c.credit_score >= 700 ? 'text-emerald-700' : 'text-amber-700'
                             }`}
                           >
                             {c.credit_score}
                           </span>
                         </td>
                         <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-semibold">
+                          <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold">
                             {c.financial_health}%
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-slate-300">{c.active_loan}</td>
+                        <td className="py-3 px-3 text-slate-600 font-mono text-[11px]">{c.active_loan}</td>
                         <td className="py-3 px-3 text-right">
                           <button
                             onClick={() => {
                               setSelectedCustomerId(c.customer_id);
                               setActiveTab('timeline');
                             }}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-200 cursor-pointer"
                             title="View Timeline"
                           >
                             <History className="w-3.5 h-3.5" />
@@ -403,7 +413,7 @@ export const RelationshipPortalPage: React.FC = () => {
                     ))}
                     {(!dashData?.customers || dashData.customers.length === 0) && (
                       <tr>
-                        <td colSpan={6} className="py-6 text-center text-slate-500">
+                        <td colSpan={6} className="py-6 text-center text-slate-500 font-medium">
                           No assigned accounts found in active portfolio.
                         </td>
                       </tr>
@@ -416,13 +426,15 @@ export const RelationshipPortalPage: React.FC = () => {
             {/* Follow-up Tasks & Activity */}
             <div className="space-y-6">
               {/* Relationship Tasks */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    <h3 className="text-sm font-semibold text-white">Pending Action Tasks</h3>
+                    <div className="w-6 h-6 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center">
+                      <Clock className="w-3.5 h-3.5" />
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-900">Pending Action Tasks</h3>
                   </div>
-                  <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-xs rounded-full font-semibold">
+                  <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full font-bold">
                     {dashData?.tasks?.length || 0}
                   </span>
                 </div>
@@ -430,23 +442,23 @@ export const RelationshipPortalPage: React.FC = () => {
                   {dashData?.tasks?.map((t: any) => (
                     <div
                       key={t.id}
-                      className="p-3 bg-slate-800/40 border border-slate-800 rounded-lg hover:border-slate-700"
+                      className="p-3 bg-slate-50/80 border border-slate-200 rounded-lg hover:border-blue-300 transition-all shadow-2xs"
                     >
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-white">{t.title}</span>
+                        <span className="font-bold text-slate-900">{t.title}</span>
                         <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
+                          className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                             t.priority === 'URGENT'
-                              ? 'bg-rose-500/20 text-rose-300'
+                              ? 'bg-rose-100 text-rose-800 border border-rose-200'
                               : t.priority === 'HIGH'
-                              ? 'bg-amber-500/20 text-amber-300'
-                              : 'bg-slate-700 text-slate-300'
+                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                              : 'bg-slate-200 text-slate-800'
                           }`}
                         >
                           {t.priority}
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+                      <div className="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
                         <span>Due: {t.due_date ? new Date(t.due_date).toLocaleDateString() : 'Pending'}</span>
                         <span className="text-emerald-400 font-medium">{t.customer_id || ''}</span>
                       </div>
@@ -459,24 +471,26 @@ export const RelationshipPortalPage: React.FC = () => {
               </div>
 
               {/* Messages Center */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-violet-400" />
-                    <h3 className="text-sm font-semibold text-white">Recent Communications</h3>
+                    <div className="w-6 h-6 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-900">Recent Communications</h3>
                   </div>
                 </div>
                 <div className="space-y-2 max-h-48 overflow-y-auto text-xs">
                   {dashData?.customer_messages?.map((m: any) => (
-                    <div key={m.id} className="p-2.5 bg-slate-800/30 rounded border border-slate-800">
-                      <div className="flex justify-between font-semibold text-white">
+                    <div key={m.id} className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                      <div className="flex justify-between font-bold text-slate-900">
                         <span>{m.sender}</span>
-                        <span className="text-[10px] text-slate-500">
+                        <span className="text-[10px] text-slate-500 font-medium">
                           {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
-                      <div className="text-slate-300 text-[11px] mt-0.5 font-medium">{m.subject}</div>
-                      <div className="text-slate-400 text-[10px] mt-0.5 line-clamp-1">{m.message}</div>
+                      <div className="text-slate-800 text-[11px] mt-0.5 font-semibold">{m.subject}</div>
+                      <div className="text-slate-500 text-[10px] mt-0.5 line-clamp-1">{m.message}</div>
                     </div>
                   ))}
                 </div>
@@ -488,7 +502,7 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* TAB 2: ASSIGNED ACCOUNTS LIST */}
       {activeTab === 'customers' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
               <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
@@ -497,14 +511,14 @@ export const RelationshipPortalPage: React.FC = () => {
                 placeholder="Search by customer name, ID, or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
               />
             </div>
             <div className="flex items-center gap-2">
               <select
                 value={selectedRiskTier}
                 onChange={(e) => setSelectedRiskTier(e.target.value)}
-                className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none"
+                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none"
               >
                 <option value="">All Risk Tiers</option>
                 <option value="Low">Low Risk</option>
@@ -516,7 +530,7 @@ export const RelationshipPortalPage: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-800/80 text-slate-400">
+              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-3 rounded-l-lg">Customer Name</th>
                   <th className="py-3 px-3">Location & Occupation</th>
@@ -528,30 +542,30 @@ export const RelationshipPortalPage: React.FC = () => {
                   <th className="py-3 px-3 rounded-r-lg text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {customersData?.map((c: any) => (
-                  <tr key={c.id} className="hover:bg-slate-800/40">
+                  <tr key={c.id} className="hover:bg-blue-50/40 transition-colors">
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-white">{c.full_name}</div>
-                      <div className="text-[11px] text-slate-400">{c.customer_id} • {c.email}</div>
+                      <div className="font-bold text-slate-900">{c.full_name}</div>
+                      <div className="text-[11px] text-slate-500 font-mono">{c.customer_id} • {c.email}</div>
                     </td>
-                    <td className="py-3.5 px-3 text-slate-300">
-                      <div>{c.location}</div>
+                    <td className="py-3.5 px-3 text-slate-700">
+                      <div className="font-medium">{c.location}</div>
                       <div className="text-[10px] text-slate-500">{c.occupation}</div>
                     </td>
-                    <td className="py-3.5 px-3 font-medium text-slate-200">
+                    <td className="py-3.5 px-3 font-semibold text-slate-900">
                       ₹{c.income?.toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-3 font-semibold text-emerald-400">
+                    <td className="py-3.5 px-3 font-bold text-emerald-700">
                       {c.credit_score}
                     </td>
                     <td className="py-3.5 px-3">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px]">
+                      <span className="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-semibold">
                         {c.risk_tier}
                       </span>
                     </td>
-                    <td className="py-3.5 px-3 text-slate-300">{c.active_loans}</td>
-                    <td className="py-3.5 px-3 text-slate-300">{c.total_applications}</td>
+                    <td className="py-3.5 px-3 text-slate-600 font-mono">{c.active_loans}</td>
+                    <td className="py-3.5 px-3 text-slate-600 font-mono">{c.total_applications}</td>
                     <td className="py-3.5 px-3 text-right">
                       <div className="inline-flex items-center gap-1.5">
                         <button
@@ -559,7 +573,7 @@ export const RelationshipPortalPage: React.FC = () => {
                             setSelectedCustomerId(c.customer_id);
                             setIsNoteModalOpen(true);
                           }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-medium"
+                          className="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 rounded text-[11px] font-semibold cursor-pointer"
                           title="Add Note"
                         >
                           + Note
@@ -569,7 +583,7 @@ export const RelationshipPortalPage: React.FC = () => {
                             setSelectedCustomerId(c.customer_id);
                             setIsFollowUpModalOpen(true);
                           }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded text-[11px] font-medium"
+                          className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded text-[11px] font-semibold cursor-pointer"
                           title="Follow-up"
                         >
                           Follow-up
@@ -579,7 +593,7 @@ export const RelationshipPortalPage: React.FC = () => {
                             setSelectedCustomerId(c.customer_id);
                             setActiveTab('timeline');
                           }}
-                          className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-semibold"
+                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold cursor-pointer"
                         >
                           Timeline
                         </button>
@@ -589,7 +603,7 @@ export const RelationshipPortalPage: React.FC = () => {
                 ))}
                 {(!customersData || customersData.length === 0) && (
                   <tr>
-                    <td colSpan={8} className="py-8 text-center text-slate-500">
+                    <td colSpan={8} className="py-8 text-center text-slate-500 font-medium">
                       No customer accounts matching filter.
                     </td>
                   </tr>
@@ -603,10 +617,10 @@ export const RelationshipPortalPage: React.FC = () => {
       {/* TAB 3: UNIFIED CUSTOMER TIMELINE (REAL DATABASE EVENTS) */}
       {activeTab === 'timeline' && (
         <div className="space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
             <div>
-              <div className="text-xs text-slate-400">Viewing Unified History for:</div>
-              <div className="text-lg font-bold text-white mt-0.5">
+              <div className="text-xs text-slate-500 font-medium">Viewing Unified History for:</div>
+              <div className="text-lg font-bold text-slate-900 mt-0.5">
                 {timelineData?.customer_name || selectedCustomerId || 'Select Account'}
               </div>
               <div className="text-xs text-slate-500">
@@ -618,50 +632,50 @@ export const RelationshipPortalPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setIsNoteModalOpen(true)}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5" /> Add Note
+                <Plus className="w-3.5 h-3.5 text-blue-600" /> Add Note
               </button>
               <button
                 onClick={() => setIsFollowUpModalOpen(true)}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
-                <Clock className="w-3.5 h-3.5" /> Follow-Up
+                <Clock className="w-3.5 h-3.5 text-amber-600" /> Follow-Up
               </button>
               <button
                 onClick={() => setIsMessageModalOpen(true)}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-violet-300 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
-                <MessageSquare className="w-3.5 h-3.5" /> Send Message
+                <MessageSquare className="w-3.5 h-3.5 text-purple-600" /> Send Message
               </button>
               <button
                 onClick={() => setIsDocRequestModalOpen(true)}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5" /> Request Doc
+                <FileText className="w-3.5 h-3.5 text-blue-600" /> Request Doc
               </button>
               <button
                 onClick={() => setIsEscalateModalOpen(true)}
-                className="px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
-                <AlertTriangle className="w-3.5 h-3.5" /> Escalate
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" /> Escalate
               </button>
             </div>
           </div>
 
           {/* Chronological Timeline Container */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
             {timelineLoading ? (
-              <div className="text-center py-12 text-slate-400 text-xs">
+              <div className="text-center py-12 text-slate-500 text-xs font-medium">
                 Assembling unified database timeline events...
               </div>
             ) : timelineData?.events?.length > 0 ? (
-              <div className="relative border-l-2 border-slate-800 ml-4 pl-6 space-y-6">
+              <div className="relative border-l-2 border-slate-200 ml-4 pl-6 space-y-6">
                 {timelineData.events.map((ev: any, idx: number) => (
                   <div key={idx} className="relative group">
                     {/* Event Node Dot */}
                     <div
-                      className={`absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-slate-900 ${
+                      className={`absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white ${
                         ev.badge_color === 'emerald' || ev.badge_color === 'green'
                           ? 'bg-emerald-500 shadow-md shadow-emerald-500/30'
                           : ev.badge_color === 'red'
@@ -674,25 +688,25 @@ export const RelationshipPortalPage: React.FC = () => {
                       }`}
                     />
 
-                    <div className="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800 rounded-xl p-4 transition-all">
+                    <div className="bg-slate-50/90 hover:bg-blue-50/50 border border-slate-200 rounded-xl p-4 transition-all">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white text-xs">{ev.title}</span>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">
+                          <span className="font-bold text-slate-900 text-xs">{ev.title}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-white border border-slate-200 text-slate-600">
                             {ev.category}
                           </span>
                         </div>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-slate-500 font-medium">
                           {ev.timestamp ? new Date(ev.timestamp).toLocaleString() : 'N/A'}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-300 leading-relaxed">{ev.description}</p>
+                      <p className="text-xs text-slate-700 leading-relaxed font-normal">{ev.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-500 text-xs">
+              <div className="text-center py-12 text-slate-500 text-xs font-medium">
                 No events recorded for this customer in database.
               </div>
             )}
@@ -702,10 +716,10 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* MODAL: ADD RELATIONSHIP NOTE */}
       {isNoteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full">
-            <h3 className="text-sm font-bold text-white mb-2">Add Relationship Note</h3>
-            <p className="text-xs text-slate-400 mb-4">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <h3 className="text-sm font-bold text-slate-900 mb-1">Add Relationship Note</h3>
+            <p className="text-xs text-slate-500 mb-4">
               Notes are committed directly to immutable audit logs and customer history.
             </p>
             <textarea
@@ -713,12 +727,12 @@ export const RelationshipPortalPage: React.FC = () => {
               placeholder="Enter client interaction observations, meeting minutes, or risk updates..."
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 mb-4"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 mb-4"
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsNoteModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -728,7 +742,7 @@ export const RelationshipPortalPage: React.FC = () => {
                   addNoteMutation.mutate({ custId: selectedCustomerId, note: noteText })
                 }
                 disabled={!noteText.trim()}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Save Note
               </button>
@@ -739,39 +753,39 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* MODAL: SCHEDULE FOLLOW-UP */}
       {isFollowUpModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4">
-            <h3 className="text-sm font-bold text-white">Schedule Follow-up Task</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-sm font-bold text-slate-900">Schedule Follow-up Task</h3>
             <input
               type="text"
               placeholder="Task Title (e.g., Review Q2 Financials)"
               value={followUpTitle}
               onChange={(e) => setFollowUpTitle(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
             />
             <textarea
               rows={3}
               placeholder="Details or specific talking points..."
               value={followUpDesc}
               onChange={(e) => setFollowUpDesc(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
             />
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Due Date</label>
+                <label className="text-[11px] text-slate-500 font-semibold block mb-1">Due Date</label>
                 <input
                   type="date"
                   value={followUpDueDate}
                   onChange={(e) => setFollowUpDueDate(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Priority</label>
+                <label className="text-[11px] text-slate-500 font-semibold block mb-1">Priority</label>
                 <select
                   value={followUpPriority}
                   onChange={(e) => setFollowUpPriority(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-900 focus:outline-none"
                 >
                   <option value="LOW">Low</option>
                   <option value="MEDIUM">Medium</option>
@@ -783,7 +797,7 @@ export const RelationshipPortalPage: React.FC = () => {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsFollowUpModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -799,7 +813,7 @@ export const RelationshipPortalPage: React.FC = () => {
                   })
                 }
                 disabled={!followUpTitle.trim()}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Create Task
               </button>
@@ -810,27 +824,27 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* MODAL: SEND IN-APP / CUSTOMER MESSAGE */}
       {isMessageModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4">
-            <h3 className="text-sm font-bold text-white">Send Message to Customer</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-sm font-bold text-slate-900">Send Message to Customer</h3>
             <input
               type="text"
               placeholder="Message Subject..."
               value={messageSubject}
               onChange={(e) => setMessageSubject(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
             />
             <textarea
               rows={4}
               placeholder="Type message content..."
               value={messageBody}
               onChange={(e) => setMessageBody(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsMessageModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -844,7 +858,7 @@ export const RelationshipPortalPage: React.FC = () => {
                   })
                 }
                 disabled={!messageSubject.trim() || !messageBody.trim()}
-                className="px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Dispatch
               </button>
@@ -855,15 +869,15 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* MODAL: REQUEST DOCUMENT */}
       {isDocRequestModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4">
-            <h3 className="text-sm font-bold text-white">Request Verification Document</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-sm font-bold text-slate-900">Request Verification Document</h3>
             <div>
-              <label className="text-xs text-slate-400 block mb-1">Select Document Type</label>
+              <label className="text-xs text-slate-500 font-semibold block mb-1">Select Document Type</label>
               <select
                 value={docType}
                 onChange={(e) => setDocType(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none"
               >
                 <option value="GST Returns (Last 6 Months)">GST Returns (Last 6 Months)</option>
                 <option value="Audited P&L Statements">Audited P&L Statements</option>
@@ -875,7 +889,7 @@ export const RelationshipPortalPage: React.FC = () => {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsDocRequestModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -884,7 +898,7 @@ export const RelationshipPortalPage: React.FC = () => {
                   selectedCustomerId &&
                   requestDocMutation.mutate({ custId: selectedCustomerId, document_type: docType })
                 }
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Dispatch Request
               </button>
@@ -895,9 +909,9 @@ export const RelationshipPortalPage: React.FC = () => {
 
       {/* MODAL: ESCALATE ISSUE */}
       {isEscalateModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2 text-rose-400">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-sm font-bold text-rose-600 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> Escalate Account to Leadership
             </h3>
             <textarea
@@ -905,12 +919,12 @@ export const RelationshipPortalPage: React.FC = () => {
               placeholder="State clear rationale for priority escalation (credit deterioration, non-responsive borrower, high-risk flag)..."
               value={escalateReason}
               onChange={(e) => setEscalateReason(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-rose-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-rose-500"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsEscalateModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
@@ -920,7 +934,7 @@ export const RelationshipPortalPage: React.FC = () => {
                   escalateMutation.mutate({ custId: selectedCustomerId, reason: escalateReason })
                 }
                 disabled={!escalateReason.trim()}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg cursor-pointer"
               >
                 Submit Escalation
               </button>

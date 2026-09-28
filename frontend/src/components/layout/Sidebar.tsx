@@ -58,11 +58,11 @@ export const Sidebar: React.FC = () => {
   const { user, switchRole, logout } = useAuth();
 
   return (
-    <aside className="w-60 min-w-60 bg-[#0B132B] text-slate-300 flex flex-col h-screen sticky top-0 border-r border-slate-800 select-none z-30">
+    <aside className="w-64 min-w-64 bg-[#0B132B] text-slate-300 flex flex-col h-screen sticky top-0 border-r border-slate-800 select-none z-30 shadow-md">
       {/* Brand Header */}
-      <div className="p-4 border-b border-slate-800/80">
+      <div className="p-4 border-b border-slate-800/80 bg-[#0B132B]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm shadow-blue-500/20">
             <Activity className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -90,10 +90,10 @@ export const Sidebar: React.FC = () => {
               to={item.path}
               end={item.path === '/'}
               className={({ isActive }) =>
-                `flex items-center justify-between px-2.5 py-2 rounded-md text-[13px] font-medium transition-all group ${
+                `flex items-center justify-between px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-sm font-semibold'
-                    : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                 }`
               }
             >
@@ -108,11 +108,17 @@ export const Sidebar: React.FC = () => {
                     <span className="truncate">{item.name}</span>
                   </div>
 
+                  {item.badge && !isActive && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold shrink-0">
+                      {item.badge}
+                    </span>
+                  )}
+
                   {item.alert && (
                     <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
                   )}
 
-                  {item.isSpecial && !isActive && (
+                  {item.isSpecial && !isActive && !item.badge && (
                     <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                   )}
                 </>
@@ -126,11 +132,11 @@ export const Sidebar: React.FC = () => {
         </div>
         <NavLink
           to="/customer-portal"
-          className="flex items-center justify-between px-2.5 py-2 rounded-md text-[13px] font-medium text-emerald-400 hover:bg-emerald-950/40 hover:text-emerald-300 transition-all border border-emerald-900/30"
+          className="flex items-center justify-between px-2.5 py-2 rounded-lg text-[13px] font-medium text-emerald-400 bg-emerald-950/40 hover:bg-emerald-900/50 hover:text-emerald-300 transition-all border border-emerald-800/40"
         >
           <div className="flex items-center gap-2.5">
             <CreditCard className="w-4 h-4 text-emerald-400" />
-            <span>Borrower Portal</span>
+            <span className="font-semibold">Borrower Portal</span>
           </div>
           <span className="text-[9px] px-1.5 py-0.5 bg-emerald-900/60 text-emerald-300 rounded font-bold">
             Live
@@ -139,16 +145,16 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Bottom Profile / Role Section */}
-      <div className="p-3 border-t border-slate-800/80 bg-[#090F22]">
-        <div className="p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition-colors">
+      <div className="p-3 border-t border-slate-800/80 bg-[#080D1D]">
+        <div className="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60 shadow-2xs">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-xs font-semibold text-white border border-slate-600 shrink-0">
-                AM
+              <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-xs shrink-0">
+                {user?.full_name ? user.full_name.substring(0, 2).toUpperCase() : 'AM'}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-white truncate">{user?.full_name || 'Arjun Mehta'}</div>
-                <div className="text-[11px] text-slate-400 truncate">{user?.role?.replace('_', ' ') || 'Risk Manager'}</div>
+                <div className="text-xs font-bold text-white truncate">{user?.full_name || 'Arjun Mehta'}</div>
+                <div className="text-[11px] text-slate-400 truncate font-medium">{user?.role?.replace('_', ' ') || 'Risk Manager'}</div>
               </div>
             </div>
             <div className="w-2 h-2 rounded-full bg-emerald-400" title="Active Connection" />
@@ -160,7 +166,7 @@ export const Sidebar: React.FC = () => {
             <select
               value={user?.role || 'RISK_MANAGER'}
               onChange={(e) => switchRole(e.target.value as any)}
-              className="bg-slate-900 border border-slate-700 text-slate-200 rounded px-1.5 py-0.5 text-[11px] outline-none focus:border-blue-500 cursor-pointer"
+              className="bg-slate-900 border border-slate-700 text-slate-200 rounded px-1.5 py-0.5 text-[11px] outline-none focus:border-blue-500 cursor-pointer shadow-2xs font-medium"
             >
               <option value="CUSTOMER">Customer (Borrower)</option>
               <option value="SALES_OFFICER">Sales Officer</option>
