@@ -7,14 +7,15 @@
     --navy-border: #3A506B;
     --accent-blue: #2563EB;
     --accent-blue-light: #3B82F6;
-    --bg-main: #F8FAFC;
+    --bg-main: #F4F7FB;
     --bg-card: #FFFFFF;
+    --bg-card-blue: #F0F7FF;
     --text-main: #0F172A;
-    --text-muted: #64748B;
+    --text-muted: #475569;
   }
 
   body {
-    background-color: #F8FAFC;
+    background-color: #F4F7FB;
     color: #0F172A;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -44,18 +45,32 @@
   background: #94A3B8;
 }
 
-/* Institutional Card Styling */
+/* Institutional Card Styling - Pale White & Pale Light Blue */
 .finsight-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  border: 1px solid #E0E7FF;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(30, 58, 138, 0.04), 0 2px 6px -1px rgba(30, 58, 138, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .finsight-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  border-color: #93C5FD;
+  box-shadow: 0 4px 12px -2px rgba(30, 58, 138, 0.08), 0 2px 4px -2px rgba(30, 58, 138, 0.04);
+}
+
+/* Card with subtle pale light blue gradient */
+.finsight-card-soft-blue {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F0F7FF 100%);
+  border: 1px solid #BFDBFE;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(30, 58, 138, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.finsight-card-soft-blue:hover {
+  border-color: #60A5FA;
+  box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.1);
 }
 
 .pulse-indicator {
@@ -73,31 +88,32 @@
   }
 }
 
-/* Neutral Professional Grey Treatment for Content & Information Boxes */
-.finsight-grey-box {
-  background-color: #F8FAFC;
+/* Neutral Professional Pale White & Pale Light Blue Grid Boxes */
+.finsight-grey-box,
+.finsight-pale-white-box {
+  background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  color: #1F2937;
+  border-radius: 10px;
+  color: #0F172A;
 }
 
-.finsight-grey-box-subtle {
-  background-color: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  color: #1F2937;
+.finsight-grey-box-subtle,
+.finsight-pale-blue-box {
+  background: linear-gradient(135deg, #F8FAFD 0%, #EFF6FF 100%);
+  border: 1px solid #BFDBFE;
+  border-radius: 10px;
+  color: #0F172A;
 }
 
 .finsight-heading-dark {
-  color: #172033;
-  font-weight: 600;
+  color: #0F172A;
+  font-weight: 700;
 }
 
 .finsight-text-charcoal {
-  color: #1F2937;
+  color: #1E293B;
 }
 
 .finsight-text-secondary {
-  color: #4B5563;
+  color: #475569;
 }
-

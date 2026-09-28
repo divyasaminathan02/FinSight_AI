@@ -63,7 +63,7 @@ export const OverviewPage: React.FC = () => {
       icon: Activity,
       link: '/risk',
       linkText: 'Inspect Risk Telemetry',
-      color: 'border-slate-700 bg-slate-900/80 text-slate-200'
+      color: 'border-blue-200 bg-gradient-to-r from-white via-blue-50/70 to-indigo-50/40 text-slate-900'
     },
     CREDIT_OFFICER: {
       title: 'Retail & MSME Underwriting Desk',
@@ -71,7 +71,7 @@ export const OverviewPage: React.FC = () => {
       icon: CreditCard,
       link: '/loan-analysis',
       linkText: 'Open Loan Underwriting Engine',
-      color: 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300'
+      color: 'border-emerald-200 bg-gradient-to-r from-white via-emerald-50/60 to-teal-50/40 text-slate-900'
     },
     COLLECTION_MANAGER: {
       title: 'Delinquency & Remediation Operations',
@@ -79,7 +79,7 @@ export const OverviewPage: React.FC = () => {
       icon: PiggyBank,
       link: '/collections',
       linkText: 'Review Collections Priority Queue',
-      color: 'border-amber-500/40 bg-amber-950/20 text-amber-300'
+      color: 'border-amber-200 bg-gradient-to-r from-white via-amber-50/60 to-yellow-50/40 text-slate-900'
     },
     FINANCE_MANAGER: {
       title: 'Treasury & ALM Liquidity Management',
@@ -87,7 +87,7 @@ export const OverviewPage: React.FC = () => {
       icon: Coins,
       link: '/liquidity',
       linkText: 'View ALM Gap Analysis',
-      color: 'border-cyan-500/40 bg-cyan-950/20 text-cyan-300'
+      color: 'border-cyan-200 bg-gradient-to-r from-white via-cyan-50/60 to-blue-50/40 text-slate-900'
     },
     ANALYST: {
       title: 'Portfolio Intelligence & Model Analytics',
@@ -95,7 +95,7 @@ export const OverviewPage: React.FC = () => {
       icon: Sparkles,
       link: '/reports',
       linkText: 'Access Enterprise Reports',
-      color: 'border-purple-500/40 bg-purple-950/20 text-purple-300'
+      color: 'border-purple-200 bg-gradient-to-r from-white via-purple-50/60 to-indigo-50/40 text-slate-900'
     },
     AUDITOR: {
       title: 'Compliance & Algorithmic Audit Station',
@@ -103,7 +103,7 @@ export const OverviewPage: React.FC = () => {
       icon: FileText,
       link: '/reports',
       linkText: 'Inspect Regulatory Filings',
-      color: 'border-indigo-500/40 bg-indigo-950/20 text-indigo-300'
+      color: 'border-indigo-200 bg-gradient-to-r from-white via-indigo-50/60 to-blue-50/40 text-slate-900'
     },
     ADMIN: {
       title: 'Executive Risk Committee Control Center',
@@ -111,7 +111,7 @@ export const OverviewPage: React.FC = () => {
       icon: UserCheck,
       link: '/settings',
       linkText: 'Configure System Thresholds',
-      color: 'border-slate-700 bg-slate-900/80 text-slate-200'
+      color: 'border-blue-200 bg-gradient-to-r from-white via-blue-50/70 to-slate-50 text-slate-900'
     },
   };
 
@@ -121,25 +121,25 @@ export const OverviewPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Role-Specific Institutional Focus Banner */}
-      <div className={`p-4 rounded-2xl border ${currentFocus.color} flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md`}>
+      <div className={`p-4 rounded-2xl border ${currentFocus.color} flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm`}>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-            <FocusIcon className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <FocusIcon className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider">{currentFocus.title}</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 font-mono font-semibold">
+              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">{currentFocus.title}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-mono font-bold">
                 Officer: {user?.full_name} ({role.replace('_', ' ')})
               </span>
             </div>
-            <p className="text-xs text-slate-300 mt-0.5">{currentFocus.desc}</p>
+            <p className="text-xs text-slate-600 font-medium mt-0.5">{currentFocus.desc}</p>
           </div>
         </div>
 
         <Link
           to={currentFocus.link}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-all shadow-xs shrink-0"
         >
           <span>{currentFocus.linkText}</span>
           <ArrowRight className="w-3.5 h-3.5" />

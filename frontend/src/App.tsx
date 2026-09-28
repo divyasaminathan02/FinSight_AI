@@ -29,6 +29,7 @@ import { KYCPortalPage } from './pages/KYCPortalPage';
 import { RiskManagerPortalPage } from './pages/RiskManagerPortalPage';
 import { AdminPortalPage } from './pages/AdminPortalPage';
 import { SupportPortalPage } from './pages/SupportPortalPage';
+import { getRoleHome } from './utils/rbac';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,36 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+const PublicOnlyRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { isAuthenticated, user, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+  if (isAuthenticated && user) {
+    return <Navigate to={getRoleHome(user.role)} replace />;
+  }
+  return children;
+};
 
 const AppRoutes: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -51,12 +82,39 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/customer/dashboard" element={<CustomerPortalPage />} />
-      <Route path="/customer-portal" element={<CustomerPortalPage />} />
+      <Route
+        path="/login"
+        element={
+          <PublicOnlyRoute>
+            <LoginPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/customer/dashboard"
+        element={
+          <ProtectedRoute>
+            <CustomerPortalPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-portal"
+        element={
+          <ProtectedRoute>
+            <CustomerPortalPage />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Main Shell Layout */}
-      <Route element={<Layout onRefresh={handleRefresh} isRefreshing={isRefreshing} />}>
+      {/* Main Shell Layout - Guarded by ProtectedRoute */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <Layout onRefresh={handleRefresh} isRefreshing={isRefreshing} />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/" element={<OverviewPage />} />
         <Route path="/executive" element={<ExecutivePortalPage />} />
         <Route path="/sales" element={<SalesPortalPage />} />

@@ -677,8 +677,11 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing }) => {
                   <span>Borrower Portal</span>
                 </a>
                 <button
-                  onClick={logout}
-                  className="w-full text-left flex items-center gap-2 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 cursor-pointer"
+                  onClick={() => {
+                    logout();
+                    navigate('/login');
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>

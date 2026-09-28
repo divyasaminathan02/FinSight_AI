@@ -43,21 +43,21 @@ export const LiquidityForecastCard: React.FC<LiquidityForecastCardProps> = ({ da
         </div>
 
         {/* 4 Metrics: Inflows, Outflows, Forecasted */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">Expected Inflows</div>
+        <div className="grid grid-cols-3 gap-2.5 text-xs">
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">Expected Inflows</div>
             <div className="text-sm font-bold text-emerald-700 mt-0.5">₹{data?.expected_inflows_cr || 94.8} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">EMI Repayments</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">EMI Repayments</div>
           </div>
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">Expected Outflows</div>
-            <div className="text-sm font-bold text-slate-800 mt-0.5">₹{data?.expected_outflows_cr || 94.8} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Disbursements & Debt</div>
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">Expected Outflows</div>
+            <div className="text-sm font-bold text-slate-900 mt-0.5">₹{data?.expected_outflows_cr || 94.8} Cr</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">Disbursements & Debt</div>
           </div>
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">30-Day Forecast</div>
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">30-Day Forecast</div>
             <div className="text-sm font-bold text-blue-700 mt-0.5">₹{data?.forecasted_liquidity_cr || 126.4} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Net Surplus</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">Net Surplus</div>
           </div>
         </div>
       </div>

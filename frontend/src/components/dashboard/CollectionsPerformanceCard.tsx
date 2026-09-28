@@ -50,21 +50,21 @@ export const CollectionsPerformanceCard: React.FC<CollectionsPerformanceCardProp
         </div>
 
         {/* 3 Metrics: Expected, Actual, At-Risk */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">Expected</div>
+        <div className="grid grid-cols-3 gap-2.5 text-xs">
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">Expected</div>
             <div className="text-sm font-bold text-slate-900 mt-0.5">₹{data?.expected_collections_cr || 45.2} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Due book</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">Due book</div>
           </div>
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">Actual</div>
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">Actual</div>
             <div className="text-sm font-bold text-emerald-700 mt-0.5">₹{data?.actual_collections_cr || 42.8} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Resolved</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">Resolved</div>
           </div>
-          <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100">
-            <div className="text-[10px] uppercase font-semibold text-slate-500">At-Risk</div>
+          <div className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-xl border border-blue-100 shadow-2xs">
+            <div className="text-[10px] uppercase font-bold text-slate-600">At-Risk</div>
             <div className="text-sm font-bold text-amber-700 mt-0.5">₹{data?.at_risk_receivables_cr || 18.4} Cr</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">DPD 30+</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">DPD 30+</div>
           </div>
         </div>
       </div>

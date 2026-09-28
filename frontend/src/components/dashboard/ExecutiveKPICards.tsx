@@ -17,11 +17,11 @@ export const ExecutiveKPICards: React.FC<ExecutiveKPICardsProps> = ({ kpis }) =>
         return (
           <div
             key={kpi.id}
-            className="finsight-card p-4 flex flex-col justify-between hover:border-slate-300 transition-all group"
+            className="finsight-card p-4 flex flex-col justify-between bg-gradient-to-b from-white via-white to-[#F0F7FF]/50 border border-blue-100/80 hover:border-blue-300 hover:shadow-md transition-all group"
           >
             {/* Header: Title + Delta Indicator */}
             <div className="flex items-start justify-between gap-1 mb-2">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 line-clamp-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700 line-clamp-1">
                 {kpi.title}
               </span>
               {kpi.change_pct !== 0 ? (

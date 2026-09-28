@@ -27,7 +27,7 @@ import { useAuth } from '../context/AuthContext';
 export const FraudIntelligencePage: React.FC = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('finsight_token') || localStorage.getItem('access_token');
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {})

@@ -33,7 +33,7 @@ export const SalesPortalPage: React.FC = () => {
   const { user } = useAuth();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('finsight_token') || localStorage.getItem('access_token');
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {})

@@ -7,39 +7,33 @@ interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (userData: {
     email: string;
     password: string;
     full_name: string;
     role: User['role'];
     department?: string;
-  }) => Promise<void>;
+  }) => Promise<User>;
   logout: () => void;
   switchRole: (newRole: User['role']) => void;
   hasPermission: (permission: string) => boolean;
 }
-
-const DEFAULT_USER: User = {
-  id: 1,
-  email: 'arjun.mehta@finsight.ai',
-  full_name: 'Arjun Mehta',
-  role: 'RISK_MANAGER',
-  department: 'Portfolio Risk Management',
-  branch: 'Headquarters - Mumbai',
-  permissions: ['risk.view', 'reports.view', 'reports.export', 'tasks.manage'],
-  is_active: true,
-};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('finsight_user');
-    return saved ? JSON.parse(saved) : DEFAULT_USER;
+    if (!saved) return null;
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return null;
+    }
   });
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('finsight_token') || 'demo_token_arjun_mehta';
+    return localStorage.getItem('finsight_token') || null;
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,29 +43,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User> => {
     setIsLoading(true);
     try {
       const data = await authApi.login(email, password);
       setUser(data.user);
       setToken(data.access_token);
       localStorage.setItem('finsight_token', data.access_token);
+      localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('finsight_user', JSON.stringify(data.user));
+      return data.user;
     } catch (err) {
       console.warn('Backend login fallback to local session:', err);
+      const cleanEmail = email.toLowerCase().trim();
+      const matchedKey = Object.keys(PERSONA_MAP).find(
+        (k) => PERSONA_MAP[k as User['role']].email.toLowerCase() === cleanEmail
+      ) as User['role'] | undefined;
+      const resolvedRole: User['role'] =
+        matchedKey ||
+        (cleanEmail.includes('customer')
+          ? 'CUSTOMER'
+          : cleanEmail.includes('admin')
+          ? 'ADMIN'
+          : cleanEmail.includes('sales')
+          ? 'SALES_OFFICER'
+          : cleanEmail.includes('credit')
+          ? 'CREDIT_ANALYST'
+          : 'RISK_MANAGER');
+
+      const persona = PERSONA_MAP[resolvedRole] || {
+        name: cleanEmail.split('@')[0].replace('.', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        email: cleanEmail,
+        dept: 'Portfolio Risk Management',
+      };
+
       const demoUser: User = {
         id: 1,
-        email,
-        full_name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        role: 'RISK_MANAGER',
-        department: 'Portfolio Risk Management',
+        email: cleanEmail,
+        full_name: persona.name,
+        role: resolvedRole,
+        department: persona.dept,
         branch: 'Headquarters - Mumbai',
         is_active: true,
       };
       setUser(demoUser);
       setToken('demo_token_session');
       localStorage.setItem('finsight_token', 'demo_token_session');
+      localStorage.setItem('access_token', 'demo_token_session');
       localStorage.setItem('finsight_user', JSON.stringify(demoUser));
+      return demoUser;
     } finally {
       setIsLoading(false);
     }
@@ -83,11 +103,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     full_name: string;
     role: User['role'];
     department?: string;
-  }) => {
+  }): Promise<User> => {
     setIsLoading(true);
     try {
-      await authApi.register(userData);
-      await login(userData.email, userData.password);
+      const data = await authApi.register(userData);
+      if (data && (data as any).access_token && (data as any).user) {
+        const u = (data as any).user;
+        const t = (data as any).access_token;
+        setUser(u);
+        setToken(t);
+        localStorage.setItem('finsight_token', t);
+        localStorage.setItem('access_token', t);
+        localStorage.setItem('finsight_user', JSON.stringify(u));
+        return u;
+      }
+      return await login(userData.email, userData.password);
     } catch (err) {
       console.warn('Backend register error, creating demo session:', err);
       const newUser: User = {
@@ -102,7 +132,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(newUser);
       setToken('demo_token_' + Date.now());
       localStorage.setItem('finsight_token', 'demo_token_' + Date.now());
+      localStorage.setItem('access_token', 'demo_token_' + Date.now());
       localStorage.setItem('finsight_user', JSON.stringify(newUser));
+      return newUser;
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +144,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setToken(null);
     localStorage.removeItem('finsight_token');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('finsight_user');
+    try {
+      authApi.logout().catch(() => {});
+    } catch {}
   };
 
   const PERSONA_MAP: Record<User['role'], { name: string; email: string; dept: string }> = {

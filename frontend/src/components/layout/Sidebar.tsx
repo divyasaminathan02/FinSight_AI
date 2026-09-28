@@ -23,6 +23,7 @@ import {
   Briefcase,
   CheckSquare,
   LifeBuoy,
+  LogOut,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -54,7 +55,7 @@ const NAV_ITEMS = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const { user, switchRole } = useAuth();
+  const { user, switchRole, logout } = useAuth();
 
   return (
     <aside className="w-60 min-w-60 bg-[#0B132B] text-slate-300 flex flex-col h-screen sticky top-0 border-r border-slate-800 select-none z-30">
@@ -179,6 +180,16 @@ export const Sidebar: React.FC = () => {
               <option value="ADMIN">Admin (Full Access)</option>
             </select>
           </div>
+
+          {/* Explicit Sign Out Action */}
+          <button
+            type="button"
+            onClick={logout}
+            className="w-full mt-2.5 py-1.5 px-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded text-rose-300 hover:text-rose-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
     </aside>

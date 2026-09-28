@@ -25,7 +25,7 @@ import { useAuth } from '../context/AuthContext';
 export const CreditManagerPortalPage: React.FC = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('finsight_token') || localStorage.getItem('access_token');
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -95,23 +95,22 @@ export const CreditManagerPortalPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Header Banner - Pale White & Pale Light Blue */}
+      <div className="bg-gradient-to-r from-white via-blue-50/60 to-indigo-50/40 border border-blue-200/80 rounded-2xl p-6 shadow-sm relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-2">
-              <Shield className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-800 text-xs font-bold mb-2">
+              <Shield className="w-3.5 h-3.5 text-blue-600" />
               Credit Committee & Risk Sanctioning
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Credit Manager Approval Console</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Credit Manager Approval Console</h1>
+            <p className="text-slate-600 text-sm mt-1 font-medium">
               Final sanctioning authority for high-value loans, underwriter recommendation reviews, and policy overrides.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400">Credit Authority:</span>
-            <span className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-indigo-400 font-semibold text-xs">
+            <span className="text-xs text-slate-500 font-medium">Credit Authority:</span>
+            <span className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-blue-700 font-bold text-xs shadow-2xs">
               {user?.full_name || 'Credit Committee Manager'}
             </span>
           </div>
@@ -122,84 +121,84 @@ export const CreditManagerPortalPage: React.FC = () => {
         <div
           className={`p-4 rounded-xl border flex items-center justify-between text-xs font-semibold ${
             feedbackMsg.type === 'success'
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-              : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800 shadow-2xs'
+              : 'bg-rose-50 border-rose-200 text-rose-800 shadow-2xs'
           }`}
         >
           <span>{feedbackMsg.text}</span>
-          <button onClick={() => setFeedbackMsg(null)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setFeedbackMsg(null)} className="text-slate-500 hover:text-slate-800">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* KPI Cards */}
+      {/* KPI Cards - Pale White & Pale Light Blue */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-white to-[#F0F7FF] border border-blue-100 rounded-xl p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-xs font-medium">Pending Approvals</span>
-            <Clock className="w-4 h-4 text-amber-400" />
+            <span className="text-slate-600 text-xs font-bold uppercase">Pending Approvals</span>
+            <Clock className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-2xl font-bold text-amber-400 mt-2">
+          <div className="text-2xl font-black text-amber-700 mt-2">
             {isLoading ? '...' : managerData?.pending_approvals_count ?? 0}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Requiring manager sign-off</div>
+          <div className="text-[11px] text-slate-500 mt-1 font-medium">Requiring manager sign-off</div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-white to-[#F0F7FF] border border-blue-100 rounded-xl p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-xs font-medium">Approved Volume</span>
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            <span className="text-slate-600 text-xs font-bold uppercase">Approved Volume</span>
+            <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-bold text-white mt-2">
+          <div className="text-2xl font-black text-slate-900 mt-2">
             {isLoading ? '...' : managerData?.approval_volume_formatted ?? '₹0'}
           </div>
-          <div className="text-[11px] text-emerald-400 mt-1">
+          <div className="text-[11px] text-emerald-700 mt-1 font-bold">
             {managerData?.approval_count ?? 0} approved this cycle
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-white to-[#F0F7FF] border border-blue-100 rounded-xl p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-xs font-medium">Rejection Volume</span>
-            <TrendingDown className="w-4 h-4 text-rose-400" />
+            <span className="text-slate-600 text-xs font-bold uppercase">Rejection Volume</span>
+            <TrendingDown className="w-4 h-4 text-rose-600" />
           </div>
-          <div className="text-2xl font-bold text-white mt-2">
+          <div className="text-2xl font-black text-slate-900 mt-2">
             {isLoading ? '...' : managerData?.rejection_volume_formatted ?? '₹0'}
           </div>
-          <div className="text-[11px] text-rose-400 mt-1">
+          <div className="text-[11px] text-rose-700 mt-1 font-bold">
             {managerData?.rejection_count ?? 0} declined applications
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-white to-[#F0F7FF] border border-blue-100 rounded-xl p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-xs font-medium">Avg Processing Turnaround</span>
-            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span className="text-slate-600 text-xs font-bold uppercase">Avg Processing Turnaround</span>
+            <Sparkles className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-bold text-white mt-2">
+          <div className="text-2xl font-black text-slate-900 mt-2">
             {isLoading ? '...' : managerData?.processing_time ?? '3.5 hrs'}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Within standard credit SLA</div>
+          <div className="text-[11px] text-slate-500 mt-1 font-medium">Within standard credit SLA</div>
         </div>
       </div>
 
       {/* Main Approval Queue & Analyst Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="lg:col-span-2 bg-white border border-blue-100/90 rounded-xl p-5 space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-indigo-400" />
-              <h3 className="text-sm font-semibold text-white">Underwriting Recommendation Queue</h3>
+              <ShieldAlert className="w-4 h-4 text-blue-600" />
+              <h3 className="text-sm font-bold text-slate-900">Underwriting Recommendation Queue</h3>
             </div>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500 font-medium">
               {managerData?.pending_approvals?.length || 0} applications awaiting final decision
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-800/60 text-slate-400">
+              <thead className="bg-[#F0F7FF] text-slate-700 font-bold border-b border-slate-200">
                 <tr>
                   <th className="py-2.5 px-3 rounded-l-lg">Application</th>
                   <th className="py-2.5 px-3">Borrower</th>
@@ -209,7 +208,7 @@ export const CreditManagerPortalPage: React.FC = () => {
                   <th className="py-2.5 px-3 rounded-r-lg text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100 text-slate-800">
                 {managerData?.pending_approvals?.map((c: any) => (
                   <tr key={c.id} className="hover:bg-slate-800/40">
                     <td className="py-3 px-3">
@@ -291,16 +290,16 @@ export const CreditManagerPortalPage: React.FC = () => {
 
         {/* Team Performance & Exceptions Side Panel */}
         <div className="space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-            <h3 className="text-sm font-semibold text-white mb-3">Underwriting Team Productivity</h3>
+          <div className="bg-white border border-blue-100 rounded-xl p-5 shadow-xs">
+            <h3 className="text-sm font-bold text-slate-900 mb-3">Underwriting Team Productivity</h3>
             <div className="space-y-3">
               {managerData?.team_performance?.map((t: any, idx: number) => (
-                <div key={idx} className="p-3 bg-slate-800/40 rounded-lg border border-slate-800 text-xs">
-                  <div className="flex justify-between font-semibold text-white">
+                <div key={idx} className="p-3 bg-gradient-to-br from-white to-[#F0F7FF] rounded-lg border border-blue-100 text-xs shadow-2xs">
+                  <div className="flex justify-between font-bold text-slate-900">
                     <span>{t.role}</span>
-                    <span className="text-emerald-400 font-bold">{t.approval_rate}</span>
+                    <span className="text-emerald-700 font-bold">{t.approval_rate}</span>
                   </div>
-                  <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+                  <div className="flex justify-between text-[11px] text-slate-500 mt-1 font-medium">
                     <span>Reviewed: {t.reviewed_count} cases</span>
                     <span>Avg TAT: {t.avg_turnaround_hours}h</span>
                   </div>
@@ -309,12 +308,12 @@ export const CreditManagerPortalPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-            <div className="flex items-center gap-2 mb-2 text-amber-400">
-              <AlertTriangle className="w-4 h-4" />
-              <h3 className="text-sm font-semibold text-white">Policy Override Protocol</h3>
+          <div className="bg-white border border-amber-200/90 rounded-xl p-5 shadow-xs">
+            <div className="flex items-center gap-2 mb-2 text-amber-700">
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+              <h3 className="text-sm font-bold text-slate-900">Policy Override Protocol</h3>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Any decision overruling the AI recommendation or analyst submission triggers an immutable audit log and mandatory reason requirement under NBFC prudential guidelines.
             </p>
           </div>
@@ -323,11 +322,11 @@ export const CreditManagerPortalPage: React.FC = () => {
 
       {/* DECISION ACTION MODAL */}
       {decisionModalAction && selectedCase && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-lg w-full space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-blue-200 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-slate-900">
                   Credit Sanction: {decisionModalAction} ({selectedCase.application_id})
                 </h3>
                 <div className="text-xs text-slate-400">

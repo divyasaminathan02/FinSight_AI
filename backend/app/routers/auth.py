@@ -231,14 +231,3 @@ def list_demo_users():
     ]
 
 
-@router.post("/logout")
-def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    audit = AuditLog(
-        user_id=current_user.id,
-        action="LOGOUT",
-        resource="AUTH"
-    )
-    db.add(audit)
-    db.commit()
-    return {"message": "Successfully logged out"}
-
