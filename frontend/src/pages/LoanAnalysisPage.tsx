@@ -121,18 +121,18 @@ export const LoanAnalysisPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="finsight-card p-5 bg-gradient-to-r from-slate-950 via-blue-950 to-indigo-950 text-white border-blue-900/60 shadow-lg">
+      <div className="finsight-card p-5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center shadow-md">
-              <Cpu className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-white shadow-xs">
+              <Cpu className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white">LangGraph Multi-Agent Loan Underwriting Engine</h2>
+                <h2 className="text-base font-bold text-[#172033]">LangGraph Multi-Agent Loan Underwriting Engine</h2>
                 <Badge variant="positive">Phase 3 Live</Badge>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-[#4B5563] mt-0.5">
                 Autonomous Coordinated Decisioning: ML Signals → Policy Engine → Explainability & Audit
               </p>
             </div>

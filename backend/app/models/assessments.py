@@ -53,16 +53,61 @@ class CollectionRecord(Base):
     overdue_amount = Column(Float, nullable=False)
     dpd = Column(Integer, default=0, index=True)
     collection_risk_score = Column(Float, default=65.0)  # 0 to 100
-    collection_probability = Column(Float, default=0.85)  # 0.0 to 1.0
-    recommended_strategy = Column(String(100))  # Automated SMS/WhatsApp, Digital Voice Bot, Field Visit, Restructuring
+    collection_probability = Column(Float, default=0.85)  # 0.0 to 1.0 (alias for payment probability)
+    payment_probability = Column(Float, default=0.85)    # 0.0 to 1.0
+    recovery_probability = Column(Float, default=0.80)   # 0.0 to 1.0
+    recommended_strategy = Column(String(150))
     priority = Column(String(20), default="Medium", index=True)  # Low, Medium, High, Critical
     collection_attempts = Column(Integer, default=0)
-    promised_date = Column(DateTime, nullable=True)
+    workflow_stage = Column(String(50), default="OVERDUE", index=True)  # CURRENT, PAYMENT DUE, OVERDUE, COLLECTION_ASSIGNED, CONTACTED, PROMISE_TO_PAY, PAYMENT_RECEIVED, RESOLVED, ESCALATED
+    assigned_officer = Column(String(100), nullable=True, index=True)
+    last_contact_date = Column(DateTime, nullable=True)
+    last_contact_channel = Column(String(50), nullable=True)
+    next_action = Column(String(150), nullable=True)
+    followup_date = Column(DateTime, nullable=True)
+    promise_amount = Column(Float, nullable=True)
+    promise_date = Column(DateTime, nullable=True)
+    promise_status = Column(String(50), nullable=True)  # PENDING, KEPT, BROKEN, CANCELLED
+    is_escalated = Column(Boolean, default=False, index=True)
+    escalation_reason = Column(Text, nullable=True)
     status = Column(String(30), default="Pending", index=True)  # Pending, In_Progress, Recovered, Escalated, Write_Off
+    created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     customer = relationship("Customer", back_populates="collection_records")
     loan = relationship("Loan", back_populates="collection_records")
+
+class CollectionActivity(Base):
+    __tablename__ = "collection_activities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    activity_id = Column(String(50), unique=True, index=True, nullable=False)
+    collection_id = Column(String(50), index=True, nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False, index=True)
+    loan_id = Column(Integer, ForeignKey("loans.id"), nullable=False, index=True)
+    officer_name = Column(String(100), nullable=False)
+    activity_type = Column(String(50), nullable=False, index=True)  # CALL, MESSAGE, NOTE, PROMISE, PAYMENT, FOLLOW_UP, ESCALATE, REASSIGN
+    channel = Column(String(50), default="PHONE")  # CALL, SMS, EMAIL, IN_APP, IN_PERSON
+    notes = Column(Text, nullable=False)
+    is_customer_visible = Column(Boolean, default=False)  # Internal staff notes NOT visible to borrower
+    metadata_json = Column(Text, default="{}")
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+class PromiseToPay(Base):
+    __tablename__ = "promises_to_pay"
+
+    id = Column(Integer, primary_key=True, index=True)
+    promise_id = Column(String(50), unique=True, index=True, nullable=False)
+    collection_id = Column(String(50), index=True, nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False, index=True)
+    loan_id = Column(Integer, ForeignKey("loans.id"), nullable=False, index=True)
+    amount = Column(Float, nullable=False)
+    promise_date = Column(DateTime, nullable=False)
+    status = Column(String(50), default="PENDING", index=True)  # PENDING, KEPT, BROKEN, CANCELLED
+    recorded_by = Column(String(100), nullable=False)
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    resolved_at = Column(DateTime, nullable=True)
 
 class RiskSignal(Base):
     __tablename__ = "risk_signals"

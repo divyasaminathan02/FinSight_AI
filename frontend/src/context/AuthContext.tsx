@@ -17,6 +17,7 @@ interface AuthContextType {
   }) => Promise<void>;
   logout: () => void;
   switchRole: (newRole: User['role']) => void;
+  hasPermission: (permission: string) => boolean;
 }
 
 const DEFAULT_USER: User = {
@@ -25,6 +26,8 @@ const DEFAULT_USER: User = {
   full_name: 'Arjun Mehta',
   role: 'RISK_MANAGER',
   department: 'Portfolio Risk Management',
+  branch: 'Headquarters - Mumbai',
+  permissions: ['risk.view', 'reports.view', 'reports.export', 'tasks.manage'],
   is_active: true,
 };
 
@@ -56,13 +59,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('finsight_user', JSON.stringify(data.user));
     } catch (err) {
       console.warn('Backend login fallback to local session:', err);
-      // Fallback for demonstration if offline
       const demoUser: User = {
         id: 1,
         email,
         full_name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         role: 'RISK_MANAGER',
         department: 'Portfolio Risk Management',
+        branch: 'Headquarters - Mumbai',
         is_active: true,
       };
       setUser(demoUser);
@@ -84,7 +87,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       await authApi.register(userData);
-      // Auto login upon successful registration
       await login(userData.email, userData.password);
     } catch (err) {
       console.warn('Backend register error, creating demo session:', err);
@@ -94,6 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         full_name: userData.full_name,
         role: userData.role,
         department: userData.department || 'Enterprise Financial Operations',
+        branch: 'Headquarters - Mumbai',
         is_active: true,
       };
       setUser(newUser);
@@ -113,19 +116,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const PERSONA_MAP: Record<User['role'], { name: string; email: string; dept: string }> = {
-    RISK_MANAGER: { name: 'Arjun Mehta', email: 'arjun.mehta@finsight.ai', dept: 'Portfolio Risk Management' },
+    // 16 Canonical Roles
+    CUSTOMER: { name: 'Customer Demo', email: 'customer.demo@finsight.ai', dept: 'Retail Borrower' },
+    SALES_OFFICER: { name: 'Sales Officer Demo', email: 'sales.officer@finsight.ai', dept: 'Direct Sales & Origination' },
+    RELATIONSHIP_MANAGER: { name: 'Relationship Manager Demo', email: 'relationship.manager@finsight.ai', dept: 'Commercial & MSME Banking' },
+    CREDIT_ANALYST: { name: 'Credit Analyst Demo', email: 'credit.analyst@finsight.ai', dept: 'Credit Appraisal & Underwriting' },
+    CREDIT_MANAGER: { name: 'Credit Manager Demo', email: 'credit.manager@finsight.ai', dept: 'Credit Sanctions & Policy' },
+    FRAUD_OFFICER: { name: 'Fraud Officer Demo', email: 'fraud.officer@finsight.ai', dept: 'Fraud Forensics & Investigation' },
+    KYC_OFFICER: { name: 'KYC Officer Demo', email: 'kyc.officer@finsight.ai', dept: 'Identity & AML Verification Desk' },
+    COLLECTIONS_OFFICER: { name: 'Collections Officer Demo', email: 'collections.officer@finsight.ai', dept: 'Field & Tele-Collections' },
+    COLLECTIONS_MANAGER: { name: 'Collections Manager Demo', email: 'collections.manager@finsight.ai', dept: 'NPA Recovery & Remediation' },
+    OPERATIONS_OFFICER: { name: 'Operations Officer Demo', email: 'operations.officer@finsight.ai', dept: 'Loan Booking & Mandates' },
+    OPERATIONS_MANAGER: { name: 'Operations Manager Demo', email: 'operations.manager@finsight.ai', dept: 'Back-Office Operations & Settlement' },
+    FINANCE_OFFICER: { name: 'Finance Officer Demo', email: 'finance.officer@finsight.ai', dept: 'Payment Reconciliation & Accounting' },
+    FINANCE_MANAGER: { name: 'Finance Manager Demo', email: 'finance.manager@finsight.ai', dept: 'Treasury & ALM Operations' },
+    RISK_ANALYST: { name: 'Risk Analyst Demo', email: 'risk.analyst@finsight.ai', dept: 'Portfolio Risk & Quantitative Modeling' },
+    RISK_MANAGER: { name: 'Risk Manager Demo', email: 'risk.manager@finsight.ai', dept: 'Enterprise Portfolio Risk' },
+    ADMIN: { name: 'Admin Demo', email: 'admin.demo@finsight.ai', dept: 'Executive Risk & Platform Administration' },
+
+    // Legacy Aliases
     CREDIT_OFFICER: { name: 'Priya Sharma', email: 'priya.sharma@finsight.ai', dept: 'Credit Underwriting Desk' },
     COLLECTION_MANAGER: { name: 'Vikram Singh', email: 'vikram.singh@finsight.ai', dept: 'Delinquency & Remediation Desk' },
-    FINANCE_MANAGER: { name: 'Sanjay Rao', email: 'sanjay.rao@finsight.ai', dept: 'Treasury & ALM Operations' },
-    ANALYST: { name: 'Kavita Verma', email: 'kavita.verma@finsight.ai', dept: 'Portfolio Intelligence & Analytics' },
-    AUDITOR: { name: 'Rahul Sen', email: 'rahul.sen@finsight.ai', dept: 'Regulatory Compliance & Audit' },
-    ADMIN: { name: 'Chief Risk Officer', email: 'admin@finsight.ai', dept: 'Executive Risk Committee' },
-    CUSTOMER: { name: 'Rajesh Kumar Verma', email: 'rajesh.verma@customer.finsight.ai', dept: 'Borrower (CUST-00001)' },
     OPERATIONS: { name: 'Deepa Nair', email: 'deepa.nair@finsight.ai', dept: 'Loan Operations & Disbursement' },
     EXECUTIVE: { name: 'Vikramaditya Singhania', email: 'ceo@finsight.ai', dept: 'Office of the CEO & Board' },
+    SALES: { name: 'Kunal Singhal', email: 'kunal.singhal@finsight.ai', dept: 'Retail & MSME Origination' },
+    ANALYST: { name: 'Kavita Verma', email: 'kavita.verma@finsight.ai', dept: 'Portfolio Intelligence & Analytics' },
+    AUDITOR: { name: 'Rahul Sen', email: 'rahul.sen@finsight.ai', dept: 'Regulatory Compliance & Audit' },
   };
 
-  const switchRole = (newRole: User['role']) => {
+  const switchRole = async (newRole: User['role']) => {
+    try {
+      const res = await authApi.switchRole(newRole);
+      if (res && res.user) {
+        setUser(res.user);
+        if (res.access_token) {
+          setToken(res.access_token);
+          localStorage.setItem('finsight_token', res.access_token);
+        }
+        localStorage.setItem('finsight_user', JSON.stringify(res.user));
+        return;
+      }
+    } catch {
+      // Local fallback
+    }
     const persona = PERSONA_MAP[newRole] || { name: 'Institutional Officer', email: `${newRole.toLowerCase()}@finsight.ai`, dept: 'Enterprise Risk' };
     const updated: User = {
       id: user?.id || 1,
@@ -133,11 +166,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       full_name: persona.name,
       email: persona.email,
       department: persona.dept,
+      branch: 'Headquarters - Mumbai',
       is_active: true,
     };
     setUser(updated);
     localStorage.setItem('finsight_user', JSON.stringify(updated));
   };
+
+  const hasPermission = (permission: string): boolean => {
+    if (!user) return false;
+    if (user.role === 'ADMIN') return true;
+    if (user.permissions && user.permissions.includes(permission)) return true;
+    return false;
+  };
+
 
   return (
     <AuthContext.Provider
@@ -150,6 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         logout,
         switchRole,
+        hasPermission,
       }}
     >
       {children}

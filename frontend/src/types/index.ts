@@ -1,12 +1,50 @@
+export type UserRole =
+  | 'CUSTOMER'
+  | 'SALES_OFFICER'
+  | 'RELATIONSHIP_MANAGER'
+  | 'CREDIT_ANALYST'
+  | 'CREDIT_MANAGER'
+  | 'FRAUD_OFFICER'
+  | 'KYC_OFFICER'
+  | 'COLLECTIONS_OFFICER'
+  | 'COLLECTIONS_MANAGER'
+  | 'OPERATIONS_OFFICER'
+  | 'OPERATIONS_MANAGER'
+  | 'FINANCE_OFFICER'
+  | 'FINANCE_MANAGER'
+  | 'RISK_ANALYST'
+  | 'RISK_MANAGER'
+  | 'ADMIN'
+  // Legacy aliases
+  | 'CREDIT_OFFICER'
+  | 'COLLECTION_MANAGER'
+  | 'OPERATIONS'
+  | 'EXECUTIVE'
+  | 'SALES'
+  | 'ANALYST'
+  | 'AUDITOR';
+
 export interface User {
   id: number;
   email: string;
   full_name: string;
-  role: 'ADMIN' | 'CREDIT_OFFICER' | 'RISK_MANAGER' | 'COLLECTION_MANAGER' | 'FINANCE_MANAGER' | 'ANALYST' | 'AUDITOR' | 'CUSTOMER' | 'OPERATIONS' | 'EXECUTIVE';
+  role: UserRole;
   department?: string;
+  branch?: string;
+  permissions?: string[];
   is_active: boolean;
   last_login?: string;
 }
+
+export interface DemoUserItem {
+  name: string;
+  email: string;
+  role: UserRole;
+  department: string;
+  description: string;
+  password_hint: string;
+}
+
 
 export interface ExecutiveKPICardData {
   id: string;
@@ -173,11 +211,16 @@ export interface NotificationItem {
   notification_id: string;
   title: string;
   message: string;
-  severity: string;
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT' | string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL' | string;
   category: string;
   responsible_agent?: string;
   is_read: boolean;
+  status?: string;
+  event_key?: string;
+  action_url?: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface LoanApplicationItem {
@@ -290,3 +333,153 @@ export interface FinanceOverviewData {
   }>;
 }
 
+export interface CustomerDashboardData {
+  customer: {
+    id: number;
+    customer_id: string;
+    name: string;
+    email: string;
+    credit_score: number;
+    risk_tier: string;
+    profile_completion: number;
+    kyc_status: string;
+  };
+  overview: {
+    active_loans_count: number;
+    outstanding_principal: number;
+    next_emi_amount: number;
+    next_emi_date: string;
+    payment_status: string;
+    available_credit_limit: number;
+  };
+  current_application: {
+    id: number;
+    application_id: string;
+    product_type: string;
+    requested_amount: number;
+    requested_tenure: number;
+    status: string;
+    created_at: string;
+    approved_amount: number | null;
+    reviewer_notes: string | null;
+  } | null;
+  recent_payments: Array<{
+    transaction_id: string;
+    amount: number;
+    type: string;
+    status: string;
+    channel: string;
+    date: string;
+  }>;
+  notifications: Array<{
+    id: number;
+    title: string;
+    message: string;
+    severity: string;
+    category: string;
+    is_read: boolean;
+    created_at: string;
+  }>;
+  support_tickets: Array<{
+    ticket_id: string;
+    subject: string;
+    category: string;
+    priority: string;
+    status: string;
+    created_at: string;
+  }>;
+}
+
+export interface CustomerProfileData {
+  personal_info: {
+    customer_id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    date_of_birth: string | null;
+    gender: string;
+    pan_masked: string;
+    aadhaar_masked: string;
+  };
+  contact_info: {
+    address_line: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+  employment_info: {
+    employment_type: string;
+    occupation: string;
+    employer_name: string;
+    designation: string;
+    years_employed: number;
+    monthly_income: number;
+    other_income: number;
+  };
+  bank_info: {
+    bank_name: string;
+    bank_account_number: string;
+    bank_ifsc: string;
+    account_type: string;
+  };
+  kyc_info: {
+    kyc_status: string;
+    verified_documents_count: number;
+    cibil_score: number;
+    risk_tier: string;
+    pan_verified: boolean;
+    aadhaar_verified: boolean;
+  };
+  audit_history: Array<{
+    action: string;
+    resource: string;
+    details: any;
+    timestamp: string;
+  }>;
+}
+
+export interface CustomerProductItem {
+  id: number;
+  product_code: string;
+  name: string;
+  category: string;
+  min_amount: number;
+  max_amount: number;
+  min_tenure_months: number;
+  max_tenure_months: number;
+  interest_rate_pa: number;
+  processing_fee_pct: number;
+  description: string;
+  eligibility_summary: string;
+}
+
+export interface CustomerLoanDetail {
+  loan_id: string;
+  product_type: string;
+  principal: number;
+  outstanding_amount: number;
+  interest_rate: number;
+  tenure_months: number;
+  emi: number;
+  dpd: number;
+  status: string;
+  next_due_date?: string | null;
+  disbursed_date: string | null;
+  repayment_schedule: Array<{
+    repayment_id: string;
+    due_date: string;
+    amount_due: number;
+    amount_paid: number;
+    status: string;
+    payment_date: string | null;
+  }>;
+  payment_history: Array<{
+    transaction_id: string;
+    amount: number;
+    type: string;
+    channel: string;
+    status: string;
+    timestamp: string;
+  }>;
+}

@@ -43,7 +43,7 @@ def list_transactions(
             transaction_amount=t.transaction_amount,
             transaction_type=t.transaction_type,
             transaction_timestamp=t.transaction_timestamp,
-            channel=t.channel,
+            channel=t.channel or "SYSTEM",
             status=t.status,
             category=t.category
         ))

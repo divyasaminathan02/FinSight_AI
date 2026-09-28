@@ -53,6 +53,56 @@ class LoanApplication(Base):
     reviewed_by = Column(String(100), nullable=True)
     reviewed_at = Column(DateTime, nullable=True)
     disbursed_at = Column(DateTime, nullable=True)
+    
+    # Sales & Credit Workflow fields
+    assigned_officer = Column(String(100), nullable=True, index=True)
+    credit_analyst = Column(String(100), nullable=True, index=True)
+    credit_manager = Column(String(100), nullable=True, index=True)
+    analyst_recommendation = Column(String(50), nullable=True)  # APPROVE_FOR_MANAGER, REQUEST_INFORMATION, ESCALATE, RECOMMEND_REJECTION
+    analyst_notes = Column(Text, nullable=True)
+    analyst_submitted_at = Column(DateTime, nullable=True)
+    manager_decision = Column(String(50), nullable=True)        # APPROVED, REJECTED, RETURN_TO_ANALYST, INFO_REQUESTED
+    manager_decision_reason = Column(Text, nullable=True)
+    override_reason = Column(Text, nullable=True)
+    
+    # AI ML Credit Agent Outputs
+    ai_credit_score = Column(Float, nullable=True)
+    ai_recommendation = Column(String(50), nullable=True)       # APPROVE, REVIEW, REJECT
+    ai_pd = Column(Float, nullable=True)
+    ai_dti = Column(Float, nullable=True)
+    ai_affordability = Column(Float, nullable=True)
+    ai_recommended_amount = Column(Float, nullable=True)
+    ai_recommended_tenure = Column(Integer, nullable=True)
+    ai_risk_category = Column(String(50), nullable=True)
+    
+    # Cross-Module Workflow Stages: SUBMITTED -> KYC_REVIEW -> FRAUD_REVIEW -> CREDIT_REVIEW -> RISK_REVIEW -> APPROVED
+    workflow_stage = Column(String(50), default="SUBMITTED", index=True)
+    kyc_status = Column(String(50), default="NOT_STARTED", index=True)     # NOT_STARTED, DOCUMENTS_PENDING, UNDER_REVIEW, ADDITIONAL_INFORMATION_REQUIRED, VERIFIED, REJECTED
+    fraud_status = Column(String(50), default="PENDING", index=True)        # PENDING, UNDER_INVESTIGATION, CLEARED, CONFIRMED_FRAUD, ESCALATED
+    risk_status = Column(String(50), default="PENDING", index=True)         # PENDING, UNDER_REVIEW, APPROVED, REJECTED, ESCALATED
+    
+    # Risk Analyst & Manager Fields
+    risk_analyst = Column(String(100), nullable=True, index=True)
+    risk_manager = Column(String(100), nullable=True, index=True)
+    risk_recommendation = Column(String(50), nullable=True) # APPROVE_RISK, REQUEST_INFORMATION, ESCALATE, RECOMMEND_REJECTION
+    risk_notes = Column(Text, nullable=True)
+    risk_decision = Column(String(50), nullable=True)       # APPROVED, REJECTED, RETURN_TO_ANALYST, INFO_REQUESTED
+    risk_decision_reason = Column(Text, nullable=True)
+    risk_override_reason = Column(Text, nullable=True)
+    
+    # Operations & Disbursement Fields
+    disbursement_status = Column(String(50), default="PENDING", index=True) # PENDING, READY_FOR_DISBURSEMENT, DISBURSED, FAILED
+    operations_officer = Column(String(100), nullable=True, index=True)
+    operations_notes = Column(Text, nullable=True)
+    offer_accepted = Column(Boolean, default=False)
+    offer_accepted_at = Column(DateTime, nullable=True)
+    disbursement_date = Column(DateTime, nullable=True)
+    net_disbursed_amount = Column(Float, nullable=True)
+    processing_fee = Column(Float, nullable=True)
+    bank_name = Column(String(100), nullable=True)
+    bank_account_number = Column(String(100), nullable=True)
+    bank_ifsc = Column(String(50), nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
     customer = relationship("Customer", back_populates="applications")

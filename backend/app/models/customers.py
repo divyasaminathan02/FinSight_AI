@@ -27,6 +27,12 @@ class Customer(Base):
     income_stability = Column(Float, default=0.5)  # 0.0 to 1.0
     previous_defaults = Column(Integer, default=0)
     risk_tier = Column(String(20), default="Moderate", index=True)  # Low, Moderate, High, Critical
+    assigned_officer = Column(String(100), nullable=True, index=True)  # Sales Officer
+    relationship_manager = Column(String(100), nullable=True, index=True)  # Relationship Manager
+    relationship_notes_json = Column(Text, default="[]")
+    kyc_status = Column(String(50), default="NOT_STARTED", index=True)  # NOT_STARTED, DOCUMENTS_PENDING, UNDER_REVIEW, ADDITIONAL_INFORMATION_REQUIRED, VERIFIED, REJECTED
+    kyc_verified_at = Column(DateTime, nullable=True)
+    kyc_verified_by = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

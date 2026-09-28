@@ -5,6 +5,8 @@ from sqlalchemy import func, desc
 
 from app.database import get_db
 from app.models.customers import Customer, CustomerProfile
+from app.models.users import User, UserRole
+from app.security.jwt import get_current_user_optional
 from app.schemas.customers import CustomerListResponse, CustomerListItem
 from app.agents.customer_agent import CustomerIntelligenceAgent
 
@@ -17,9 +19,15 @@ def list_customers(
     search: Optional[str] = None,
     risk_tier: Optional[str] = None,
     employment_type: Optional[str] = None,
+    current_user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     query = db.query(Customer)
+
+    # Scoped visibility: Customer sees strictly their own profile record
+    if current_user and current_user.role == UserRole.CUSTOMER:
+        query = query.filter((Customer.email == current_user.email) | (Customer.id == current_user.id))
+
     
     if search:
         search_fmt = f"%{search}%"

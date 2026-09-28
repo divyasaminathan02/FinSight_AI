@@ -20,12 +20,12 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Badge } from '../components/common/Badge';
-import { settingsApi, healthApi } from '../services/api';
+import { settingsApi, healthApi, usersApi, loansApi } from '../services/api';
 import { SIMULATED_DATA_NOTICE } from '../utils/masking';
 
 export const SettingsPage: React.FC = () => {
   const { user, switchRole } = useAuth();
-  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'thresholds' | 'policies' | 'notifications' | 'models' | 'health'>('thresholds');
+  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'thresholds' | 'policies' | 'notifications' | 'models' | 'health' | 'users' | 'approval_rules' | 'products'>('thresholds');
 
   // Config State
   const [config, setConfig] = useState<any>(null);
@@ -57,10 +57,31 @@ export const SettingsPage: React.FC = () => {
   const [smsBorrowerEmi, setSmsBorrowerEmi] = useState<boolean>(true);
   const [webhookAutoReject, setWebhookAutoReject] = useState<boolean>(true);
 
+  // Admin entities
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [approvalRules, setApprovalRules] = useState<any[]>([]);
+  const [productsList, setProductsList] = useState<any[]>([]);
+
   useEffect(() => {
     loadSettings();
     loadHealth();
+    loadAdminData();
   }, []);
+
+  const loadAdminData = async () => {
+    try {
+      const [u, r, p] = await Promise.all([
+        usersApi.list(),
+        loansApi.getApprovalRules(),
+        loansApi.getProducts()
+      ]);
+      setUsersList(u || []);
+      setApprovalRules(r || []);
+      setProductsList(p || []);
+    } catch (e) {
+      console.warn('Admin data load:', e);
+    }
+  };
 
   const loadSettings = async () => {
     setIsLoading(true);
@@ -213,6 +234,9 @@ export const SettingsPage: React.FC = () => {
         {[
           { id: 'thresholds', label: 'Risk Thresholds', icon: Sliders },
           { id: 'policies', label: 'Decision Policies', icon: Zap },
+          { id: 'approval_rules', label: 'Approval Tiers', icon: CheckCircle2 },
+          { id: 'users', label: 'User Management', icon: User },
+          { id: 'products', label: 'Loan Products', icon: Database },
           { id: 'notifications', label: 'Notification Preferences', icon: Bell },
           { id: 'models', label: 'Model Versions & MLflow', icon: Cpu },
           { id: 'health', label: 'System Health', icon: Activity },
@@ -399,6 +423,162 @@ export const SettingsPage: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Approval Rules Tab */}
+      {activeTab === 'approval_rules' && (
+        <div className="finsight-card p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white">Institutional Approval Rules & Sanction Governance</h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Configurable exposure thresholds, minimum underwriting metrics, and role escalation matrix.
+              </p>
+            </div>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-blue-900/60 text-blue-300 border border-blue-800">
+              {approvalRules.length} Active Tiers
+            </span>
+          </div>
+
+          <div className="overflow-x-auto border border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-800/60 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-800">
+                <tr>
+                  <th className="p-3">Tier Code</th>
+                  <th className="p-3">Approval Level</th>
+                  <th className="p-3">Ticket Range</th>
+                  <th className="p-3">Required Authority</th>
+                  <th className="p-3">Min CIBIL</th>
+                  <th className="p-3">Max DTI</th>
+                  <th className="p-3">Escalation Role</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                {approvalRules.map((rule) => (
+                  <tr key={rule.id} className="hover:bg-slate-800/30">
+                    <td className="p-3 font-mono font-bold text-blue-400">{rule.rule_code}</td>
+                    <td className="p-3 font-semibold text-white">{rule.tier_name}</td>
+                    <td className="p-3 text-emerald-400 font-bold">
+                      ₹{(rule.min_amount / 100000).toFixed(1)}L &ndash; ₹{(rule.max_amount / 100000).toFixed(1)}L
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-200 border border-slate-700">
+                        {rule.required_role?.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono">{rule.min_cibil_score}</td>
+                    <td className="p-3 font-mono">{rule.max_dti_pct}%</td>
+                    <td className="p-3 text-amber-400 font-semibold">{rule.escalation_role?.replace('_', ' ')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* User Management Tab */}
+      {activeTab === 'users' && (
+        <div className="finsight-card p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white">Platform Users & Institutional Role Assignments</h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Manage registered officers, branches, and functional permissions across NBFC departments.
+              </p>
+            </div>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-indigo-900/60 text-indigo-300 border border-indigo-800">
+              {usersList.length} Organization Users
+            </span>
+          </div>
+
+          <div className="overflow-x-auto border border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-800/60 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-800">
+                <tr>
+                  <th className="p-3">Officer Name</th>
+                  <th className="p-3">Email Address</th>
+                  <th className="p-3">Assigned Role</th>
+                  <th className="p-3">Department</th>
+                  <th className="p-3">Branch Location</th>
+                  <th className="p-3">Account Status</th>
+                  <th className="p-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                {usersList.map((u) => (
+                  <tr key={u.id} className="hover:bg-slate-800/30">
+                    <td className="p-3 font-bold text-white">{u.full_name}</td>
+                    <td className="p-3 font-mono text-[11px] text-slate-400">{u.email}</td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800">
+                        {u.role?.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="p-3 text-slate-400">{u.department || 'Operations'}</td>
+                    <td className="p-3 text-slate-400">{u.branch || 'Headquarters - Mumbai'}</td>
+                    <td className="p-3">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        u.is_active ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'
+                      }`}>
+                        {u.is_active ? 'ACTIVE' : 'SUSPENDED'}
+                      </span>
+                    </td>
+                    <td className="p-3 text-right">
+                      <button
+                        onClick={async () => {
+                          await usersApi.update(u.id, { is_active: !u.is_active });
+                          loadAdminData();
+                        }}
+                        className="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-colors cursor-pointer"
+                      >
+                        {u.is_active ? 'Deactivate' : 'Activate'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Loan Products Tab */}
+      {activeTab === 'products' && (
+        <div className="finsight-card p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white">Credit Products Catalog & Rate Configuration</h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Active lending facilities offered to retail, MSME, commercial, and gold loan borrowers.
+              </p>
+            </div>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-purple-900/60 text-purple-300 border border-purple-800">
+              {productsList.length} Active Facilities
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {productsList.map((p) => (
+              <div key={p.id} className="p-4 bg-slate-800/40 rounded-xl border border-slate-700/60 space-y-3 text-xs">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">{p.category}</span>
+                    <h4 className="text-sm font-bold text-white mt-0.5">{p.name}</h4>
+                  </div>
+                  <span className="text-base font-bold text-emerald-400 font-mono">{p.interest_rate}%</span>
+                </div>
+                <p className="text-[11px] text-slate-400 line-clamp-2">{p.description}</p>
+                <div className="grid grid-cols-2 gap-2 p-2.5 bg-slate-900/60 rounded-lg text-[11px] text-slate-300 font-mono">
+                  <div>Amount: ₹{(p.min_amount / 100000).toFixed(1)}L - ₹{(p.max_amount / 100000).toFixed(1)}L</div>
+                  <div>Tenure: {p.min_tenure}-{p.max_tenure}m</div>
+                  <div>Fee: {p.processing_fee_pct}%</div>
+                  <div>Code: {p.product_code}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

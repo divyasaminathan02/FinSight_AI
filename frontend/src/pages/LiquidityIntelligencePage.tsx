@@ -32,18 +32,18 @@ export const LiquidityIntelligencePage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="finsight-card p-5 bg-gradient-to-r from-blue-950 via-slate-900 to-[#0B132B] text-white border-blue-900/60">
+      <div className="finsight-card p-5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-              <Coins className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-white shadow-xs">
+              <Coins className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white">Liquidity Intelligence Agent (ALM Cashflow Forecaster)</h2>
+                <h2 className="text-base font-bold text-[#172033]">Liquidity Intelligence Agent (ALM Cashflow Forecaster)</h2>
                 <Badge variant="positive">XGBoost Time-Series</Badge>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-[#4B5563] mt-0.5">
                 Institutional Asset-Liability Management (ALM), 7d/30d/90d Inflow Projections & Capital Stress Shock Simulators
               </p>
             </div>
@@ -254,8 +254,8 @@ export const LiquidityIntelligencePage: React.FC = () => {
               ))}
             </div>
 
-            <div className="p-3 bg-blue-50/50 rounded-lg border border-blue-200/70 text-[11px] text-blue-900 font-medium flex items-start gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+            <div className="p-3 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0] text-xs text-[#1F2937] font-medium flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
               <span>All 3 stress scenarios maintain institutional buffers above RBI NBFC-ND-SI regulatory thresholds (1.15x LCR).</span>
             </div>
           </div>

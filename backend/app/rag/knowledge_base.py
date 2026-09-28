@@ -155,7 +155,8 @@ class KnowledgeBase:
             
             # Keyword overlap boost
             content_lower = chunk.content.lower()
-            overlap_count = sum(1 for w in query_words if len(w) > 3 and w in content_lower)
+            title_lower = chunk.title.lower()
+            overlap_count = sum(1 for w in query_words if (len(w) >= 3 and (w in content_lower or w in title_lower)))
             boost = min(0.35, overlap_count * 0.08)
             final_score = cos_sim + boost
 

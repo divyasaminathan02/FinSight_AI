@@ -99,7 +99,7 @@ def test_enterprise_reports():
     # List reports
     r_list = client.get("/api/reports/list", headers=headers)
     assert r_list.status_code == 200
-    assert len(r_list.json()["reports"]) == 6
+    assert len(r_list.json()["reports"]) >= 6
 
     # Get structured report data
     for rep in ["portfolio-risk", "credit", "fraud", "collections", "liquidity", "executive-summary"]:

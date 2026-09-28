@@ -14,353 +14,722 @@ import {
   Shield,
   FileText,
   AlertCircle,
-  XCircle
+  XCircle,
+  AlertTriangle,
+  ArrowRight,
+  Filter,
+  DollarSign,
+  UserCheck,
+  Send,
+  HelpCircle,
+  Check,
+  ChevronRight
 } from 'lucide-react';
-import { loansApi } from '../services/api';
-import { LoanApplicationItem, DocumentItem } from '../types';
+import { operationsApi } from '../services/api';
 
 export const OperationsPortalPage: React.FC = () => {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<'disbursements' | 'documents'>('disbursements');
-  const [disbursingApp, setDisbursingApp] = useState<LoanApplicationItem | null>(null);
-  const [interestRate, setInterestRate] = useState<number>(13.5);
-  const [disbSuccessMsg, setDisbSuccessMsg] = useState<string>('');
-  const [disbResult, setDisbResult] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'queue' | 'manager'>('queue');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [productFilter, setProductFilter] = useState<string>('');
+  const [riskFilter, setRiskFilter] = useState<string>('');
 
-  // 1. Fetch Approved Applications ready for disbursement
-  const { data: appsData, isLoading: appsLoading, refetch: refetchApps } = useQuery({
-    queryKey: ['operations-approved-apps'],
-    queryFn: () => loansApi.getApplications({ status: 'Approved', page_size: 50 })
+  // Selected app modals
+  const [checkAppId, setCheckAppId] = useState<string | null>(null);
+  const [disburseAppId, setDisburseAppId] = useState<string | null>(null);
+  const [actionModalApp, setActionModalApp] = useState<{ id: string; action: string } | null>(null);
+  const [actionNotes, setActionNotes] = useState<string>('');
+  const [actionReason, setActionReason] = useState<string>('');
+  const [targetOfficer, setTargetOfficer] = useState<string>('');
+
+  // 1. Fetch Operations Dashboard KPIs
+  const { data: dashData, isLoading: dashLoading, refetch: refetchDash } = useQuery({
+    queryKey: ['operations-dashboard'],
+    queryFn: () => operationsApi.getDashboard()
   });
 
-  // 2. Fetch KYC Documents pending review
-  const { data: docsData, isLoading: docsLoading, refetch: refetchDocs } = useQuery({
-    queryKey: ['operations-documents'],
-    queryFn: () => loansApi.getDocuments()
+  // 2. Fetch Operations Cases Work Queue
+  const { data: casesData, isLoading: casesLoading, refetch: refetchCases } = useQuery({
+    queryKey: ['operations-cases', statusFilter, productFilter, riskFilter],
+    queryFn: () => operationsApi.getCases({
+      status: statusFilter || undefined,
+      loan_product: productFilter || undefined,
+      risk_level: riskFilter || undefined
+    })
+  });
+
+  // 3. Pre-disbursement check query
+  const { data: checkData, isLoading: checkLoading, refetch: refetchCheck } = useQuery({
+    queryKey: ['operations-precheck', checkAppId],
+    queryFn: () => checkAppId ? operationsApi.getPreDisbursementCheck(checkAppId) : null,
+    enabled: !!checkAppId
+  });
+
+  // 4. Disbursement details query
+  const { data: disbDetails, isLoading: disbDetailsLoading } = useQuery({
+    queryKey: ['operations-disb-details', disburseAppId],
+    queryFn: () => disburseAppId ? operationsApi.getDisbursementDetails(disburseAppId) : null,
+    enabled: !!disburseAppId
+  });
+
+  // 5. Operations Manager Dashboard query
+  const { data: mgrData } = useQuery({
+    queryKey: ['operations-manager-dashboard'],
+    queryFn: () => operationsApi.getManagerDashboard(),
+    enabled: activeTab === 'manager'
+  });
+
+  // Action mutation
+  const actionMutation = useMutation({
+    mutationFn: ({ appId, payload }: { appId: string; payload: any }) =>
+      operationsApi.action(appId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['operations-dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['operations-cases'] });
+      setActionModalApp(null);
+      setActionNotes('');
+      setActionReason('');
+    }
   });
 
   // Disbursement mutation
   const disburseMutation = useMutation({
-    mutationFn: ({ appId, rate }: { appId: string; rate: number }) =>
-      loansApi.disburseApplication(appId, {
-        interest_rate: rate,
-        remarks: 'Operations verification passed; capital released via RTGS/NEFT.'
-      }),
+    mutationFn: ({ appId, payload }: { appId: string; payload: any }) =>
+      operationsApi.disburse(appId, payload),
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['operations-approved-apps'] });
-      queryClient.invalidateQueries({ queryKey: ['loan-applications'] });
-      queryClient.invalidateQueries({ queryKey: ['loans'] });
-      setDisbResult(res);
-      setDisbSuccessMsg(`Disbursement executed! Core Loan ID: ${res.loan_id} activated.`);
-      setDisbursingApp(null);
+      queryClient.invalidateQueries({ queryKey: ['operations-dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['operations-cases'] });
+      setDisburseAppId(null);
+      alert(`Demo Disbursement Executed Successfully!\n\nLoan ID: ${res.loan?.loan_id}\nAmount: ₹${res.loan?.net_disbursed_amount?.toLocaleString()}\nTransaction Ref: ${res.transaction?.reference}`);
+    },
+    onError: (err: any) => {
+      alert(`Disbursement Error: ${err?.response?.data?.detail || err.message}`);
     }
   });
 
-  // Document verification mutation
-  const verifyDocMutation = useMutation({
-    mutationFn: ({ docId, action }: { docId: string; action: 'VERIFIED' | 'REJECTED' }) =>
-      loansApi.verifyDocument(docId, action, 'Verified by Operations Desk'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['operations-documents'] });
-    }
-  });
-
-  const approvedApps: LoanApplicationItem[] = appsData?.items || [];
-  const documents: DocumentItem[] = docsData || [];
+  const cases = casesData?.cases || [];
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-md shadow-purple-500/20">
+          <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-md shadow-purple-500/20">
             <Layers className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Loan Operations & Servicing Desk</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight">Operations, Pre-Disbursement & Booking Desk</h1>
             <p className="text-xs text-slate-400">
-              Sanction verification, KYC document authentication, core ledger account setup & disbursement
+              Institutional pre-disbursement verification, regulatory checks, demo core disbursement & loan account booking
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
+          <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+            <button
+              onClick={() => setActiveTab('queue')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'queue' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Operations Queue
+            </button>
+            <button
+              onClick={() => setActiveTab('manager')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'manager' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Executive Console
+            </button>
+          </div>
+
           <button
-            onClick={() => { refetchApps(); refetchDocs(); }}
+            onClick={() => { refetchDash(); refetchCases(); }}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5 text-purple-400" />
-            <span>Sync Ops Tasks</span>
+            <span>Sync Ops</span>
           </button>
         </div>
       </div>
 
-      {disbSuccessMsg && disbResult && (
-        <div className="p-4 bg-emerald-950/80 border border-emerald-700 rounded-2xl text-emerald-200 text-xs space-y-1 shadow-lg">
-          <div className="flex items-center gap-2 font-bold text-sm text-emerald-300">
-            <CheckCircle className="w-5 h-5 text-emerald-400" />
-            <span>{disbSuccessMsg}</span>
+      {/* Real Backend Operational KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
+          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-amber-400" /> Awaiting Operations
+          </span>
+          <div className="text-2xl font-bold text-white tracking-tight">
+            {dashData?.applications_awaiting_operations ?? 0}
           </div>
-          <div className="pl-7 text-[11px] space-y-0.5 text-emerald-200/90">
-            <div>Principal Sanctioned: ₹{disbResult.disbursed_amount?.toLocaleString()}</div>
-            <div>Tenure: {disbResult.tenure_months} months @ {disbResult.interest_rate}% p.a.</div>
-            <div>Monthly EMI: ₹{disbResult.monthly_emi?.toLocaleString()} (Auto-Debit Mandate Generated)</div>
+          <div className="text-[10px] text-slate-500">Approved facilities</div>
+        </div>
+
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
+          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-blue-400" /> Disbursement Pending
+          </span>
+          <div className="text-2xl font-bold text-blue-400 tracking-tight">
+            {dashData?.disbursement_pending ?? 0}
+          </div>
+          <div className="text-[10px] text-slate-500">Pre-checks active</div>
+        </div>
+
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
+          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-purple-400" /> Pending Documents
+          </span>
+          <div className="text-2xl font-bold text-purple-400 tracking-tight">
+            {dashData?.documents_pending ?? 0}
+          </div>
+          <div className="text-[10px] text-slate-500">Awaiting verification</div>
+        </div>
+
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
+          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Today's Disbursed
+          </span>
+          <div className="text-xl font-bold text-emerald-400 tracking-tight">
+            ₹{((dashData?.today_disbursements?.amount || 0) / 100000).toFixed(1)}L
+          </div>
+          <div className="text-[10px] text-emerald-400/80 font-medium">
+            {dashData?.today_disbursements?.count ?? 0} facilities booked
           </div>
         </div>
-      )}
 
-      {/* Tabs */}
-      <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
-        <button
-          onClick={() => setActiveTab('disbursements')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-            activeTab === 'disbursements'
-              ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-              : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
-          }`}
-        >
-          <Zap className="w-4 h-4" />
-          <span>Disbursement Queue ({approvedApps.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('documents')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-            activeTab === 'documents'
-              ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-              : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
-          }`}
-        >
-          <FileCheck className="w-4 h-4" />
-          <span>KYC Document Verification ({documents.filter(d => d.status !== 'VERIFIED').length} Pending)</span>
-        </button>
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-1">
+          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-400" /> Ops Exceptions
+          </span>
+          <div className="text-2xl font-bold text-rose-400 tracking-tight">
+            {dashData?.operational_exceptions ?? 0}
+          </div>
+          <div className="text-[10px] text-slate-500">Flagged for escalation</div>
+        </div>
       </div>
 
-      {/* Tab 1: Disbursements Queue */}
-      {activeTab === 'disbursements' && (
-        <div className="space-y-4">
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-white text-sm">Approved Applications Awaiting Capital Release</h3>
-                <span className="text-[11px] text-slate-400">Applications sanctioned by Credit Underwriting requiring operations release</span>
-              </div>
-              <span className="text-xs px-2.5 py-1 bg-purple-950 text-purple-300 border border-purple-800 rounded-full font-bold">
-                {approvedApps.length} Ready for Disbursal
+      {activeTab === 'queue' && (
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
+          {/* Filters Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-slate-400 flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5" /> Filters:
               </span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+              >
+                <option value="">All Workflow Stages</option>
+                <option value="APPROVED">Approved by Risk</option>
+                <option value="OFFER_SENT">Offer Sent</option>
+                <option value="CUSTOMER_ACCEPTED">Customer Accepted</option>
+                <option value="OPERATIONS_REVIEW">Operations Review</option>
+                <option value="READY_FOR_DISBURSEMENT">Ready For Disbursement</option>
+                <option value="DISBURSED">Disbursed</option>
+              </select>
+
+              <select
+                value={productFilter}
+                onChange={(e) => setProductFilter(e.target.value)}
+                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+              >
+                <option value="">All Products</option>
+                <option value="MSME Business Loan">MSME Business Loan</option>
+                <option value="Vehicle Loan">Vehicle Loan</option>
+                <option value="Personal Loan">Personal Loan</option>
+                <option value="Gold Loan">Gold Loan</option>
+              </select>
+
+              <select
+                value={riskFilter}
+                onChange={(e) => setRiskFilter(e.target.value)}
+                className="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+              >
+                <option value="">All Risk Tiers</option>
+                <option value="LOW">Low Risk</option>
+                <option value="MEDIUM">Medium Risk</option>
+                <option value="HIGH">High Risk</option>
+              </select>
+
+              {(statusFilter || productFilter || riskFilter) && (
+                <button
+                  onClick={() => { setStatusFilter(''); setProductFilter(''); setRiskFilter(''); }}
+                  className="text-xs text-purple-400 hover:text-purple-300 underline cursor-pointer ml-1"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-[#0B132B] text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
-                  <tr>
-                    <th className="py-3 px-4">Application ID</th>
-                    <th className="py-3 px-4">Borrower</th>
-                    <th className="py-3 px-4">Product</th>
-                    <th className="py-3 px-4">Sanction Amount</th>
-                    <th className="py-3 px-4">Approved By</th>
-                    <th className="py-3 px-4">Mandate Status</th>
-                    <th className="py-3 px-4 text-right">Operations Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800 text-slate-300">
-                  {appsLoading ? (
-                    <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
-                        <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-purple-500" />
-                        Loading disbursement queue...
-                      </td>
-                    </tr>
-                  ) : approvedApps.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
-                        No pending approved loans ready for disbursement.
-                      </td>
-                    </tr>
-                  ) : (
-                    approvedApps.map((app) => (
-                      <tr key={app.id} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="py-3.5 px-4 font-mono font-bold text-purple-400">
-                          {app.application_id}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="font-semibold text-white">{app.customer_name}</div>
-                          <div className="text-[11px] text-slate-500">{app.customer_identifier}</div>
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-300">
-                          {app.product_type}
-                        </td>
-                        <td className="py-3.5 px-4 font-bold text-emerald-400">
-                          ₹{(app.approved_amount || app.requested_amount).toLocaleString()}
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-400">
-                          {app.reviewed_by || 'Credit Officer'}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded-full font-semibold">
-                            eNACH Validated
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <button
-                            onClick={() => {
-                              setDisbursingApp(app);
-                              setInterestRate(13.5);
-                            }}
-                            className="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-purple-600/30 cursor-pointer"
-                          >
-                            Release Capital &rarr;
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tab 2: Documents Verification */}
-      {activeTab === 'documents' && (
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-white text-sm">Borrower KYC & Compliance Documents</h3>
-              <span className="text-[11px] text-slate-400">Authenticate identity and income documents in accordance with RBI DPDP Act</span>
+            <div className="text-xs text-slate-400 font-medium">
+              Showing <span className="text-white font-bold">{cases.length}</span> active operations cases
             </div>
           </div>
 
+          {/* Cases Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#0B132B] text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="bg-slate-800/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-700">
                 <tr>
-                  <th className="py-3 px-4">Doc ID</th>
-                  <th className="py-3 px-4">Type</th>
-                  <th className="py-3 px-4">File Name</th>
-                  <th className="py-3 px-4">Size</th>
-                  <th className="py-3 px-4">Uploaded</th>
-                  <th className="py-3 px-4">Verification Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3 px-3">Application</th>
+                  <th className="py-3 px-3">Customer</th>
+                  <th className="py-3 px-3">Product</th>
+                  <th className="py-3 px-3">Approved Sanction</th>
+                  <th className="py-3 px-3">Cross-Module Gates</th>
+                  <th className="py-3 px-3">Stage / Disb Status</th>
+                  <th className="py-3 px-3">Assigned Ops</th>
+                  <th className="py-3 px-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800 text-slate-300">
-                {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-300">{doc.doc_id}</td>
-                    <td className="py-3.5 px-4 font-semibold text-blue-400">{doc.doc_type}</td>
-                    <td className="py-3.5 px-4 text-slate-200">{doc.file_name}</td>
-                    <td className="py-3.5 px-4 text-slate-400">{doc.file_size_kb} KB</td>
-                    <td className="py-3.5 px-4 text-slate-400">{new Date(doc.uploaded_at).toLocaleDateString()}</td>
-                    <td className="py-3.5 px-4">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                        doc.status === 'VERIFIED' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' :
-                        doc.status === 'REJECTED' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
-                        'bg-amber-950 text-amber-300 border border-amber-800'
-                      }`}>
-                        {doc.status}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4 text-right space-x-1.5">
-                      {doc.status !== 'VERIFIED' && (
-                        <button
-                          onClick={() => verifyDocMutation.mutate({ docId: doc.doc_id, action: 'VERIFIED' })}
-                          className="px-2.5 py-1 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 rounded text-[11px] font-semibold transition-colors cursor-pointer"
-                        >
-                          Verify
-                        </button>
-                      )}
-                      {doc.status !== 'REJECTED' && (
-                        <button
-                          onClick={() => verifyDocMutation.mutate({ docId: doc.doc_id, action: 'REJECTED' })}
-                          className="px-2.5 py-1 bg-rose-900/60 hover:bg-rose-800 text-rose-300 rounded text-[11px] font-semibold transition-colors cursor-pointer"
-                        >
-                          Reject
-                        </button>
-                      )}
+              <tbody className="divide-y divide-slate-800/60">
+                {casesLoading ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-8 text-slate-500">
+                      Loading operations queue from database...
                     </td>
                   </tr>
-                ))}
+                ) : cases.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-8 text-slate-500">
+                      No applications found matching the selected operations filters.
+                    </td>
+                  </tr>
+                ) : (
+                  cases.map((c: any) => (
+                    <tr key={c.application_id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="py-3 px-3 font-mono font-semibold text-white">
+                        {c.application_id}
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-medium text-white">{c.customer_name}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">{c.customer_id}</div>
+                      </td>
+                      <td className="py-3 px-3 text-slate-300">
+                        {c.loan_product}
+                      </td>
+                      <td className="py-3 px-3 font-semibold text-white">
+                        ₹{c.approved_amount?.toLocaleString() || '0'}
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                            c.kyc_status === 'VERIFIED' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400'
+                          }`}>
+                            KYC: {c.kyc_status}
+                          </span>
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                            c.fraud_status === 'CLEARED' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-400'
+                          }`}>
+                            Fraud: {c.fraud_status}
+                          </span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-950 text-blue-400 border border-blue-800">
+                            Risk: {c.risk_status}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                          c.workflow_stage === 'DISBURSED' || c.disbursement_status === 'DISBURSED'
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            : c.workflow_stage === 'READY_FOR_DISBURSEMENT'
+                            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30 animate-pulse'
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        }`}>
+                          {c.workflow_stage}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-slate-400">
+                        {c.assigned_officer}
+                      </td>
+                      <td className="py-3 px-3 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          {/* Pre-check button */}
+                          <button
+                            onClick={() => setCheckAppId(c.application_id)}
+                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1"
+                            title="Run Pre-Disbursement Checklist"
+                          >
+                            <Shield className="w-3 h-3 text-amber-400" />
+                            <span>Pre-Check</span>
+                          </button>
+
+                          {/* Disburse Button */}
+                          {c.workflow_stage !== 'DISBURSED' && (
+                            <button
+                              onClick={() => setDisburseAppId(c.application_id)}
+                              className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow-md shadow-purple-500/20 transition-all cursor-pointer flex items-center gap-1"
+                            >
+                              <Zap className="w-3 h-3" />
+                              <span>Disburse</span>
+                            </button>
+                          )}
+
+                          {/* Actions Dropdown */}
+                          <button
+                            onClick={() => setActionModalApp({ id: c.application_id, action: 'ADD_NOTE' })}
+                            className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs cursor-pointer"
+                            title="Add Note or Assign"
+                          >
+                            •••
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* Disbursement Execution Modal */}
-      {disbursingApp && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#0B132B] border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <div>
-                <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">
-                  Core Ledger Activation
-                </span>
-                <h3 className="text-base font-bold text-white">
-                  Execute Capital Disbursement
-                </h3>
+      {/* Executive Manager Console Tab */}
+      {activeTab === 'manager' && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
+              <span className="text-xs text-slate-400">Total Portfolio Disbursed</span>
+              <div className="text-3xl font-bold text-white tracking-tight">
+                ₹{((mgrData?.total_disbursed_volume || 0) / 10000000).toFixed(2)} <span className="text-xs font-normal text-slate-400">Cr</span>
+              </div>
+              <p className="text-xs text-slate-500">Core capital released across facilities</p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
+              <span className="text-xs text-slate-400">Active Live Facilities</span>
+              <div className="text-3xl font-bold text-emerald-400 tracking-tight">
+                {mgrData?.active_loans || 0}
+              </div>
+              <p className="text-xs text-slate-500">Currently servicing loan accounts</p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
+              <span className="text-xs text-slate-400">Pending Operations Review</span>
+              <div className="text-3xl font-bold text-purple-400 tracking-tight">
+                {mgrData?.pending_operations_review || 0}
+              </div>
+              <p className="text-xs text-slate-500">Applications awaiting pre-check or disbursement</p>
+            </div>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
+            <h3 className="text-sm font-bold text-white">Operations Officer Workload Distribution</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {(mgrData?.team_activity || []).map((t: any, idx: number) => (
+                <div key={idx} className="p-3 bg-slate-800/60 rounded-xl border border-slate-700/60 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-purple-400" />
+                    <span className="text-xs font-semibold text-white">{t.officer}</span>
+                  </div>
+                  <span className="text-xs font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded-full border border-purple-800">
+                    {t.assigned_cases} Cases
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* MODAL 1: PRE-DISBURSEMENT CHECKLIST MODAL */}
+      {/* ============================================================== */}
+      {checkAppId && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-amber-400" />
+                <h3 className="text-base font-bold text-white">Pre-Disbursement Validation Checklist</h3>
               </div>
               <button
-                onClick={() => setDisbursingApp(null)}
-                className="text-slate-400 hover:text-white p-1 cursor-pointer"
+                onClick={() => setCheckAppId(null)}
+                className="text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
               >
-                &times;
+                ✕
               </button>
             </div>
 
-            <div className="p-3.5 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Borrower:</span>
-                <span className="font-bold text-white">{disbursingApp.customer_name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Principal Amount:</span>
-                <span className="font-bold text-emerald-400">₹{(disbursingApp.approved_amount || disbursingApp.requested_amount).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Tenure:</span>
-                <span className="font-bold text-white">{disbursingApp.requested_tenure} Months</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Disbursement Channel:</span>
-                <span className="font-mono text-purple-300">RBI RTGS Direct Mandate</span>
-              </div>
-            </div>
+            {checkLoading ? (
+              <div className="py-8 text-center text-xs text-slate-400">Verifying conditions...</div>
+            ) : checkData ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                  <div>
+                    <span className="text-slate-400">Application: </span>
+                    <span className="font-mono font-bold text-white">{checkData.application_id}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Borrower: </span>
+                    <span className="font-semibold text-white">{checkData.customer_name}</span>
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-slate-300 font-semibold">
-                Sanction Interest Rate (% p.a.)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={interestRate}
-                onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white font-mono outline-none focus:border-purple-500"
-              />
-            </div>
+                <div className="space-y-2">
+                  <span className="text-xs font-bold text-slate-300">Mandatory Regulatory & Policy Conditions:</span>
+                  <div className="space-y-1.5">
+                    {checkData.checklist.map((item: any) => (
+                      <div
+                        key={item.code}
+                        className={`flex items-center justify-between p-2.5 rounded-xl border text-xs transition-colors ${
+                          item.passed
+                            ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-300'
+                            : 'bg-rose-950/40 border-rose-800/60 text-rose-300'
+                        }`}
+                      >
+                        <span className="font-medium">{item.label}</span>
+                        {item.passed ? (
+                          <span className="flex items-center gap-1 font-bold text-emerald-400 text-[11px]">
+                            <CheckCircle className="w-3.5 h-3.5" /> PASSED
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 font-bold text-rose-400 text-[11px]">
+                            <XCircle className="w-3.5 h-3.5" /> MISSING
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            <div className="p-3 bg-purple-950/40 border border-purple-800/40 rounded-xl text-[11px] text-purple-200">
-              Upon clicking "Confirm & Disburse", the core ledger will generate a new active loan facility, adjust institutional treasury reserves, and dispatch repayment schedules.
-            </div>
+                {checkData.all_passed ? (
+                  <div className="p-3 bg-emerald-950/60 border border-emerald-700 rounded-xl text-emerald-200 text-xs flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>All mandatory conditions verified! Application is formally cleared for core capital disbursement.</span>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-rose-950/60 border border-rose-700 rounded-xl text-rose-200 text-xs space-y-1">
+                    <div className="font-bold flex items-center gap-1.5 text-rose-400">
+                      <AlertTriangle className="w-4 h-4" /> Disbursement Blocked
+                    </div>
+                    <p className="text-[11px]">
+                      The following mandatory requirement(s) must be fulfilled:
+                    </p>
+                    <ul className="list-disc list-inside text-[11px] text-rose-300 font-medium">
+                      {checkData.missing_conditions.map((m: string, i: number) => (
+                        <li key={i}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                  <button
+                    onClick={() => refetchCheck()}
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 cursor-pointer"
+                  >
+                    Re-Verify Checks
+                  </button>
+                  {checkData.can_disburse && (
+                    <button
+                      onClick={() => {
+                        const targetId = checkAppId;
+                        setCheckAppId(null);
+                        setDisburseAppId(targetId);
+                      }}
+                      className="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-500/20 cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Proceed to Disburse</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* MODAL 2: DISBURSEMENT DETAILS & DEMO EXECUTION MODAL */}
+      {/* ============================================================== */}
+      {disburseAppId && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-purple-400" />
+                <h3 className="text-base font-bold text-white">Execute Demo Core Disbursement</h3>
+              </div>
               <button
-                onClick={() => setDisbursingApp(null)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold cursor-pointer"
+                onClick={() => setDisburseAppId(null)}
+                className="text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {disbDetailsLoading ? (
+              <div className="py-8 text-center text-xs text-slate-400">Calculating financial terms...</div>
+            ) : disbDetails ? (
+              <div className="space-y-4 text-xs">
+                <div className="p-3 bg-purple-950/40 border border-purple-800/60 rounded-xl space-y-1">
+                  <div className="font-bold text-white text-sm">{disbDetails.customer_name}</div>
+                  <div className="text-slate-400 text-[11px]">
+                    Product: <span className="text-slate-200">{disbDetails.product_type}</span> | Account Ref:{' '}
+                    <span className="font-mono text-purple-300">{disbDetails.loan_number}</span>
+                  </div>
+                </div>
+
+                {/* Financial Ledger Details */}
+                <div className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
+                    <span className="text-slate-400">Sanctioned Principal:</span>
+                    <span className="font-bold text-white text-sm">
+                      ₹{disbDetails.approved_amount?.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
+                    <span className="text-slate-400">Processing Fee ({disbDetails.processing_fee_pct}%):</span>
+                    <span className="text-rose-400 font-semibold">
+                      - ₹{disbDetails.processing_fee?.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-700">
+                    <span className="text-slate-300 font-bold">Net Credited Capital:</span>
+                    <span className="font-extrabold text-emerald-400 text-sm">
+                      ₹{disbDetails.net_disbursement_amount?.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-slate-400">Monthly EMI (P+I):</span>
+                    <span className="font-semibold text-purple-300">
+                      ₹{disbDetails.monthly_emi?.toLocaleString()} / mo ({disbDetails.tenure_months} mos @ {disbDetails.interest_rate}%)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bank Account Mandate */}
+                <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/80 space-y-1">
+                  <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                    <Building className="w-3.5 h-3.5 text-blue-400" /> Borrower Bank Account Mandate:
+                  </span>
+                  <div className="text-[11px] text-slate-300 font-mono">
+                    {disbDetails.bank_details.bank_name} - A/C: {disbDetails.bank_details.account_number} (IFSC: {disbDetails.bank_details.ifsc})
+                  </div>
+                </div>
+
+                <div className="p-2.5 bg-slate-800/40 rounded-xl text-[10px] text-slate-400">
+                  <span className="font-bold text-slate-300">Atomic Process:</span> Executes demo RTGS/NEFT transaction, creates active Loan account in core ledger, generates {disbDetails.tenure_months}-installment repayment schedule, updates Customer Portal, and generates audit trail.
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                  <button
+                    onClick={() => setDisburseAppId(null)}
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => disburseMutation.mutate({ appId: disburseAppId, payload: { channel: 'NEFT/RTGS' } })}
+                    disabled={disburseMutation.isPending}
+                    className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 cursor-pointer flex items-center gap-1.5 transition-all"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>{disburseMutation.isPending ? 'Processing Core Disbursal...' : 'Confirm Demo Disbursement'}</span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* MODAL 3: OPERATIONS ACTION MODAL (ASSIGN, ESCALATE, ADD NOTE) */}
+      {/* ============================================================== */}
+      {actionModalApp && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 className="font-bold text-white text-sm">Operations Action — {actionModalApp.id}</h3>
+              <button
+                onClick={() => setActionModalApp(null)}
+                className="text-slate-400 hover:text-white text-base cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-slate-400 text-[11px] block mb-1">Select Action</label>
+                <select
+                  value={actionModalApp.action}
+                  onChange={(e) => setActionModalApp({ ...actionModalApp, action: e.target.value })}
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                >
+                  <option value="ADD_NOTE">Add Operational Note</option>
+                  <option value="ASSIGN">Assign Officer</option>
+                  <option value="REQUEST_INFORMATION">Request Information from Borrower</option>
+                  <option value="ESCALATE">Escalate Exception to Operations Manager</option>
+                  <option value="VERIFY">Mark Pre-Checks Verified</option>
+                </select>
+              </div>
+
+              {actionModalApp.action === 'ASSIGN' && (
+                <div>
+                  <label className="text-slate-400 text-[11px] block mb-1">Target Officer Name</label>
+                  <input
+                    type="text"
+                    value={targetOfficer}
+                    onChange={(e) => setTargetOfficer(e.target.value)}
+                    placeholder="e.g., Rajesh Operations"
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                  />
+                </div>
+              )}
+
+              {actionModalApp.action === 'ESCALATE' && (
+                <div>
+                  <label className="text-slate-400 text-[11px] block mb-1">Mandatory Escalation Reason</label>
+                  <input
+                    type="text"
+                    value={actionReason}
+                    onChange={(e) => setActionReason(e.target.value)}
+                    placeholder="e.g., Bank mandate mismatch / KYC anomaly detected"
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="text-slate-400 text-[11px] block mb-1">Notes / Instructions</label>
+                <textarea
+                  rows={3}
+                  value={actionNotes}
+                  onChange={(e) => setActionNotes(e.target.value)}
+                  placeholder="Enter detailed remarks for audit trail..."
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2 text-xs focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+              <button
+                onClick={() => setActionModalApp(null)}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl"
               >
                 Cancel
               </button>
               <button
-                onClick={() => disburseMutation.mutate({
-                  appId: disbursingApp.application_id,
-                  rate: interestRate
+                onClick={() => actionMutation.mutate({
+                  appId: actionModalApp.id,
+                  payload: {
+                    action: actionModalApp.action,
+                    notes: actionNotes,
+                    reason: actionReason,
+                    assigned_officer: targetOfficer
+                  }
                 })}
-                disabled={disburseMutation.isPending}
-                className="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-purple-600/30 cursor-pointer disabled:opacity-50"
+                disabled={actionMutation.isPending}
+                className="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-md cursor-pointer"
               >
-                {disburseMutation.isPending ? 'Releasing Funds...' : 'Confirm & Disburse'}
+                {actionMutation.isPending ? 'Saving...' : 'Submit Action'}
               </button>
             </div>
           </div>
@@ -369,3 +738,5 @@ export const OperationsPortalPage: React.FC = () => {
     </div>
   );
 };
+
+export default OperationsPortalPage;

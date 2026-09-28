@@ -120,13 +120,16 @@ class EventBus:
             effects.append(f"Customer #{cust.customer_id} financial health score reduced to {cust.profile.financial_health_score:.1f}/100.")
 
         # Trigger notification
+        # Trigger notification
         notif = Notification(
             notification_id=f"NOTIF-{uuid.uuid4().hex[:6].upper()}",
             title=f"Delinquency Migration: {cust_id} Missed EMI",
             message=f"Borrower missed EMI payment of ₹{overdue_amt:,.0f}. Assigned to Collections Agent Priority Queue.",
-            severity="High",
+            priority="HIGH",
+            severity="WARNING",
             category="Collections Alert",
             responsible_agent="Collections Intelligence",
+            event_key=f"DELINQUENCY:{cust_id}",
             is_read=False,
             created_at=datetime.utcnow()
         )
@@ -157,9 +160,11 @@ class EventBus:
             notification_id=f"NOTIF-{uuid.uuid4().hex[:6].upper()}",
             title=f"EMI Payment Received: {cust_id}",
             message=f"Successful receipt of ₹{paid_amt:,.0f}. Customer credit profile restored.",
-            severity="Info",
+            priority="NORMAL",
+            severity="INFO",
             category="Repayment",
             responsible_agent="Collections Intelligence",
+            event_key=f"EMI_PAYMENT:{cust_id}",
             is_read=False,
             created_at=datetime.utcnow()
         )
@@ -192,9 +197,11 @@ class EventBus:
             notification_id=f"NOTIF-{uuid.uuid4().hex[:6].upper()}",
             title="High Fraud Anomaly Alert",
             message=f"Interpreted {rule_desc}. Device fingerprint {device_id} quarantined.",
-            severity="Critical",
+            priority="URGENT",
+            severity="CRITICAL",
             category="Fraud",
             responsible_agent="Fraud Intelligence",
+            event_key=f"FRAUD_ALERT:{device_id}",
             is_read=False,
             created_at=datetime.utcnow()
         )

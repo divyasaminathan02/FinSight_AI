@@ -63,7 +63,7 @@ export const OverviewPage: React.FC = () => {
       icon: Activity,
       link: '/risk',
       linkText: 'Inspect Risk Telemetry',
-      color: 'border-blue-500/40 bg-blue-950/20 text-blue-300'
+      color: 'border-slate-700 bg-slate-900/80 text-slate-200'
     },
     CREDIT_OFFICER: {
       title: 'Retail & MSME Underwriting Desk',
@@ -111,7 +111,7 @@ export const OverviewPage: React.FC = () => {
       icon: UserCheck,
       link: '/settings',
       linkText: 'Configure System Thresholds',
-      color: 'border-blue-500/40 bg-blue-950/20 text-blue-300'
+      color: 'border-slate-700 bg-slate-900/80 text-slate-200'
     },
   };
 

@@ -72,3 +72,32 @@
     transform: scale(1.1);
   }
 }
+
+/* Neutral Professional Grey Treatment for Content & Information Boxes */
+.finsight-grey-box {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  color: #1F2937;
+}
+
+.finsight-grey-box-subtle {
+  background-color: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  color: #1F2937;
+}
+
+.finsight-heading-dark {
+  color: #172033;
+  font-weight: 600;
+}
+
+.finsight-text-charcoal {
+  color: #1F2937;
+}
+
+.finsight-text-secondary {
+  color: #4B5563;
+}
+

@@ -11,7 +11,7 @@ class TransactionListItem(BaseModel):
     transaction_amount: float
     transaction_type: str
     transaction_timestamp: datetime
-    channel: str
+    channel: Optional[str] = "SYSTEM"
     status: str
     category: Optional[str] = None
 
@@ -28,11 +28,18 @@ class NotificationItem(BaseModel):
     notification_id: str
     title: str
     message: str
-    severity: str
-    category: str
+    priority: str = "NORMAL"  # LOW, NORMAL, HIGH, URGENT
+    severity: str = "INFO"    # INFO, WARNING, CRITICAL
+    category: str = "Agent Alert"
     responsible_agent: Optional[str] = None
     is_read: bool
+    status: Optional[str] = "ACTIVE"
+    event_key: Optional[str] = None
+    action_url: Optional[str] = None
+    recipient_email: Optional[str] = None
+    role_target: Optional[str] = None
     created_at: datetime
+    updated_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
 

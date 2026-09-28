@@ -12,9 +12,10 @@ from app.models.loans import Loan, LoanApplication
 from app.models.customers import Customer
 from app.models.transactions import Transaction, Repayment
 from app.models.notifications import Notification
-from app.models.users import AuditLog
-from app.models.portal_models import LoanProduct, Document, SupportTicket
+from app.models.users import AuditLog, User, UserRole
+from app.models.portal_models import LoanProduct, Document, SupportTicket, ApprovalRule
 from app.services.event_service import event_bus, EventType
+from app.security.jwt import get_current_user_optional
 from app.schemas.loans import (
     LoanListResponse,
     LoanListItem,
@@ -44,9 +45,16 @@ def list_loans(
     min_dpd: Optional[int] = None,
     search: Optional[str] = None,
     customer_id: Optional[str] = None,
+    current_user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     query = db.query(Loan).join(Customer, Loan.customer_id == Customer.id)
+    
+    # Scoped visibility: Customer sees strictly their own loans
+    if current_user and current_user.role == UserRole.CUSTOMER:
+        matched_cust = db.query(Customer).filter((Customer.email == current_user.email) | (Customer.id == current_user.id)).first()
+        target_cust_id = matched_cust.id if matched_cust else 1
+        query = query.filter(Loan.customer_id == target_cust_id)
     
     if product_type:
         query = query.filter(Loan.product_type == product_type)
@@ -119,9 +127,17 @@ def list_loan_applications(
     product_type: Optional[str] = None,
     search: Optional[str] = None,
     customer_id: Optional[str] = None,
+    current_user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     query = db.query(LoanApplication).join(Customer, LoanApplication.customer_id == Customer.id)
+
+    # Scoped visibility: Customer sees strictly their own applications
+    if current_user and current_user.role == UserRole.CUSTOMER:
+        matched_cust = db.query(Customer).filter((Customer.email == current_user.email) | (Customer.id == current_user.id)).first()
+        target_cust_id = matched_cust.id if matched_cust else 1
+        query = query.filter(LoanApplication.customer_id == target_cust_id)
+
 
     if status:
         query = query.filter(LoanApplication.status == status)
@@ -787,3 +803,223 @@ def get_loan_details(loan_id: str, db: Session = Depends(get_db)):
         "fraud_alerts": loan.fraud_alerts,
         "collection_records": loan.collection_records
     }
+
+# ==========================================
+# 5. LIFECYCLE EXTENSIONS (OFFER ACCEPTANCE, CLOSURE, NOC, RULES)
+# ==========================================
+
+@router.post("/applications/{application_id}/accept-offer")
+def customer_accept_offer(application_id: str, db: Session = Depends(get_db)):
+    """Customer accepts the approved loan sanction offer."""
+    app = db.query(LoanApplication).filter(
+        (LoanApplication.application_id == application_id) |
+        (LoanApplication.id == (int(application_id) if application_id.isdigit() else -1))
+    ).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="Loan application not found")
+    if app.status not in ["Approved", "Offer_Sent"]:
+        raise HTTPException(status_code=400, detail=f"Cannot accept offer for status '{app.status}'.")
+
+    app.status = "Disbursement_Pending"
+    
+    audit = AuditLog(
+        action="OFFER_ACCEPTED_BY_CUSTOMER",
+        resource=f"LOAN_APPLICATION:{app.application_id}",
+        details_json=f'{{"approved_amount": {app.approved_amount or app.requested_amount}}}',
+        created_at=datetime.utcnow()
+    )
+    db.add(audit)
+
+    notif = Notification(
+        notification_id=f"NOTIF-{uuid.uuid4().hex[:6].upper()}",
+        title=f"Offer Accepted: #{app.application_id}",
+        message=f"Borrower accepted sanction of ₹{(app.approved_amount or app.requested_amount):,.0f}. Queued for Operations disbursement.",
+        severity="Info",
+        category="Disbursement Pipeline",
+        responsible_agent="Operations Desk",
+        is_read=False,
+        created_at=datetime.utcnow()
+    )
+    db.add(notif)
+    db.commit()
+
+    return {
+        "status": "success",
+        "message": "Offer accepted. Application has moved to Operations Disbursement queue.",
+        "application_id": app.application_id,
+        "new_status": app.status
+    }
+
+@router.post("/applications/{application_id}/reject-offer")
+def customer_reject_offer(application_id: str, reason: Optional[str] = "Customer opted out", db: Session = Depends(get_db)):
+    """Customer declines the loan offer."""
+    app = db.query(LoanApplication).filter(
+        (LoanApplication.application_id == application_id) |
+        (LoanApplication.id == (int(application_id) if application_id.isdigit() else -1))
+    ).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="Loan application not found")
+
+    app.status = "Cancelled"
+    app.reviewer_notes = f"Offer declined by customer: {reason}"
+    db.commit()
+    return {"status": "success", "application_id": app.application_id, "new_status": "Cancelled"}
+
+@router.post("/{loan_id}/close")
+def close_loan_facility(loan_id: str, db: Session = Depends(get_db)):
+    """Closes an active loan after full repayment and verifies balance is 0."""
+    loan = db.query(Loan).filter((Loan.loan_id == loan_id) | (Loan.id == (int(loan_id) if loan_id.isdigit() else -1))).first()
+    if not loan:
+        raise HTTPException(status_code=404, detail="Loan not found")
+    if loan.outstanding_balance > 0:
+        raise HTTPException(status_code=400, detail=f"Cannot close facility. Remaining balance is ₹{loan.outstanding_balance:,.0f}.")
+
+    loan.status = "Closed"
+    audit = AuditLog(
+        action="LOAN_CLOSED",
+        resource=f"LOAN:{loan.loan_id}",
+        details_json=f'{{"sanction": {loan.loan_amount}, "status": "Closed"}}',
+        created_at=datetime.utcnow()
+    )
+    db.add(audit)
+
+    notif = Notification(
+        notification_id=f"NOTIF-{uuid.uuid4().hex[:6].upper()}",
+        title=f"Loan Closed: #{loan.loan_id}",
+        message=f"Loan #{loan.loan_id} has been fully settled and closed. No Objection Certificate (NOC) is ready.",
+        severity="Info",
+        category="Loan Closure",
+        responsible_agent="Operations Desk",
+        is_read=False,
+        created_at=datetime.utcnow()
+    )
+    db.add(notif)
+    db.commit()
+
+    return {
+        "status": "success",
+        "message": f"Loan {loan.loan_id} successfully closed in core ledger.",
+        "loan_id": loan.loan_id,
+        "closure_date": datetime.utcnow().strftime("%Y-%m-%d")
+    }
+
+@router.get("/{loan_id}/noc")
+def get_loan_noc_certificate(loan_id: str, db: Session = Depends(get_db)):
+    """Generates official No Objection Certificate (NOC) data for fully settled loans."""
+    loan = db.query(Loan).filter((Loan.loan_id == loan_id) | (Loan.id == (int(loan_id) if loan_id.isdigit() else -1))).first()
+    if not loan:
+        raise HTTPException(status_code=404, detail="Loan not found")
+    
+    cust = loan.customer
+    return {
+        "certificate_no": f"NOC-FINSIGHT-{datetime.utcnow().year}-{loan.id:05d}",
+        "loan_id": loan.loan_id,
+        "borrower_name": f"{cust.first_name} {cust.last_name}" if cust else "Valued Borrower",
+        "borrower_pan_masked": "XXXXX" + (cust.customer_id[-4:] if cust else "9999"),
+        "product_type": loan.product_type,
+        "sanction_amount": loan.loan_amount,
+        "closure_date": datetime.utcnow().strftime("%d %B %Y"),
+        "status": "SETTLED_AND_DISCHARGED",
+        "rbi_reg_number": "NBFC-ND-SI/2026/8942",
+        "issuing_authority": "FinSight AI Capital Solutions Limited",
+        "authorized_signatory": "Chief Risk Officer & Operations Head",
+        "qr_verification_code": f"https://verify.finsight.ai/noc/{loan.loan_id}"
+    }
+
+@router.patch("/support-tickets/{ticket_id}")
+def update_support_ticket(ticket_id: str, payload: dict, db: Session = Depends(get_db)):
+    """Update support ticket status, reply message, or assign staff."""
+    ticket = db.query(SupportTicket).filter(
+        (SupportTicket.ticket_id == ticket_id) |
+        (SupportTicket.id == (int(ticket_id) if ticket_id.isdigit() else -1))
+    ).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Support ticket not found")
+
+    if "status" in payload:
+        ticket.status = payload["status"].upper()
+    if "assigned_to" in payload:
+        ticket.assigned_to = payload["assigned_to"]
+    if "priority" in payload:
+        ticket.priority = payload["priority"].upper()
+    
+    if "reply_text" in payload and payload["reply_text"].strip():
+        msgs = []
+        try:
+            msgs = json.loads(ticket.messages_json or "[]")
+        except Exception:
+            msgs = []
+        msgs.append({
+            "sender": payload.get("sender", "staff"),
+            "text": payload["reply_text"].strip(),
+            "time": datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        })
+        ticket.messages_json = json.dumps(msgs)
+
+    ticket.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(ticket)
+
+    msgs = []
+    try:
+        msgs = json.loads(ticket.messages_json or "[]")
+    except Exception:
+        msgs = []
+
+    return {
+        "status": "success",
+        "ticket_id": ticket.ticket_id,
+        "ticket_status": ticket.status,
+        "assigned_to": ticket.assigned_to,
+        "messages": msgs
+    }
+
+@router.get("/approval-rules")
+def list_approval_rules(db: Session = Depends(get_db)):
+    """List institutional approval rules and thresholds."""
+    rules = db.query(ApprovalRule).filter(ApprovalRule.is_active == True).all()
+    if not rules:
+        default_rules = [
+            ApprovalRule(rule_code="TIER-1", tier_name="Standard Credit Desk", min_amount=25000, max_amount=500000, required_role="CREDIT_OFFICER", min_cibil_score=680, max_dti_pct=50.0, escalation_role="RISK_MANAGER"),
+            ApprovalRule(rule_code="TIER-2", tier_name="Senior Credit & Risk Committee", min_amount=500001, max_amount=2500000, required_role="RISK_MANAGER", min_cibil_score=700, max_dti_pct=45.0, escalation_role="EXECUTIVE"),
+            ApprovalRule(rule_code="TIER-3", tier_name="Executive Board & CRO Sanction", min_amount=2500001, max_amount=10000000, required_role="EXECUTIVE", min_cibil_score=725, max_dti_pct=40.0, escalation_role="ADMIN")
+        ]
+        db.add_all(default_rules)
+        db.commit()
+        rules = db.query(ApprovalRule).filter(ApprovalRule.is_active == True).all()
+    
+    return [
+        {
+            "id": r.id,
+            "rule_code": r.rule_code,
+            "tier_name": r.tier_name,
+            "min_amount": r.min_amount,
+            "max_amount": r.max_amount,
+            "required_role": r.required_role,
+            "min_cibil_score": r.min_cibil_score,
+            "max_dti_pct": r.max_dti_pct,
+            "escalation_role": r.escalation_role,
+            "is_active": r.is_active
+        }
+        for r in rules
+    ]
+
+@router.post("/approval-rules")
+def create_approval_rule(payload: dict, db: Session = Depends(get_db)):
+    """Create a new approval rule tier."""
+    rule = ApprovalRule(
+        rule_code=payload.get("rule_code", f"TIER-{uuid.uuid4().hex[:4].upper()}"),
+        tier_name=payload.get("tier_name", "Custom Approval Tier"),
+        min_amount=float(payload.get("min_amount", 100000.0)),
+        max_amount=float(payload.get("max_amount", 1000000.0)),
+        required_role=payload.get("required_role", "CREDIT_OFFICER"),
+        min_cibil_score=int(payload.get("min_cibil_score", 650)),
+        max_dti_pct=float(payload.get("max_dti_pct", 50.0)),
+        escalation_role=payload.get("escalation_role", "RISK_MANAGER"),
+        is_active=True,
+        created_at=datetime.utcnow()
+    )
+    db.add(rule)
+    db.commit()
+    db.refresh(rule)
+    return {"status": "success", "rule_code": rule.rule_code, "id": rule.id}

@@ -299,14 +299,14 @@ export const UnderwritingQueuePage: React.FC = () => {
             </div>
 
             {/* AI Underwriting Recommendation */}
-            <div className="p-4 bg-linear-to-r from-blue-950/40 to-slate-900 border border-blue-900/40 rounded-xl space-y-2">
-              <div className="flex items-center gap-2 text-blue-300 font-bold">
-                <ShieldCheck className="w-4 h-4 text-blue-400" />
+            <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-2">
+              <div className="flex items-center gap-2 text-[#172033] font-bold">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 <span>AI Risk Signal Recommendation</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <p className="text-xs text-[#1F2937] leading-relaxed">
                 Applicant satisfies RBI Tier-1 NBFC credit norms. Debt-to-income (DTI) is within tolerance (38.2%).
-                Zero active fraud collisions detected across national device fingerprint database. Recommended action: <strong>APPROVE</strong> at 13.5% p.a.
+                Zero active fraud collisions detected across national device fingerprint database. Recommended action: <strong className="text-[#172033]">APPROVE</strong> at 13.5% p.a.
               </p>
             </div>
 

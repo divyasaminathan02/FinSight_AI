@@ -29,17 +29,37 @@ def get_general_audit_logs(
     results = []
     for log in logs:
         details = {}
+        before = {}
+        after = {}
         try:
-            details = json.loads(log.details_json or "{}")
+            if log.details_json:
+                details = json.loads(log.details_json)
         except Exception:
             details = {"raw": log.details_json}
+        try:
+            if log.before_state_json:
+                before = json.loads(log.before_state_json)
+        except Exception:
+            before = {"raw": log.before_state_json}
+        try:
+            if log.after_state_json:
+                after = json.loads(log.after_state_json)
+        except Exception:
+            after = {"raw": log.after_state_json}
+
         results.append({
             "id": log.id,
             "action": log.action,
             "resource": log.resource,
-            "user": log.user.full_name if log.user else "System / Officer",
+            "entity": log.entity_type or (log.resource.split(":")[0] if ":" in (log.resource or "") else "Entity"),
+            "entity_id": log.entity_id or (log.resource.split(":")[1] if ":" in (log.resource or "") else str(log.id)),
+            "user": log.user_name or (log.user.full_name if log.user else log.user_email or "System / Officer"),
+            "role": log.user_role or (log.user.role.value if log.user and hasattr(log.user.role, 'value') else "OFFICER"),
+            "timestamp": log.created_at.isoformat() if log.created_at else None,
+            "created_at": log.created_at.isoformat() if log.created_at else None,
+            "before": before,
+            "after": after,
             "details": details,
-            "created_at": log.created_at.isoformat() if log.created_at else None
         })
     return {"total": len(results), "logs": results}
 

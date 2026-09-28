@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 from app.config import settings
-from app.database import engine, Base, SessionLocal
+from app.database import engine, Base, SessionLocal, ensure_schema_columns
 from app.models import User, UserRole
 from app.security.jwt import get_password_hash
 from app.routers import (
@@ -30,6 +30,18 @@ from app.routers import (
     reports,
     settings as settings_router,
     finance,
+    leads,
+    tasks,
+    search,
+    customer_portal,
+    sales,
+    relationship,
+    credit_management,
+    communication,
+    kyc,
+    operations,
+    admin,
+    support,
 )
 
 # Configure logging
@@ -39,11 +51,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger("finsight.api")
 
+# Ensure DB schema and columns are ready at import time
+try:
+    Base.metadata.create_all(bind=engine)
+    ensure_schema_columns()
+except Exception as _e:
+    logger.warning(f"Error ensuring schema at import: {_e}")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Initialize DB Schema
     logger.info("Initializing FinSight AI Database Tables...")
     Base.metadata.create_all(bind=engine)
+    ensure_schema_columns()
     
     # Initialize default admin / risk manager user if not present
     db = SessionLocal()
@@ -102,7 +122,7 @@ import time
 from collections import defaultdict
 
 _rate_limit_records = defaultdict(list)
-RATE_LIMIT_PER_MINUTE = 180
+RATE_LIMIT_PER_MINUTE = 600
 
 @app.middleware("http")
 async def security_and_rate_limit_middleware(request: Request, call_next):
@@ -176,6 +196,18 @@ app.include_router(events.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(settings_router.router, prefix=settings.API_V1_STR)
 app.include_router(finance.router, prefix=settings.API_V1_STR)
+app.include_router(leads.router, prefix=settings.API_V1_STR)
+app.include_router(tasks.router, prefix=settings.API_V1_STR)
+app.include_router(search.router, prefix=settings.API_V1_STR)
+app.include_router(customer_portal.router, prefix=settings.API_V1_STR)
+app.include_router(sales.router, prefix=settings.API_V1_STR)
+app.include_router(relationship.router, prefix=settings.API_V1_STR)
+app.include_router(credit_management.router, prefix=settings.API_V1_STR)
+app.include_router(communication.router, prefix=settings.API_V1_STR)
+app.include_router(kyc.router, prefix=settings.API_V1_STR)
+app.include_router(operations.router, prefix=settings.API_V1_STR)
+app.include_router(admin.router, prefix=settings.API_V1_STR)
+app.include_router(support.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

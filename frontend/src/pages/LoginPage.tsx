@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Activity, Lock, Mail, ArrowRight, ShieldCheck, UserCheck, Briefcase, UserPlus, Building2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { User } from '../types';
+import { User, DemoUserItem } from '../types';
+import { authApi } from '../services/api';
 
 export const LoginPage: React.FC = () => {
   const { login, register } = useAuth();
@@ -31,7 +32,13 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login(email, password);
-      navigate('/');
+      const saved = localStorage.getItem('finsight_user');
+      const u = saved ? JSON.parse(saved) : null;
+      if (u?.role === 'CUSTOMER' || email.toLowerCase().includes('customer')) {
+        navigate('/customer/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       setError(err?.response?.data?.detail || 'Invalid email or password');
     } finally {
@@ -71,18 +78,22 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const QUICK_PERSONAS = [
-    { name: 'Arjun Mehta', role: 'RISK_MANAGER', label: 'Risk Manager', email: 'arjun.mehta@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Priya Sharma', role: 'CREDIT_OFFICER', label: 'Credit Officer', email: 'priya.sharma@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Vikram Singh', role: 'COLLECTION_MANAGER', label: 'Collection Mgr', email: 'vikram.singh@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Sanjay Rao', role: 'FINANCE_MANAGER', label: 'Finance Manager', email: 'sanjay.rao@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Kavita Verma', role: 'ANALYST', label: 'Financial Analyst', email: 'kavita.verma@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Rahul Sen', role: 'AUDITOR', label: 'Compliance Auditor', email: 'rahul.sen@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Deepa Nair', role: 'OPERATIONS', label: 'Operations Desk', email: 'deepa.nair@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Vikramaditya Singhania', role: 'EXECUTIVE', label: 'Executive / CEO', email: 'ceo@finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Rajesh Kumar Verma', role: 'CUSTOMER', label: 'Borrower', email: 'rajesh.verma@customer.finsight.ai', pass: 'FinSight@2026' },
-    { name: 'Chief Risk Officer', role: 'ADMIN', label: 'CRO / Admin', email: 'admin@finsight.ai', pass: 'FinSight@Admin2026' },
-  ];
+  const [demoUsers, setDemoUsers] = useState<DemoUserItem[]>([]);
+  const [isDevMode, setIsDevMode] = useState(false);
+
+  React.useEffect(() => {
+    authApi.getDemoUsers()
+      .then((users: DemoUserItem[]) => {
+        if (users && users.length > 0) {
+          setDemoUsers(users);
+          setIsDevMode(true);
+        }
+      })
+      .catch(() => {
+        setIsDevMode(false);
+      });
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-[#070E20] flex flex-col items-center justify-center p-4">
@@ -186,28 +197,33 @@ export const LoginPage: React.FC = () => {
                 </button>
               </form>
 
-              {/* Quick Persona Logins for Demo */}
-              <div className="pt-4 border-t border-slate-800">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2 text-center">
-                  Instant Demo Switcher (7 Institutional Roles)
-                </span>
-                <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
-                  {QUICK_PERSONAS.map((q) => (
-                    <button
-                      key={q.email}
-                      type="button"
-                      onClick={() => {
-                        setEmail(q.email);
-                        setPassword(q.pass);
-                      }}
-                      className="p-1.5 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/80 rounded-lg text-left transition-colors cursor-pointer group"
-                    >
-                      <div className="text-[11px] font-semibold text-slate-200 group-hover:text-blue-400 truncate">{q.name}</div>
-                      <div className="text-[9px] text-slate-400 truncate">{q.label}</div>
-                    </button>
-                  ))}
+              {/* Quick Persona Logins for Demo - Only rendered in Development Mode */}
+              {isDevMode && demoUsers.length > 0 && (
+                <div className="pt-4 border-t border-slate-800">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                      DEVELOPMENT DEMO LOGIN ({demoUsers.length} ROLES)
+                    </span>
+                    <span className="text-[9px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Dev Only</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5 max-h-44 overflow-y-auto pr-1">
+                    {demoUsers.map((q) => (
+                      <button
+                        key={q.email}
+                        type="button"
+                        onClick={() => {
+                          setEmail(q.email);
+                          setPassword(q.password_hint);
+                        }}
+                        className="p-1.5 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/80 rounded-lg text-left transition-colors cursor-pointer group"
+                      >
+                        <div className="text-[11px] font-semibold text-slate-200 group-hover:text-blue-400 truncate">{q.name}</div>
+                        <div className="text-[9px] text-slate-400 truncate">{q.role.replace('_', ' ')}</div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             /* Register Tab */
@@ -244,12 +260,21 @@ export const LoginPage: React.FC = () => {
                     onChange={(e) => setRegRole(e.target.value as User['role'])}
                     className="w-full px-2 py-1.5 text-xs bg-slate-800/80 border border-slate-700 text-slate-100 rounded-lg outline-none focus:border-blue-500"
                   >
-                    <option value="CREDIT_OFFICER">Credit Officer</option>
-                    <option value="RISK_MANAGER">Risk Manager</option>
-                    <option value="COLLECTION_MANAGER">Collection Manager</option>
+                    <option value="CUSTOMER">Customer / Borrower</option>
+                    <option value="SALES_OFFICER">Sales Officer</option>
+                    <option value="RELATIONSHIP_MANAGER">Relationship Manager</option>
+                    <option value="CREDIT_ANALYST">Credit Analyst</option>
+                    <option value="CREDIT_MANAGER">Credit Manager</option>
+                    <option value="FRAUD_OFFICER">Fraud Officer</option>
+                    <option value="KYC_OFFICER">KYC Officer</option>
+                    <option value="COLLECTIONS_OFFICER">Collections Officer</option>
+                    <option value="COLLECTIONS_MANAGER">Collections Manager</option>
+                    <option value="OPERATIONS_OFFICER">Operations Officer</option>
+                    <option value="OPERATIONS_MANAGER">Operations Manager</option>
+                    <option value="FINANCE_OFFICER">Finance Officer</option>
                     <option value="FINANCE_MANAGER">Finance Manager</option>
-                    <option value="ANALYST">Analyst</option>
-                    <option value="AUDITOR">Auditor</option>
+                    <option value="RISK_ANALYST">Risk Analyst</option>
+                    <option value="RISK_MANAGER">Risk Manager</option>
                     <option value="ADMIN">Admin (Full Access)</option>
                   </select>
                 </div>

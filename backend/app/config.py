@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
+    DEMO_MODE: bool = True
+    DEMO_PASSWORD: str = os.getenv("DEMO_PASSWORD", "FinSight@Demo2026")
+    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "FinSight@Admin2026")
     
     # Portfolio Baseline Settings (₹ Cr)
     AUM_BASELINE_CR: float = 842.60

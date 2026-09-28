@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 from app.models.users import UserRole
@@ -9,6 +9,8 @@ class UserResponse(BaseModel):
     full_name: str
     role: UserRole
     department: Optional[str] = None
+    branch: Optional[str] = "Headquarters - Mumbai"
+    permissions: Optional[List[str]] = None
     is_active: bool
     last_login: Optional[datetime] = None
     created_at: Optional[datetime] = None
@@ -36,3 +38,12 @@ class UserCreate(BaseModel):
     full_name: str
     role: UserRole = UserRole.RISK_MANAGER
     department: Optional[str] = "Risk Management"
+
+class DemoUserItem(BaseModel):
+    name: str
+    email: str
+    role: str
+    department: str
+    description: str
+    password_hint: str
+

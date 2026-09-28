@@ -20,26 +20,37 @@ import {
   DollarSign,
   TrendingUp,
   Shield,
+  Briefcase,
+  CheckSquare,
+  LifeBuoy,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
   { name: 'Overview', path: '/', icon: LayoutDashboard },
   { name: 'Executive Command', path: '/executive', icon: TrendingUp, badge: 'C-Suite' },
+  { name: 'Sales & Origination', path: '/sales', icon: Briefcase, badge: 'Origination' },
+  { name: 'Relationship Desk', path: '/relationship', icon: Users, badge: 'RM' },
+  { name: 'KYC & Compliance', path: '/kyc/dashboard', icon: UserCheck, badge: 'AML' },
+  { name: 'Fraud Intelligence', path: '/fraud/dashboard', icon: ShieldAlert, alert: true },
+  { name: 'Task & Approval Center', path: '/tasks', icon: CheckSquare, badge: 'Tasks' },
   { name: 'Underwriting Queue', path: '/underwriting-queue', icon: ClipboardCheck, badge: 'Queue' },
+  { name: 'Credit Intelligence', path: '/credit', icon: CreditCard },
+  { name: 'Credit Manager Desk', path: '/credit-manager', icon: Shield, badge: 'Sanctions' },
+  { name: 'Risk Intelligence', path: '/risk', icon: Activity },
+  { name: 'Risk Manager Desk', path: '/risk-manager/dashboard', icon: Shield, badge: 'Risk Desk' },
   { name: 'Operations Desk', path: '/operations', icon: Layers },
   { name: 'Finance & Treasury', path: '/finance', icon: DollarSign },
-  { name: 'Credit Intelligence', path: '/credit', icon: CreditCard },
-  { name: 'Fraud Intelligence', path: '/fraud', icon: ShieldAlert, alert: true },
   { name: 'Customer Intelligence', path: '/customer', icon: Users },
   { name: 'Collections', path: '/collections', icon: PiggyBank },
-  { name: 'Risk Intelligence', path: '/risk', icon: Activity },
   { name: 'Liquidity Intelligence', path: '/liquidity', icon: Coins },
   { name: 'Loan Analysis', path: '/loan-analysis', icon: Cpu, badge: 'LangGraph' },
   { name: 'AI Copilot', path: '/copilot', icon: Bot, isSpecial: true },
   { name: 'Audit Trail', path: '/audit-logs', icon: Shield },
   { name: 'Reports', path: '/reports', icon: FileText },
+  { name: 'Support Desk', path: '/support', icon: LifeBuoy, badge: 'Helpdesk' },
   { name: 'Settings', path: '/settings', icon: Settings },
+  { name: 'Admin Portal', path: '/admin', icon: Shield, badge: 'Governance' },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -150,16 +161,22 @@ export const Sidebar: React.FC = () => {
               onChange={(e) => switchRole(e.target.value as any)}
               className="bg-slate-900 border border-slate-700 text-slate-200 rounded px-1.5 py-0.5 text-[11px] outline-none focus:border-blue-500 cursor-pointer"
             >
-              <option value="RISK_MANAGER">Risk Manager</option>
-              <option value="CREDIT_OFFICER">Credit Officer</option>
-              <option value="OPERATIONS">Operations Desk</option>
-              <option value="COLLECTION_MANAGER">Collection Manager</option>
+              <option value="CUSTOMER">Customer (Borrower)</option>
+              <option value="SALES_OFFICER">Sales Officer</option>
+              <option value="RELATIONSHIP_MANAGER">Relationship Manager</option>
+              <option value="CREDIT_ANALYST">Credit Analyst</option>
+              <option value="CREDIT_MANAGER">Credit Manager</option>
+              <option value="FRAUD_OFFICER">Fraud Officer</option>
+              <option value="KYC_OFFICER">KYC Officer</option>
+              <option value="COLLECTIONS_OFFICER">Collections Officer</option>
+              <option value="COLLECTIONS_MANAGER">Collections Manager</option>
+              <option value="OPERATIONS_OFFICER">Operations Officer</option>
+              <option value="OPERATIONS_MANAGER">Operations Manager</option>
+              <option value="FINANCE_OFFICER">Finance Officer</option>
               <option value="FINANCE_MANAGER">Finance Manager</option>
-              <option value="EXECUTIVE">Executive / CEO</option>
-              <option value="ADMIN">CRO / Admin</option>
-              <option value="CUSTOMER">Customer / Borrower</option>
-              <option value="ANALYST">Analyst</option>
-              <option value="AUDITOR">Auditor</option>
+              <option value="RISK_ANALYST">Risk Analyst</option>
+              <option value="RISK_MANAGER">Risk Manager</option>
+              <option value="ADMIN">Admin (Full Access)</option>
             </select>
           </div>
         </div>
