@@ -182,19 +182,19 @@ export const CollectionsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* 1. Header Banner */}
-      <div className="finsight-card p-6 bg-gradient-to-r from-teal-950 via-slate-900 to-[#0B132B] text-white border-teal-900/60 shadow-xl">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="finsight-card p-6 bg-white border border-slate-200 shadow-sm rounded-xl text-slate-900">
+        <div className="flex flex-col lg:flex-row lg:lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400">
+            <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600 shadow-xs">
               <PiggyBank className="w-7 h-7" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-white">Collections Operations & Intelligence</h1>
+                <h1 className="text-xl font-extrabold tracking-tight text-slate-900">Collections Operations & Intelligence</h1>
                 <Badge variant="positive">Multi-Head XGBoost</Badge>
                 {isManager && <Badge variant="neutral">Manager Console</Badge>}
               </div>
-              <p className="text-xs text-slate-300 mt-1">
+              <p className="text-xs text-slate-700 font-semibold mt-1">
                 Dynamic Recovery Prioritization, Probability of Payment Models, Ethical Tele-Recovery & Synchronized Ledger
               </p>
             </div>
@@ -203,26 +203,26 @@ export const CollectionsPage: React.FC = () => {
             <button
               onClick={() => syncMutation.mutate()}
               disabled={syncMutation.isPending}
-              className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${syncMutation.isPending ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 text-teal-600 ${syncMutation.isPending ? 'animate-spin' : ''}`} />
               Sync Overdue Portfolio
             </button>
-            <div className="bg-slate-800/80 px-3 py-1.5 rounded border border-slate-700 text-xs">
-              <span className="text-slate-400">Logged Officer:</span>{' '}
-              <strong className="text-teal-400">{dashboardData?.officer?.name || user?.full_name || 'Officer'}</strong>
+            <div className="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+              <span className="text-slate-600 font-medium">Logged Officer:</span>{' '}
+              <strong className="text-teal-700 font-bold">{dashboardData?.officer?.name || user?.full_name || 'Officer'}</strong>
             </div>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 mt-6 pt-4 border-t border-slate-800">
+        <div className="flex items-center gap-2 mt-6 pt-4 border-t border-slate-200">
           <button
             onClick={() => setActiveTab('queue')}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
               activeTab === 'queue'
-                ? 'bg-teal-600 text-white shadow-lg shadow-teal-900/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <Layers className="w-4 h-4" />
@@ -231,10 +231,10 @@ export const CollectionsPage: React.FC = () => {
           {isManager && (
             <button
               onClick={() => setActiveTab('manager')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
                 activeTab === 'manager'
-                  ? 'bg-teal-600 text-white shadow-lg shadow-teal-900/50'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-teal-600 text-white shadow-sm'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <SlidersHorizontal className="w-4 h-4" />
@@ -243,10 +243,10 @@ export const CollectionsPage: React.FC = () => {
           )}
           <button
             onClick={() => setActiveTab('communications')}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
               activeTab === 'communications'
-                ? 'bg-teal-600 text-white shadow-lg shadow-teal-900/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <MessageSquare className="w-4 h-4" />
@@ -257,58 +257,58 @@ export const CollectionsPage: React.FC = () => {
 
       {/* 2. Top KPI Cards Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Assigned Cases</span>
-            <Users className="w-4 h-4 text-slate-400" />
+            <Users className="w-4 h-4 text-slate-500" />
           </div>
-          <div className="text-xl font-bold text-slate-900">{kpis.assigned_cases}</div>
-          <p className="text-[10px] text-slate-500 mt-0.5">Permitted queue</p>
+          <div className="text-xl font-extrabold text-slate-900">{kpis.assigned_cases}</div>
+          <p className="text-[11px] text-slate-600 font-medium mt-0.5">Permitted queue</p>
         </div>
 
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Total Overdue AUM</span>
-            <DollarSign className="w-4 h-4 text-amber-500" />
+            <DollarSign className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-xl font-bold text-amber-600">{kpis.total_overdue_formatted}</div>
-          <p className="text-[10px] text-amber-600 mt-0.5">Delinquent balances</p>
+          <div className="text-xl font-extrabold text-amber-700">{kpis.total_overdue_formatted}</div>
+          <p className="text-[11px] text-amber-800 font-bold mt-0.5">Delinquent balances</p>
         </div>
 
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Contacted Today</span>
             <PhoneCall className="w-4 h-4 text-teal-600" />
           </div>
-          <div className="text-xl font-bold text-teal-700">{kpis.contacted_today}</div>
-          <p className="text-[10px] text-teal-600 mt-0.5">Outreach interactions</p>
+          <div className="text-xl font-extrabold text-teal-800">{kpis.contacted_today}</div>
+          <p className="text-[11px] text-teal-800 font-bold mt-0.5">Outreach interactions</p>
         </div>
 
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Pending Promises</span>
             <Clock className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-xl font-bold text-blue-700">{kpis.promises_pending}</div>
-          <p className="text-[10px] text-blue-600 mt-0.5">PTP commitments</p>
+          <div className="text-xl font-extrabold text-blue-800">{kpis.promises_pending}</div>
+          <p className="text-[11px] text-blue-800 font-bold mt-0.5">PTP commitments</p>
         </div>
 
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Recovered Month</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-xl font-bold text-emerald-700">{kpis.recovered_this_month_formatted}</div>
-          <p className="text-[10px] text-emerald-600 mt-0.5">Cured & collected</p>
+          <div className="text-xl font-extrabold text-emerald-800">{kpis.recovered_this_month_formatted}</div>
+          <p className="text-[11px] text-emerald-800 font-bold mt-0.5">Cured & collected</p>
         </div>
 
-        <div className="finsight-card p-3.5 bg-white border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+        <div className="finsight-card p-3.5 bg-white border border-slate-200 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold mb-1">
             <span>Escalated Cases</span>
             <ShieldAlert className="w-4 h-4 text-rose-600" />
           </div>
-          <div className="text-xl font-bold text-rose-700">{kpis.escalated_cases}</div>
-          <p className="text-[10px] text-rose-600 mt-0.5">Manager review</p>
+          <div className="text-xl font-extrabold text-rose-700">{kpis.escalated_cases}</div>
+          <p className="text-[11px] text-rose-800 font-bold mt-0.5">Manager review</p>
         </div>
       </div>
 
@@ -316,23 +316,23 @@ export const CollectionsPage: React.FC = () => {
       {activeTab === 'queue' && (
         <div className="space-y-4">
           {/* Filters Bar */}
-          <div className="finsight-card p-4 bg-white border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Search borrower, loan #, customer ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-500 w-64"
+                  className="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-teal-500 w-64 font-medium"
                 />
               </div>
 
               <select
                 value={selectedStage}
                 onChange={(e) => setSelectedStage(e.target.value)}
-                className="text-xs py-1.5 px-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-1 focus:ring-teal-500 font-medium"
+                className="text-xs py-1.5 px-3 rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500 font-bold"
               >
                 <option value="ALL">All Lifecycle Stages</option>
                 <option value="OVERDUE">OVERDUE</option>
@@ -347,7 +347,7 @@ export const CollectionsPage: React.FC = () => {
               <select
                 value={selectedPriority}
                 onChange={(e) => setSelectedPriority(e.target.value)}
-                className="text-xs py-1.5 px-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-1 focus:ring-teal-500 font-medium"
+                className="text-xs py-1.5 px-3 rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500 font-bold"
               >
                 <option value="ALL">All Priorities</option>
                 <option value="HIGH">High Priority</option>
@@ -356,32 +356,32 @@ export const CollectionsPage: React.FC = () => {
               </select>
             </div>
 
-            <div className="text-xs text-slate-500 font-medium">
-              Showing <strong className="text-slate-800">{filteredCases.length}</strong> of {rawCases.length} cases
+            <div className="text-xs text-slate-700 font-semibold">
+              Showing <strong className="text-slate-900 font-bold">{filteredCases.length}</strong> of {rawCases.length} cases
             </div>
           </div>
 
           {/* Cases Data Table */}
-          <div className="finsight-card bg-white border-slate-200 overflow-hidden shadow-sm">
+          <div className="finsight-card bg-[#F0F7FF] border border-blue-200 overflow-hidden shadow-sm rounded-xl">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse bg-white">
                 <thead>
-                  <tr className="bg-slate-50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
-                    <th className="py-3 px-4">Borrower & Customer</th>
-                    <th className="py-3 px-4">Loan Details</th>
-                    <th className="py-3 px-4">Overdue & DPD</th>
-                    <th className="py-3 px-4">Risk & ML P(Pay)</th>
-                    <th className="py-3 px-4">Priority & Recommendation</th>
-                    <th className="py-3 px-4">Stage & Next Action</th>
-                    <th className="py-3 px-4">Assigned Officer</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                  <tr className="bg-[#E4F0FF] text-[11px] font-bold text-blue-950 uppercase tracking-wider border-b border-blue-200">
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Borrower & Customer</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Loan Details</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Overdue & DPD</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Risk & ML P(Pay)</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Priority & Recommendation</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Stage & Next Action</th>
+                    <th className="py-3.5 px-4 text-blue-950 font-bold">Assigned Officer</th>
+                    <th className="py-3.5 px-4 text-right text-blue-950 font-bold">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-xs">
+                <tbody className="divide-y divide-blue-100 text-xs">
                   {filteredCases.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="text-center py-12 text-slate-400">
-                        <Inbox className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                      <td colSpan={8} className="text-center py-12 text-slate-700 font-semibold">
+                        <Inbox className="w-8 h-8 mx-auto mb-2 text-slate-400" />
                         No collection cases matching filters.
                       </td>
                     </tr>

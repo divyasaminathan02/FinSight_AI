@@ -347,14 +347,13 @@ export const OperationsPortalPage: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {/* Pre-check button */}
+                          {/* Pre-check symbol button */}
                           <button
                             onClick={() => setCheckAppId(c.application_id)}
-                            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                            className="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300 rounded-lg transition-all shadow-xs cursor-pointer flex items-center justify-center"
                             title="Run Pre-Disbursement Checklist"
                           >
-                            <Shield className="w-3.5 h-3.5 text-amber-600" />
-                            <span>Pre-Check</span>
+                            <Shield className="w-4 h-4 text-amber-600" />
                           </button>
 
                           {/* Disburse Button */}

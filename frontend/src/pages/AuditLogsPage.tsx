@@ -41,14 +41,14 @@ export const AuditLogsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-white border border-slate-700 shadow-md">
-            <Shield className="w-5 h-5 text-blue-400" />
+      <div className="finsight-card p-5 bg-white border border-slate-200 shadow-sm rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-200 shadow-xs">
+            <Shield className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Institutional Regulatory Audit Trail</h1>
-            <p className="text-xs text-slate-400">
+            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Institutional Regulatory Audit Trail</h1>
+            <p className="text-xs text-slate-700 font-semibold mt-0.5">
               Immutable ledger of loan decisions, sanctions, disbursements, and authentication events (RBI Fair Practices Code)
             </p>
           </div>
@@ -57,9 +57,9 @@ export const AuditLogsPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-blue-400" />
+            <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
             <span>Sync Audit Events</span>
           </button>
         </div>
@@ -72,10 +72,10 @@ export const AuditLogsPage: React.FC = () => {
             <button
               key={act}
               onClick={() => setFilterAction(act)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 filterAction === act
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+                  : 'bg-white border border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-100 shadow-xs'
               }`}
             >
               {act === 'All' ? 'All Activities' : act}
@@ -90,35 +90,35 @@ export const AuditLogsPage: React.FC = () => {
             placeholder="Search action or resource..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900/90 border border-slate-800 pl-9 pr-3 py-1.5 rounded-xl text-xs text-slate-200 outline-none focus:border-blue-500"
+            className="w-full bg-white border border-slate-300 pl-9 pr-3 py-1.5 rounded-xl text-xs text-slate-900 font-medium outline-none focus:border-blue-500 shadow-xs"
           />
         </div>
       </div>
 
-      {/* Audit Log Table */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      {/* Audit Log Table in Light Pale Blue Shade */}
+      <div className="bg-[#F0F7FF] border border-blue-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#0B132B] text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+          <table className="w-full text-left text-xs bg-white">
+            <thead className="bg-[#E1EFFF] text-blue-950 uppercase text-[11px] font-extrabold tracking-wider border-b border-blue-200">
               <tr>
-                <th className="py-3 px-4">Action</th>
-                <th className="py-3 px-4">Entity Resource</th>
-                <th className="py-3 px-4">Officer / Subject</th>
-                <th className="py-3 px-4">Timestamp (UTC)</th>
-                <th className="py-3 px-4 text-right">Details</th>
+                <th className="py-3.5 px-4 text-blue-950 font-bold">Action</th>
+                <th className="py-3.5 px-4 text-blue-950 font-bold">Entity Resource</th>
+                <th className="py-3.5 px-4 text-blue-950 font-bold">Officer / Subject</th>
+                <th className="py-3.5 px-4 text-blue-950 font-bold">Timestamp (UTC)</th>
+                <th className="py-3.5 px-4 text-right text-blue-950 font-bold">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-300">
+            <tbody className="divide-y divide-blue-100 text-slate-800">
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-500">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-blue-500" />
+                  <td colSpan={5} className="py-8 text-center text-blue-950 font-semibold">
+                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-blue-600" />
                     Loading immutable audit logs...
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-500">
+                  <td colSpan={5} className="py-8 text-center text-slate-600 font-medium">
                     No matching audit records found.
                   </td>
                 </tr>
@@ -127,39 +127,39 @@ export const AuditLogsPage: React.FC = () => {
                   const isExpanded = expandedId === item.id;
                   return (
                     <React.Fragment key={item.id}>
-                      <tr className="hover:bg-slate-800/40 transition-colors">
-                        <td className="py-3 px-4">
-                          <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold ${
-                            item.action.includes('APPROVE') ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' :
-                            item.action.includes('DISBURSE') ? 'bg-purple-950 text-purple-300 border border-purple-800' :
-                            item.action.includes('REPAYMENT') ? 'bg-blue-950 text-blue-300 border border-blue-800' :
-                            'bg-slate-800 text-slate-300 border border-slate-700'
+                      <tr className="bg-white hover:bg-[#F0F7FF] transition-colors">
+                        <td className="py-3.5 px-4">
+                          <span className={`text-[11px] px-2.5 py-0.5 rounded font-mono font-bold ${
+                            item.action.includes('APPROVE') ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                            item.action.includes('DISBURSE') ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                            item.action.includes('REPAYMENT') ? 'bg-blue-100 text-blue-900 border border-blue-300' :
+                            'bg-slate-100 text-slate-800 border border-slate-300'
                           }`}>
                             {item.action}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-mono text-slate-200">
+                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
                           {item.resource}
                         </td>
-                        <td className="py-3 px-4 text-slate-300">
+                        <td className="py-3.5 px-4 font-semibold text-slate-800">
                           {item.user}
                         </td>
-                        <td className="py-3 px-4 text-slate-400 font-mono text-[11px]">
+                        <td className="py-3.5 px-4 text-slate-700 font-mono text-[11px] font-medium">
                           {item.created_at ? new Date(item.created_at).toLocaleString() : 'Recent'}
                         </td>
-                        <td className="py-3 px-4 text-right">
+                        <td className="py-3.5 px-4 text-right">
                           <button
                             onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                            className="text-xs text-blue-400 hover:text-blue-300 font-semibold cursor-pointer"
+                            className="text-xs text-blue-600 hover:text-blue-800 font-bold cursor-pointer underline"
                           >
                             {isExpanded ? 'Hide Payload' : 'View Payload'}
                           </button>
                         </td>
                       </tr>
                       {isExpanded && (
-                        <tr className="bg-slate-950/60 border-b border-slate-800">
+                        <tr className="bg-[#F0F7FF] border-b border-blue-200">
                           <td colSpan={5} className="p-4">
-                            <pre className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-[11px] font-mono text-slate-300 overflow-x-auto">
+                            <pre className="p-3 bg-white border border-blue-200 rounded-xl text-[11px] font-mono text-slate-900 font-semibold overflow-x-auto shadow-inner">
                               {JSON.stringify(item.details, null, 2)}
                             </pre>
                           </td>

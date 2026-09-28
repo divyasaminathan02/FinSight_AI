@@ -240,20 +240,20 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* Header Banner */}
-      <div className="finsight-card p-5 bg-gradient-to-r from-slate-900 to-[#0B132B] text-white">
+      <div className="finsight-card p-5 bg-white border border-slate-200 shadow-sm rounded-xl text-slate-900">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <FileText className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-200 shadow-xs">
+              <FileText className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span>Enterprise Reporting & Dossier Engine</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-900 border border-blue-200 font-bold">
                   13 Canonical Reports
                 </span>
               </h2>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-600 font-medium mt-0.5">
                 Live database aggregation, multi-dimensional filtering, customizable views, and regulatory export
               </p>
             </div>
@@ -262,24 +262,24 @@ export const ReportsPage: React.FC = () => {
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => loadReportDetails(selectedReportId)}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loadingData ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 text-blue-600 ${loadingData ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
             </button>
             <button
               onClick={handleDownloadCsv}
               disabled={downloading}
-              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer shadow-lg shadow-blue-600/30 disabled:opacity-50"
+              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm disabled:opacity-50"
             >
               <Download className="w-3.5 h-3.5" />
               <span>{downloading ? 'Generating...' : 'Export CSV'}</span>
             </button>
             <button
               onClick={handleDownloadPdf}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-slate-700" />
               <span>Export PDF / Print</span>
             </button>
           </div>
@@ -288,10 +288,10 @@ export const ReportsPage: React.FC = () => {
 
       {/* Main Grid: Left Navigator & Right Detailed View */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Column: 13 Reports Navigator */}
+        {/* Left Column: 13 Reports Navigator (Light Pale Blue Shade) */}
         <div className="lg:col-span-1 space-y-2">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
               Report Catalog (13)
             </span>
           </div>
@@ -303,23 +303,23 @@ export const ReportsPage: React.FC = () => {
                 <button
                   key={r.id}
                   onClick={() => setSelectedReportId(r.id)}
-                  className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${
+                  className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between shadow-xs ${
                     isSelected
-                      ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 font-semibold shadow-xs'
-                      : 'bg-slate-900/40 border-slate-800/80 text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                      ? 'bg-[#E1EFFF] border-2 border-blue-500 text-blue-950 font-bold'
+                      : 'bg-[#F0F7FF] border border-blue-200 text-slate-800 hover:bg-[#E4F0FF]'
                   }`}
                 >
                   <div className="min-w-0 pr-2">
-                    <div className="text-xs truncate">{r.title}</div>
-                    <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
+                    <div className={`text-xs truncate ${isSelected ? 'text-blue-950 font-bold' : 'text-slate-800 font-semibold'}`}>{r.title}</div>
+                    <div className="text-[10px] text-slate-600 flex items-center gap-1 mt-0.5 font-medium">
                       <span>{r.category}</span>
                     </div>
                   </div>
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded shrink-0 ${
+                    className={`text-[9px] px-1.5 py-0.5 rounded shrink-0 font-bold ${
                       isSelected
-                        ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30'
-                        : 'bg-slate-800 text-slate-400'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-blue-100 text-blue-900 border border-blue-200'
                     }`}
                   >
                     {r.tag}
@@ -333,21 +333,21 @@ export const ReportsPage: React.FC = () => {
         {/* Right 3 Columns: Filters, Personalization & Report Content */}
         <div className="lg:col-span-3 space-y-4">
           {/* Personalization & Filter Matrix Bar */}
-          <div className="finsight-card p-4 bg-slate-900/60 border-slate-800 space-y-3">
+          <div className="finsight-card p-4 bg-white border border-slate-200 shadow-sm rounded-xl space-y-3">
             {/* Row 1: Saved View Presets & Column Picker */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 flex-wrap gap-2">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <Bookmark className="w-3.5 h-3.5 text-blue-400" />
-                <span className="text-xs font-bold text-slate-300">Saved View:</span>
-                <div className="flex flex-wrap rounded-md bg-slate-800/70 p-0.5 border border-slate-700 gap-0.5">
+                <Bookmark className="w-3.5 h-3.5 text-blue-600" />
+                <span className="text-xs font-bold text-slate-800">Saved View:</span>
+                <div className="flex flex-wrap rounded-lg bg-slate-100 p-0.5 border border-slate-200 gap-0.5">
                   {Object.entries(savedViews).map(([k, v]) => (
                     <button
                       key={k}
                       onClick={() => applySavedView(k)}
-                      className={`px-2.5 py-1 text-[11px] rounded transition-colors cursor-pointer ${
+                      className={`px-2.5 py-1 text-[11px] rounded-md transition-colors cursor-pointer ${
                         activeSavedView === k
-                          ? 'bg-blue-600 text-white font-bold'
-                          : 'text-slate-400 hover:text-slate-200'
+                          ? 'bg-blue-600 text-white font-bold shadow-xs'
+                          : 'text-slate-700 hover:text-slate-900 font-medium'
                       }`}
                     >
                       {v.label}
@@ -358,20 +358,20 @@ export const ReportsPage: React.FC = () => {
                 {!isSavingCustomView ? (
                   <button
                     onClick={() => setIsSavingCustomView(true)}
-                    className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-blue-400 text-[11px] font-semibold border border-slate-700 transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700 text-[11px] font-bold border border-slate-300 transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
                     title="Save current filters and column preferences as a reusable preset"
                   >
                     <span>+ Save View</span>
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-md border border-slate-700">
+                  <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-md border border-slate-300">
                     <input
                       type="text"
                       placeholder="View Name..."
                       value={customViewName}
                       onChange={(e) => setCustomViewName(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter') handleSaveCustomView(); }}
-                      className="px-2 py-0.5 text-xs bg-slate-900 text-white rounded border border-slate-600 outline-none w-32"
+                      className="px-2 py-0.5 text-xs bg-white text-slate-900 font-medium rounded border border-slate-300 outline-none w-32"
                       autoFocus
                     />
                     <button
@@ -383,7 +383,7 @@ export const ReportsPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => { setIsSavingCustomView(false); setCustomViewName(''); }}
-                      className="text-slate-400 hover:text-slate-200 text-xs px-1 cursor-pointer"
+                      className="text-slate-500 hover:text-slate-700 text-xs px-1 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -395,19 +395,19 @@ export const ReportsPage: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setIsColumnPickerOpen(!isColumnPickerOpen)}
-                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 flex items-center gap-1.5 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-300 flex items-center gap-1.5 cursor-pointer shadow-xs"
                 >
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-slate-600" />
                   <span>Configure Columns ({visibleHeaders.length}/{rawHeaders.length})</span>
                 </button>
 
                 {isColumnPickerOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl p-3 z-30 animate-in fade-in duration-100">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                      <span className="text-xs font-bold text-white">Visible Columns</span>
+                  <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-xl p-3 z-30 animate-in fade-in duration-100">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <span className="text-xs font-bold text-slate-900">Visible Columns</span>
                       <button
                         onClick={() => setIsColumnPickerOpen(false)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-slate-600"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -418,13 +418,13 @@ export const ReportsPage: React.FC = () => {
                         return (
                           <label
                             key={col}
-                            className="flex items-center gap-2 text-xs text-slate-300 hover:bg-slate-800/60 p-1 rounded cursor-pointer"
+                            className="flex items-center gap-2 text-xs text-slate-800 hover:bg-slate-100 p-1 rounded cursor-pointer font-medium"
                           >
                             <input
                               type="checkbox"
                               checked={isVisible}
                               onChange={() => toggleColumnVisibility(col)}
-                              className="rounded border-slate-700 text-blue-600 focus:ring-blue-500"
+                              className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                             />
                             <span className="truncate">{col.replace(/_/g, ' ').toUpperCase()}</span>
                           </label>
@@ -436,7 +436,7 @@ export const ReportsPage: React.FC = () => {
                         setHiddenColumns({});
                         savePreferences({}, activeSavedView);
                       }}
-                      className="w-full text-center text-[10px] text-blue-400 hover:text-blue-300 pt-2 border-t border-slate-800 cursor-pointer"
+                      className="w-full text-center text-[10px] text-blue-600 hover:text-blue-800 font-bold pt-2 border-t border-slate-200 cursor-pointer"
                     >
                       Reset All Columns
                     </button>
@@ -580,31 +580,31 @@ export const ReportsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Active Report Header & KPIs */}
-          <div className="finsight-card p-5 bg-slate-900 border-slate-800 space-y-4">
+          {/* Active Report Header & KPIs in Light Pale Blue Shade */}
+          <div className="finsight-card p-5 bg-white border border-slate-200 shadow-sm rounded-xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                   <span>{reportData?.title || 'Report Details'}</span>
-                  <span className="text-[11px] text-slate-400 font-normal">
+                  <span className="text-[11px] text-slate-600 font-mono font-medium">
                     (ID: {reportData?.report_id || selectedReportId})
                   </span>
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-600 font-medium mt-0.5">
                   Generated at {reportData?.generated_at ? new Date(reportData.generated_at).toLocaleString() : 'Live'}
                 </p>
               </div>
             </div>
 
-            {/* Summary KPI Cards */}
+            {/* Summary KPI Cards in Light Blue Pale Shade */}
             {reportData?.summary && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(reportData.summary).map(([k, v]) => (
-                  <div key={k} className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 truncate block">
+                  <div key={k} className="p-3.5 rounded-xl bg-[#F0F7FF] border border-blue-200 shadow-xs">
+                    <span className="text-[11px] uppercase font-bold text-blue-900 truncate block">
                       {k.replace(/_/g, ' ')}
                     </span>
-                    <div className="text-base font-bold text-white mt-0.5">
+                    <div className="text-xl font-black text-blue-950 mt-1">
                       {typeof v === 'number' && v > 1000 ? `₹${v.toLocaleString()}` : String(v)}
                     </div>
                   </div>
@@ -612,25 +612,25 @@ export const ReportsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Detailed Rows Table */}
-            <div className="border border-slate-800 rounded-lg overflow-hidden">
+            {/* Detailed Rows Table in Light Pale Blue Shade */}
+            <div className="border border-blue-200 rounded-xl overflow-hidden bg-[#F0F7FF] shadow-xs">
               <div className="max-h-[50vh] overflow-x-auto overflow-y-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-slate-800/80 text-[11px] text-slate-400 font-semibold uppercase tracking-wider sticky top-0 border-b border-slate-700">
+                <table className="w-full text-left text-xs bg-white text-slate-800">
+                  <thead className="bg-[#E1EFFF] text-[11px] text-blue-950 font-bold uppercase tracking-wider sticky top-0 border-b border-blue-200">
                     <tr>
                       {visibleHeaders.map((h) => (
-                        <th key={h} className="p-2.5 whitespace-nowrap">
+                        <th key={h} className="p-3 whitespace-nowrap text-blue-950 font-bold">
                           {h.replace(/_/g, ' ')}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 bg-slate-900/40">
+                  <tbody className="divide-y divide-blue-100 bg-white">
                     {rawRows.length > 0 ? (
                       rawRows.map((r, idx) => (
-                        <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
+                        <tr key={idx} className="hover:bg-[#F0F7FF] transition-colors">
                           {visibleHeaders.map((h) => (
-                            <td key={h} className="p-2.5 whitespace-nowrap font-mono text-[11px]">
+                            <td key={h} className="p-3 whitespace-nowrap font-mono text-[11px] font-medium text-slate-800">
                               {typeof r[h] === 'number' && r[h] > 1000 ? `₹${r[h].toLocaleString()}` : String(r[h] ?? '-')}
                             </td>
                           ))}
@@ -638,7 +638,7 @@ export const ReportsPage: React.FC = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={visibleHeaders.length || 1} className="py-8 text-center text-slate-500">
+                        <td colSpan={visibleHeaders.length || 1} className="py-8 text-center text-slate-600 font-semibold">
                           {loadingData ? 'Loading report data...' : 'No records match the selected filter criteria.'}
                         </td>
                       </tr>

@@ -188,15 +188,15 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Header */}
-      <div className="finsight-card p-5 bg-gradient-to-r from-slate-900 to-[#0B132B] text-white">
+      <div className="finsight-card p-5 bg-white border border-slate-200 shadow-sm rounded-xl text-slate-900">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <Settings className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-200 shadow-xs">
+              <Settings className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Enterprise Settings & System Governance</h2>
-              <p className="text-xs text-slate-300">
+              <h2 className="text-base font-extrabold text-slate-900">Enterprise Settings & System Governance</h2>
+              <p className="text-xs text-slate-700 font-semibold mt-0.5">
                 Dynamic risk thresholds, decision policies, MLflow model registries, and service health
               </p>
             </div>
@@ -206,7 +206,7 @@ export const SettingsPage: React.FC = () => {
             <button
               onClick={handleSaveConfig}
               disabled={isSaving}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs font-bold text-white flex items-center gap-2 transition-colors cursor-pointer shadow-lg shadow-blue-600/30 disabled:opacity-50"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs font-bold text-white flex items-center gap-2 transition-colors cursor-pointer shadow-sm disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               <span>{isSaving ? 'Saving Policies...' : 'Save Configuration'}</span>
@@ -217,20 +217,20 @@ export const SettingsPage: React.FC = () => {
 
       {/* Status Messages */}
       {saveSuccess && (
-        <div className="p-3 bg-emerald-950/60 border border-emerald-800 text-emerald-300 text-xs rounded-xl flex items-center gap-2">
-          <Check className="w-4 h-4 text-emerald-400" />
+        <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs rounded-xl flex items-center gap-2 font-medium">
+          <Check className="w-4 h-4 text-emerald-600" />
           <span>Enterprise thresholds and policies updated successfully. Live agent pipelines synced.</span>
         </div>
       )}
       {errorMessage && (
-        <div className="p-3 bg-rose-950/60 border border-rose-800 text-rose-300 text-xs rounded-xl flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
+        <div className="p-3 bg-rose-50 border border-rose-300 text-rose-900 text-xs rounded-xl flex items-center gap-2 font-medium">
+          <AlertTriangle className="w-4 h-4 text-rose-600" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* Settings Navigation Tabs */}
-      <div className="flex border-b border-slate-800 overflow-x-auto gap-1">
+      <div className="flex border-b border-slate-200 overflow-x-auto gap-1">
         {[
           { id: 'thresholds', label: 'Risk Thresholds', icon: Sliders },
           { id: 'policies', label: 'Decision Policies', icon: Zap },
@@ -251,8 +251,8 @@ export const SettingsPage: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-3.5 py-2.5 text-xs font-bold flex items-center gap-2 border-b-2 whitespace-nowrap transition-colors cursor-pointer ${
                 isActive
-                  ? 'border-blue-500 text-blue-400 bg-slate-900/60'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  ? 'border-blue-600 text-blue-700 bg-blue-50/60 font-bold'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -266,20 +266,20 @@ export const SettingsPage: React.FC = () => {
 
       {/* 1. Risk Thresholds Tab */}
       {activeTab === 'thresholds' && (
-        <div className="finsight-card p-6 space-y-6">
+        <div className="finsight-card p-6 space-y-6 bg-white border border-slate-200 shadow-sm rounded-xl">
           <div>
-            <h3 className="text-sm font-bold text-white">Configurable Risk Engine Thresholds</h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <h3 className="text-sm font-bold text-slate-900">Configurable Risk Engine Thresholds</h3>
+            <p className="text-xs text-slate-600 font-medium mt-0.5">
               Tune automated underwriting and risk cutoffs. Changes apply immediately to all incoming loan applications.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2 p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-              <label className="text-xs font-bold text-slate-200 block">
+            <div className="space-y-2 p-4 bg-[#F0F7FF] rounded-xl border border-blue-200 shadow-xs">
+              <label className="text-xs font-extrabold text-blue-950 block">
                 Max Probability of Default for Auto-Approval (PD)
               </label>
-              <p className="text-[11px] text-slate-400">Applications with PD &le; this limit are immediately approved.</p>
+              <p className="text-[11px] text-slate-700 font-medium">Applications with PD &le; this limit are immediately approved.</p>
               <div className="flex items-center gap-3">
                 <input
                   type="range"
@@ -290,17 +290,17 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setMaxPdAutoApproval(parseFloat(e.target.value))}
                   className="w-full"
                 />
-                <span className="font-mono text-sm font-bold text-emerald-400 w-16 text-right">
+                <span className="font-mono text-sm font-black text-emerald-700 w-16 text-right">
                   {(maxPdAutoApproval * 100).toFixed(1)}%
                 </span>
               </div>
             </div>
 
-            <div className="space-y-2 p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-              <label className="text-xs font-bold text-slate-200 block">
+            <div className="space-y-2 p-4 bg-[#F0F7FF] rounded-xl border border-blue-200 shadow-xs">
+              <label className="text-xs font-extrabold text-blue-950 block">
                 Max PD for Manual Review (Cutoff Ceiling)
               </label>
-              <p className="text-[11px] text-slate-400">Applications with PD above this limit trigger automatic rejection.</p>
+              <p className="text-[11px] text-slate-700 font-medium">Applications with PD above this limit trigger automatic rejection.</p>
               <div className="flex items-center gap-3">
                 <input
                   type="range"
@@ -311,17 +311,17 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setMaxPdManualReview(parseFloat(e.target.value))}
                   className="w-full"
                 />
-                <span className="font-mono text-sm font-bold text-amber-400 w-16 text-right">
+                <span className="font-mono text-sm font-black text-amber-700 w-16 text-right">
                   {(maxPdManualReview * 100).toFixed(1)}%
                 </span>
               </div>
             </div>
 
-            <div className="space-y-2 p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-              <label className="text-xs font-bold text-slate-200 block">
+            <div className="space-y-2 p-4 bg-[#F0F7FF] rounded-xl border border-blue-200 shadow-xs">
+              <label className="text-xs font-extrabold text-blue-950 block">
                 Minimum Prime Credit Score (CIBIL Scale)
               </label>
-              <p className="text-[11px] text-slate-400">Scores above qualify for preferential enterprise interest margins.</p>
+              <p className="text-[11px] text-slate-700 font-medium">Scores above qualify for preferential enterprise interest margins.</p>
               <div className="flex items-center gap-3">
                 <input
                   type="number"
@@ -329,17 +329,17 @@ export const SettingsPage: React.FC = () => {
                   max="850"
                   value={minCreditScorePrime}
                   onChange={(e) => setMinCreditScorePrime(parseInt(e.target.value))}
-                  className="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 text-slate-100 rounded-lg"
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-blue-200 text-blue-950 font-bold rounded-lg shadow-xs"
                 />
-                <span className="text-xs text-slate-400">Points</span>
+                <span className="text-xs text-slate-700 font-bold">Points</span>
               </div>
             </div>
 
-            <div className="space-y-2 p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-              <label className="text-xs font-bold text-slate-200 block">
+            <div className="space-y-2 p-4 bg-[#F0F7FF] rounded-xl border border-blue-200 shadow-xs">
+              <label className="text-xs font-extrabold text-blue-950 block">
                 Fraud Risk Cutoff Score (0 - 100)
               </label>
-              <p className="text-[11px] text-slate-400">Transactions or loans above this score trigger quarantine.</p>
+              <p className="text-[11px] text-slate-700 font-medium">Transactions or loans above this score trigger quarantine.</p>
               <div className="flex items-center gap-3">
                 <input
                   type="number"
@@ -347,9 +347,9 @@ export const SettingsPage: React.FC = () => {
                   max="95"
                   value={fraudCutoff}
                   onChange={(e) => setFraudCutoff(parseInt(e.target.value))}
-                  className="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 text-slate-100 rounded-lg"
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-blue-200 text-blue-950 font-bold rounded-lg shadow-xs"
                 />
-                <span className="text-xs text-slate-400">/ 100</span>
+                <span className="text-xs text-slate-700 font-bold">/ 100</span>
               </div>
             </div>
           </div>
